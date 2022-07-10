@@ -16,7 +16,10 @@ export class Excursion {
   @Prop({ type: String, required: true })
   description: string;
 
-  @ApiProperty({ example: '[{url: sea.jpg}]', description: 'array of objects' })
+  @ApiProperty({
+    example: '[{name: sea.jpg}]',
+    description: 'array of objects',
+  })
   @Prop({ type: [Object], required: true })
   images: [
     {
@@ -25,11 +28,11 @@ export class Excursion {
   ];
 
   @ApiProperty({ example: '3', description: 'excursion duration' })
-  @Prop({ type: Number, default: false })
+  @Prop({ type: Number, required: true, default: false })
   duration: number;
 
   @ApiProperty({ example: '10500', description: 'price' })
-  @Prop({ type: Number })
+  @Prop({ type: Number, required: true })
   price: number;
 
   @ApiProperty({ example: 'hotel name', description: 'hotel name' })
@@ -48,11 +51,11 @@ export class Excursion {
   documentName: string;
 
   @ApiProperty({ example: '2022-06-01', description: 'excursions start date' })
-  @Prop({ type: Date })
+  @Prop({ type: Date, required: true })
   excursionStart: Date;
 
   @ApiProperty({ example: 'Москва', description: 'city name' })
-  @Prop({ type: String })
+  @Prop({ type: String, required: true })
   city: string;
 
   @ApiProperty({
