@@ -27,6 +27,17 @@ export class Hotel {
   locationDescription: string;
 
   @ApiProperty({
+    example: '[{name: "hotel.jpg"}]',
+    description: 'hotel images',
+  })
+  @Prop({ type: [{ name: String }], required: true })
+  images: [
+    {
+      name: string;
+    },
+  ];
+
+  @ApiProperty({
     example:
       '[{type: "Стандарт", numberOfSeats: 2, inRoom: "wi-fi, холодильник, телевизор"}]',
     description: 'rooms array',
