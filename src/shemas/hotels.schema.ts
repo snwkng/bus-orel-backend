@@ -38,20 +38,6 @@ export class Hotel {
   ];
 
   @ApiProperty({
-    example:
-      '[{type: "Стандарт", numberOfSeats: 2, inRoom: "wi-fi, холодильник, телевизор"}]',
-    description: 'rooms array',
-  })
-  @Prop({ type: [Object], required: true })
-  rooms: [
-    {
-      type: string;
-      numberOfSeats: number;
-      inRoom: string;
-    },
-  ];
-
-  @ApiProperty({
     example: 'только завтраки',
     description: 'food at the hotel',
   })
@@ -103,20 +89,21 @@ export class Hotel {
 
   @ApiProperty({
     example:
-      '[{startDate: "22.07.2022" endDate: "30.07.20222", rooms: [{ room: "2 местный стандарт", price: 12100 }]}]',
+      '[type: "стандарт", roomName: "1 местный стандарт", numberOfSeats: "2", inRoom: "две односпальные кровати, шкаф, стол, стулья" [{startDate: "01.01", endDate: "02.02", price: "20000"}]]',
     description: 'the price includes',
   })
   @Prop({ type: [Object] })
   tours: [
     {
-      startDate: string;
-      endDate: string;
-      rooms: [
-        {
-          room: ObjectId;
-          price: number;
-        },
-      ];
+      type: string;
+      roomName: string;
+      numberOfSeats: number;
+      inRoom: string;
+      datesAndPrices: {
+        startDate: Date;
+        endDate: Date;
+        price: number;
+      }[];
     },
   ];
 
