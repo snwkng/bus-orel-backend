@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ObjectId } from 'mongoose';
 export class CreateHotelDto {
   @ApiProperty({
     example: 'Аврора',
@@ -21,14 +20,20 @@ export class CreateHotelDto {
 
   @ApiProperty({
     example:
-      '[{type: "Стандарт", numberOfSeats: 2, inRoom: "wi-fi, холодильник, телевизор"}]',
-    description: 'rooms array',
+      '[type: "стандарт", roomName: "1 местный стандарт", numberOfSeats: "2", inRoom: "две односпальные кровати, шкаф, стол, стулья" [{startDate: "01.01", endDate: "02.02", price: "20000"}]]',
+    description: 'tours array',
   })
-  readonly rooms: [
+  readonly tours: [
     {
       type: string;
+      roomName: string;
       numberOfSeats: number;
       inRoom: string;
+      datesAndPrices: {
+        startDate: Date;
+        endDate: Date;
+        price: number;
+      }[];
     },
   ];
 
@@ -76,24 +81,6 @@ export class CreateHotelDto {
   readonly thePriceIncludes: string;
 
   @ApiProperty({
-    example:
-      '[{startDate: "22.07.2022" endDate: "30.07.20222", rooms: [{ room: "2 местный стандарт", price: 12100 }]}]',
-    description: 'the price includes',
-  })
-  readonly tours: [
-    {
-      startDate: string;
-      endDate: string;
-      rooms: [
-        {
-          room: ObjectId;
-          price: number;
-        },
-      ];
-    },
-  ];
-
-  @ApiProperty({
     example: 'Анапа',
     description: 'city',
   })
@@ -104,4 +91,10 @@ export class CreateHotelDto {
     description: 'region',
   })
   readonly region: string;
+
+  @ApiProperty({
+    example: 'Азовское море',
+    description: 'seaType',
+  })
+  readonly seaType: string;
 }

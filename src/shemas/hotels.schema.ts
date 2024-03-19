@@ -1,8 +1,8 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory, raw } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
-import { Document, ObjectId } from 'mongoose';
+import { HydratedDocument } from 'mongoose';
 
-export type HotelsDocument = Hotel & Document;
+export type HotelsDocument = HydratedDocument<Hotel>;
 @Schema()
 export class Hotel {
   @ApiProperty({
@@ -30,7 +30,7 @@ export class Hotel {
     example: '[{name: "hotel.jpg"}]',
     description: 'hotel images',
   })
-  @Prop({ type: [{ name: String }], required: true })
+  @Prop({ type: [raw({ name: String })], required: true })
   images: [
     {
       name: string;
@@ -120,5 +120,12 @@ export class Hotel {
   })
   @Prop({ type: String, required: true })
   region: string;
+
+  @ApiProperty({
+    example: 'Азовское море',
+    description: 'seaType',
+  })
+  @Prop({ type: String, required: true })
+  seaType: string;
 }
-export const HotelsDocument = SchemaFactory.createForClass(Hotel);
+export const HotelSchema = SchemaFactory.createForClass(Hotel);

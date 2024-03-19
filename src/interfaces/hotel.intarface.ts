@@ -1,4 +1,4 @@
-import { ObjectId } from 'mongoose';
+// import Document from 'mongoose';
 export interface Hotel {
   name: string;
   type: string;
@@ -6,11 +6,17 @@ export interface Hotel {
   images: {
     name: string;
   }[];
-  rooms: [
+  tours: [
     {
       type: string;
+      roomName: string;
       numberOfSeats: number;
       inRoom: string;
+      datesAndPrices: {
+        startDate: Date;
+        endDate: Date;
+        price: number;
+      }[];
     },
   ];
   food: string;
@@ -20,18 +26,7 @@ export interface Hotel {
   address: string;
   fare: number;
   thePriceIncludes: string;
-  tours: [
-    {
-      startDate: string;
-      endDate: string;
-      rooms: [
-        {
-          room: ObjectId;
-          price: number;
-        },
-      ];
-    },
-  ];
   city: string;
   region: string;
+  seaType: string;
 }

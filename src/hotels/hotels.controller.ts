@@ -21,6 +21,17 @@ import { UpdateHotelDto } from './dto/update-hotel-dto';
 export class HotelsController {
   constructor(private hotelsService: HotelsService) {}
 
+  @ApiOperation({ summary: 'Get all hotels' })
+  @ApiResponse({ status: 200, type: [Hotel] })
+  @Get('list')
+  async getSeaList(): Promise<{ id: number; name: string }[]> {
+    const res: Hotel[] = await this.hotelsService.getSeaList();
+    return res?.map((item: Hotel, index: number) => ({
+      id: index + 1,
+      name: item.seaType,
+    }));
+  }
+
   @ApiOperation({ summary: 'Create hotel' })
   @ApiResponse({ status: 201, type: Hotel })
   @Post()

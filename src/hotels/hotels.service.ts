@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Hotel, HotelsDocument } from 'src/shemas/hotels.schema';
+import { Hotel } from 'src/shemas/hotels.schema';
 import { CreateHotelDto } from './dto/create-hotel-dto';
 import { UpdateHotelDto } from './dto/update-hotel-dto';
 
@@ -9,12 +9,12 @@ import { UpdateHotelDto } from './dto/update-hotel-dto';
 export class HotelsService {
   constructor(
     @InjectModel(Hotel.name)
-    private readonly hotelModel: Model<HotelsDocument>,
+    private readonly hotelModel: Model<Hotel>,
   ) {}
 
   async hotelCreate(dto: CreateHotelDto) {
-    const user = await this.hotelModel.create(dto);
-    return user;
+    const hotel = await this.hotelModel.create(dto);
+    return hotel;
   }
 
   async getAllHotels() {
@@ -35,5 +35,10 @@ export class HotelsService {
   async deleteHotel(id: string) {
     const hotel = await this.hotelModel.deleteOne({ _id: id });
     return hotel;
+  }
+
+  async getSeaList() {
+    const seaList: any = await this.hotelModel.find();
+    return seaList;
   }
 }

@@ -1,4 +1,4 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory, raw } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import { Document } from 'mongoose';
 
@@ -20,7 +20,7 @@ export class Excursion {
     example: '[{name: sea.jpg}]',
     description: 'array of objects',
   })
-  @Prop({ type: [Object], required: true })
+  @Prop({ type: [raw({ name: String })], required: true })
   images: [
     {
       name: string;

@@ -15,7 +15,7 @@ export class CreateExcursionDto {
     example: '[{name: sea.jpg}]',
     description: 'array of objects excursion images',
   })
-  readonly images: [object];
+  readonly images: [{ name: string }];
   @ApiProperty({ example: '5', description: 'duration excursion' })
   readonly duration: number;
   @ApiProperty({ example: '10500', description: 'price excursion' })
