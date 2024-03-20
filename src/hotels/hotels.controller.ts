@@ -8,6 +8,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { CreateHotelDto } from './dto/create-hotel-dto';
 import { HotelsService } from './hotels.service';
@@ -21,10 +22,21 @@ import { UpdateHotelDto } from './dto/update-hotel-dto';
 export class HotelsController {
   constructor(private hotelsService: HotelsService) {}
 
-  @ApiOperation({ summary: 'Get all hotels' })
+  @ApiOperation({ summary: 'Get city list' })
   @ApiResponse({ status: 200, type: [Hotel] })
-  @Get('list')
-  async getSeaList(): Promise<{ id: number; name: string }[]> {
+  @Get('city-list')
+  async getCityList(@Query('sea') sea?: string): Promise<SelectItem[]> {
+    const res: Hotel[] = await this.hotelsService.getCityList(sea);
+    return res?.map((item: Hotel, index: number) => ({
+      id: index + 1,
+      name: item.city,
+    }));
+  }
+
+  @ApiOperation({ summary: 'Get sea list' })
+  @ApiResponse({ status: 200, type: [Hotel] })
+  @Get('sea-list')
+  async getSeaList(): Promise<SelectItem[]> {
     const res: Hotel[] = await this.hotelsService.getSeaList();
     return res?.map((item: Hotel, index: number) => ({
       id: index + 1,
@@ -43,8 +55,8 @@ export class HotelsController {
   @ApiOperation({ summary: 'Get all hotels' })
   @ApiResponse({ status: 200, type: [Hotel] })
   @Get()
-  async getAll(): Promise<Hotel[]> {
-    return this.hotelsService.getAllHotels();
+  async getAll(@Query() params: any): Promise<Hotel[]> {
+    return this.hotelsService.getAllHotels(params);
   }
 
   @ApiOperation({ summary: 'Get one hotel' })
