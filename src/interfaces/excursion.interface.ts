@@ -1,13 +1,12 @@
 export interface Excursion {
   name: string;
   descriptrion: string;
-  images: [object];
+  images: { name: string }[];
   duration: number;
   price: number;
   hotel: string;
-  horelLink: string;
   documentName: string;
   excursionStart: Date;
   city: string;
-  thePriceIncludes: [string];
+  thePriceIncludes: string[];
 }

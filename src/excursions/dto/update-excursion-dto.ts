@@ -34,5 +34,5 @@ export class UpdateExcursionDto {
     example: '["Экскурсии по программе"]',
     description: 'array of string the price includes',
   })
-  readonly thePriceIncludes: [string];
+  readonly thePriceIncludes: string[];
 }
