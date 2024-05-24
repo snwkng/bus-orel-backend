@@ -7,10 +7,10 @@ export class CreateExcursionDto {
   })
   readonly name: string;
   @ApiProperty({
-    example: 'описание экскурсии',
+    example: '["Описание первого дня", "Описание второго дня"]',
     description: 'excursion description',
   })
-  readonly descriptrion: string;
+  readonly descriptrion: string[];
   @ApiProperty({
     example: '[{name: sea.jpg}]',
     description: 'array of objects excursion images',
@@ -28,6 +28,8 @@ export class CreateExcursionDto {
   readonly excursionStart: Date;
   @ApiProperty({ example: 'Москва', description: 'excurtion city' })
   readonly city: string;
+  @ApiProperty({ example: 'Отель Эллиот', description: 'hotel name' })
+  readonly hotelName: string;
   @ApiProperty({
     example: '["Экскурсии по программе"]',
     description: 'array of string the price includes',

@@ -42,7 +42,7 @@ export class HotelsService {
     return seaList;
   }
 
-  async getCityList(sea?: string) {
+  async getCityList(sea?: string): Promise<Hotel[]> {
     let cityList: any;
     if (sea) {
       cityList = await this.hotelModel.find(
