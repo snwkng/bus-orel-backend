@@ -20,8 +20,6 @@ export class UpdateExcursionDto {
   readonly duration: number;
   @ApiProperty({ example: '10500', description: 'price excursion' })
   readonly price: number;
-  @ApiProperty({ example: 'название отеля', description: 'hotel name' })
-  readonly hotel: string;
   @ApiProperty({ example: 'ссылка на сайт отеля', description: 'hotel link' })
   readonly hotelLink: string;
   @ApiProperty({ example: 'document.docx', description: 'price document name' })

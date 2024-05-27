@@ -4,7 +4,6 @@ export interface Excursion {
   images: { name: string }[];
   duration: number;
   price: number;
-  hotel: string;
   documentName: string;
   excursionStart: Date;
   city: string;
