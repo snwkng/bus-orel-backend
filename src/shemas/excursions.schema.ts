@@ -13,8 +13,8 @@ export class Excursion {
     example: 'Excursion description',
     description: 'Excursion description',
   })
-  @Prop({ type: String, required: true })
-  description: string;
+  @Prop({ type: [String], required: true })
+  description: string[];
 
   @ApiProperty({
     example: '[{name: sea.jpg}]',
