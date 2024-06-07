@@ -17,7 +17,7 @@ export class HotelsService {
     return hotel;
   }
 
-  async getAllHotels(params: any = {}): Promise<Hotel[]> {
+  async getAllHotels(params?: any): Promise<Hotel[]> {
     const hotels = await this.hotelModel.find(params).exec();
     return hotels;
   }
@@ -37,21 +37,19 @@ export class HotelsService {
     return hotel;
   }
 
-  async getSeaList() {
-    const seaList: any = await this.hotelModel.find({}, { seaType: true });
+  async getSeaList(): Promise<string[]> {
+    const seaList: string[] = await this.hotelModel.distinct('seaType');
     return seaList;
   }
 
-  async getCityList(sea?: string): Promise<Hotel[]> {
-    let cityList: any;
-    if (sea) {
-      cityList = await this.hotelModel.find(
-        {},
-        { city: true },
-        { seaType: { $ne: sea } },
-      );
+  async getCityList(seaType?: string): Promise<string[]> {
+    let cityList: string[];
+    if (seaType) {
+      cityList = await this.hotelModel.distinct('city', {
+        seaType: seaType,
+      });
     } else {
-      cityList = await this.hotelModel.find();
+      cityList = await this.hotelModel.find().distinct('city');
     }
     return cityList;
   }

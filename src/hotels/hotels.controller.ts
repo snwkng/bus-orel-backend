@@ -25,11 +25,11 @@ export class HotelsController {
   @ApiOperation({ summary: 'Get city list' })
   @ApiResponse({ status: 200, type: [Hotel] })
   @Get('city-list')
-  async getCityList(@Query('sea') sea?: string): Promise<SelectItem[]> {
-    const res: Hotel[] = await this.hotelsService.getCityList(sea);
-    return res?.map((item: Hotel, index: number) => ({
+  async getCityList(@Query('seaType') seaType?: string): Promise<SelectItem[]> {
+    const res: string[] = await this.hotelsService.getCityList(seaType);
+    return res?.map((item: string, index: number) => ({
       id: index + 1,
-      name: item.city,
+      name: item,
     }));
   }
 
@@ -37,10 +37,10 @@ export class HotelsController {
   @ApiResponse({ status: 200, type: [Hotel] })
   @Get('sea-list')
   async getSeaList(): Promise<SelectItem[]> {
-    const res: Hotel[] = await this.hotelsService.getSeaList();
-    return res?.map((item: Hotel, index: number) => ({
+    const res: string[] = await this.hotelsService.getSeaList();
+    return res?.map((item: string, index: number) => ({
       id: index + 1,
-      name: item.seaType,
+      name: item,
     }));
   }
 

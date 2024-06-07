@@ -8,6 +8,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { CreateExcursionDto } from './dto/create-excursion-dto';
 import { ExcursionsService } from './excursions.service';
@@ -21,6 +22,17 @@ import { UpdateExcursionDto } from './dto/update-excursion-dto';
 export class ExcursionsController {
   constructor(private excursionsService: ExcursionsService) {}
 
+  @ApiOperation({ summary: 'Get city list' })
+  @ApiResponse({ status: 200, type: [Excursion] })
+  @Get('city-list')
+  async getCityList(): Promise<SelectItem[]> {
+    const res: string[] = await this.excursionsService.getCityList();
+    return res?.map((item: string, index: number) => ({
+      id: index + 1,
+      name: item,
+    }));
+  }
+
   @ApiOperation({ summary: 'Create excursion' })
   @ApiResponse({ status: 201, type: Excursion })
   @Post()
@@ -32,8 +44,8 @@ export class ExcursionsController {
   @ApiOperation({ summary: 'Get all excursions' })
   @ApiResponse({ status: 200, type: [Excursion] })
   @Get()
-  async getAll(): Promise<Excursion[]> {
-    return this.excursionsService.getAllExcursions();
+  async getAll(@Query() params: any): Promise<Excursion[]> {
+    return this.excursionsService.getAllExcursions(params);
   }
 
   @ApiOperation({ summary: 'Get one excursion' })

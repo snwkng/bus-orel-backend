@@ -17,8 +17,8 @@ export class ExcursionsService {
     return user;
   }
 
-  async getAllExcursions() {
-    const excursions = await this.excursionModel.find().exec();
+  async getAllExcursions(params?: any) {
+    const excursions = await this.excursionModel.find(params).exec();
     return excursions;
   }
 
@@ -38,5 +38,10 @@ export class ExcursionsService {
   async deleteExcursion(id: string) {
     const excursion = await this.excursionModel.deleteOne({ _id: id });
     return excursion;
+  }
+
+  async getCityList(): Promise<string[]> {
+    const cityList: string[] = await this.excursionModel.distinct('city');
+    return cityList;
   }
 }
