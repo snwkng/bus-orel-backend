@@ -1,0 +1,25 @@
+version: '3.6'
+services:
+  nestjs-app:
+    image: backend:v1
+    container_name: nestjs
+    env_file:
+      - .env
+    ports:
+      - 3001:3001
+    depends_on:
+      - app-db
+    networks:
+      - localnet
+    restart: unless-stopped
+  app-db:
+    image: mongo
+    container_name: app-mongo
+    ports:
+      - 27017:27017
+    networks:
+      - localnet
+networks:
+  localnet:
+    driver: bridge
+    name: localnet
