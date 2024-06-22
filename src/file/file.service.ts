@@ -38,7 +38,7 @@ export class FileService {
         const mimetype = file.mimetype;
         const currentFileType = file.mimetype.split('/')[1];
         const type = file.originalname.split('.')[1];
-
+        file.originalname = file.originalname.split('.')[0];
         if (mimetype.includes('image')) {
           if (currentFileType != 'svg+xml') {
             const buffer = await this.convertToWebP(file.buffer);
