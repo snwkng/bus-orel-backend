@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   HttpCode,
+  HttpException,
   HttpStatus,
   Param,
   Post,
@@ -38,7 +39,20 @@ export class ExcursionsController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async create(@Body() excursionDto: CreateExcursionDto) {
-    return this.excursionsService.excursionCreate(excursionDto);
+    try {
+      await this.excursionsService.excursionCreate(excursionDto);
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: HttpStatus.INTERNAL_SERVER_ERROR,
+          error: 'Something went wrong',
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        {
+          cause: error,
+        },
+      );
+    }
   }
 
   @ApiOperation({ summary: 'Get all excursions' })
