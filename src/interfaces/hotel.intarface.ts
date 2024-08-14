@@ -24,9 +24,10 @@ export interface Hotel {
   distanceToBeach: string;
   checkInConditions: string;
   address: string;
-  fare: number;
+  price: number;
   thePriceIncludes: string;
   city: string;
   region: string;
   seaType: string;
+  documentName: string;
 }

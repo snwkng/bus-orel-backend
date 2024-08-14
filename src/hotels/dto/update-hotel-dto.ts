@@ -70,9 +70,9 @@ export class UpdateHotelDto {
 
   @ApiProperty({
     example: '9100',
-    description: 'fare',
+    description: 'price',
   })
-  readonly fare: number;
+  readonly price: number;
 
   @ApiProperty({
     example: 'проезд, проживание и другое',

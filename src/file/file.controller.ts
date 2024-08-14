@@ -8,7 +8,6 @@ import {
   HttpCode,
   HttpStatus,
   StreamableFile,
-  Res,
 } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { FileService } from './file.service';

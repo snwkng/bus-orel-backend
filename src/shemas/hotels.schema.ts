@@ -75,10 +75,10 @@ export class Hotel {
 
   @ApiProperty({
     example: '9100',
-    description: 'fare',
+    description: 'price',
   })
   @Prop({ type: Number })
-  fare: number;
+  price: number;
 
   @ApiProperty({
     example: 'проезд, проживание и другое',
