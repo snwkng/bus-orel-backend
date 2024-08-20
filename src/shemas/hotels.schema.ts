@@ -30,7 +30,7 @@ export class Hotel {
     example: '[{name: "hotel.jpg"}]',
     description: 'hotel images',
   })
-  @Prop({ type: [raw({ name: String })], required: true })
+  @Prop({ type: [raw({ name: String })] })
   images: [
     {
       name: string;
@@ -70,7 +70,7 @@ export class Hotel {
     example: 'Краснодарский край, г. Анапа, ул. Горького, 68',
     description: 'address',
   })
-  @Prop({ type: String, required: true })
+  @Prop({ type: String })
   address: string;
 
   @ApiProperty({
@@ -84,8 +84,8 @@ export class Hotel {
     example: 'проезд, проживание и другое',
     description: 'the price includes',
   })
-  @Prop({ type: String })
-  thePriceIncludes: string;
+  @Prop({ type: [String] })
+  thePriceIncludes: [];
 
   @ApiProperty({
     example:
@@ -111,21 +111,21 @@ export class Hotel {
     example: 'Анапа',
     description: 'city',
   })
-  @Prop({ type: String, required: true })
+  @Prop({ type: String })
   city: string;
 
   @ApiProperty({
     example: 'Краснодарский край',
     description: 'region',
   })
-  @Prop({ type: String, required: true })
+  @Prop({ type: String })
   region: string;
 
   @ApiProperty({
     example: 'Азовское море',
     description: 'seaType',
   })
-  @Prop({ type: String, required: true })
+  @Prop({ type: String })
   seaType: string;
 }
 export const HotelSchema = SchemaFactory.createForClass(Hotel);

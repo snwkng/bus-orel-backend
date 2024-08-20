@@ -18,7 +18,10 @@ export class ExcursionsService {
   }
 
   async getAllExcursions(params?: any) {
-    const excursions = await this.excursionModel.find(params).exec();
+    const excursions = await this.excursionModel
+      .find(params)
+      .sort({ _id: -1 })
+      .exec();
     return excursions;
   }
 

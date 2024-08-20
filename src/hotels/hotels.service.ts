@@ -18,7 +18,7 @@ export class HotelsService {
   }
 
   async getAllHotels(params?: any): Promise<Hotel[]> {
-    const hotels = await this.hotelModel.find(params).exec();
+    const hotels = await this.hotelModel.find(params).sort({ _id: -1 }).exec();
     return hotels;
   }
 

@@ -78,7 +78,7 @@ export class UpdateHotelDto {
     example: 'проезд, проживание и другое',
     description: 'the price includes',
   })
-  readonly thePriceIncludes: string;
+  readonly thePriceIncludes: string[];
 
   @ApiProperty({
     example: 'Анапа',
