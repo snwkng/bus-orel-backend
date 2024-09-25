@@ -18,7 +18,10 @@ jobs:
       matrix:
         node-version: [20.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
+    env:
+      MONGODB_HOST: ${{secrets.MONGODB_HOST}} 
+      MONGODB_PORT: ${{secrets.MONGODB_PORT}} 
+      PORT: ${{secrets.PORT}} 
     steps:
     - uses: actions/checkout@v4
     - name: Use Node.js ${{ matrix.node-version }}
