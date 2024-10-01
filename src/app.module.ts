@@ -12,7 +12,7 @@ import { FileModule } from './file/file.module';
   imports: [
     ConfigModule.forRoot({ envFilePath: '.env' }),
     MongooseModule.forRoot(
-      `mongodb://${process.env.MONGODB_HOST}:${process.env.MONGODB_PORT}/nest-test`,
+      `mongodb://${process.env.MONGODB_HOST}:${process.env.MONGODB_PORT}/${process.env.MONGODB_DATABASE_NAME}`,
     ),
     UsersModule,
     ExcursionsModule,
