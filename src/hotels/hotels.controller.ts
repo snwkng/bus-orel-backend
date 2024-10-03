@@ -20,7 +20,7 @@ import { UpdateHotelDto } from './dto/update-hotel-dto';
 @ApiTags('Hotels')
 @Controller('hotels')
 export class HotelsController {
-  constructor(private hotelsService: HotelsService) {}
+  constructor(private readonly hotelsService: HotelsService) {}
 
   @ApiOperation({ summary: 'Get city list' })
   @ApiResponse({ status: 200, type: [Hotel] })
