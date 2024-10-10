@@ -32,6 +32,7 @@ jobs:
         touch .env
         echo "MONGODB_HOST=${{secrets.MONGODB_HOST}}" >> .env
         echo "MONGODB_PORT=${{secrets.MONGODB_PORT}}" >> .env
+        echo "MONGODB_DATABASE_NAME=${{secrets.MONGODB_DATABASE_NAME}}" >> .env
         echo "PORT=${{secrets.PORT}}" >> .env
         echo "JWT_KEY=${{secrets.JWT_KEY}}" >> .env
     - run: npm ci
