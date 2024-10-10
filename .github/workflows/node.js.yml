@@ -33,5 +33,6 @@ jobs:
         echo "MONGODB_HOST=${{secrets.MONGODB_HOST}}" >> .env
         echo "MONGODB_PORT=${{secrets.MONGODB_PORT}}" >> .env
         echo "PORT=${{secrets.PORT}}" >> .env
+        echo "PORT=${{secrets.JWT_KEY}}" >> .env
     - run: npm ci
     - run: npm run build --if-present

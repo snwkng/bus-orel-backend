@@ -7,6 +7,7 @@ import { HotelsModule } from './hotels/hotels.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { FileModule } from './file/file.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { FileModule } from './file/file.module';
     ExcursionsModule,
     HotelsModule,
     FileModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -5,21 +5,13 @@ import { Document } from 'mongoose';
 export type UsersDocument = User & Document;
 @Schema()
 export class User {
-  @ApiProperty({ example: 'test@test.test', description: 'email' })
+  @ApiProperty({ example: 'username', description: 'username' })
   @Prop({ type: String, required: true })
-  email: string;
+  username: string;
 
   @ApiProperty({ example: '123456', description: 'password' })
   @Prop({ type: String, required: true })
   password: string;
-
-  @ApiProperty({ example: 'false', description: 'is banned' })
-  @Prop({ type: Boolean, default: false })
-  banned: boolean;
-
-  @ApiProperty({ example: 'for reason', description: 'reason banned' })
-  @Prop({ type: String })
-  banReason: string;
 }
 
 export const UsersDocument = SchemaFactory.createForClass(User);
