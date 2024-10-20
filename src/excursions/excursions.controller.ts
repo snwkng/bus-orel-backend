@@ -21,7 +21,7 @@ import { UpdateExcursionDto } from './dto/update-excursion-dto';
 @ApiTags('Excursions')
 @Controller('excursions')
 export class ExcursionsController {
-  constructor(private excursionsService: ExcursionsService) {}
+  constructor(private readonly excursionsService: ExcursionsService) {}
 
   @ApiOperation({ summary: 'Get city list' })
   @ApiResponse({ status: 200, type: [Excursion] })

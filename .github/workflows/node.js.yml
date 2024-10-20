@@ -35,5 +35,7 @@ jobs:
         echo "MONGODB_DATABASE_NAME=${{secrets.MONGODB_DATABASE_NAME}}" >> .env
         echo "PORT=${{secrets.PORT}}" >> .env
         echo "JWT_KEY=${{secrets.JWT_KEY}}" >> .env
+        echo "SITE_HOST=${{secrets.SITE_HOST}}" >> .env
     - run: npm ci
     - run: npm run build --if-present
+    - run: pm2 restart backend
