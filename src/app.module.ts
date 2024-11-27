@@ -10,10 +10,11 @@ import { FileModule } from './file/file.module';
 import { AuthModule } from './auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth/auth.guard';
+import { UploadModule } from './upload/upload.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ envFilePath: '.env' }),
+    ConfigModule.forRoot({ envFilePath: '.env', isGlobal: true }),
     MongooseModule.forRoot(
       `mongodb://${process.env.MONGODB_HOST}:${process.env.MONGODB_PORT}/${process.env.MONGODB_DATABASE_NAME}`,
     ),
@@ -22,6 +23,7 @@ import { AuthGuard } from './auth/auth.guard';
     HotelsModule,
     FileModule,
     AuthModule,
+    UploadModule,
   ],
   controllers: [AppController],
   providers: [
