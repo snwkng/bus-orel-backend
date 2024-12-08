@@ -11,7 +11,7 @@ async function bootstrap() {
     origin: '*',
   });
 
-  app.useStaticAssets(join(__dirname, '..', 'public'), {
+  app.useStaticAssets(join(__dirname, 'public'), {
     index: false,
     prefix: '/public/',
   });
