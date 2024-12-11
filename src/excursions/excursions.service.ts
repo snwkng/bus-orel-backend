@@ -19,7 +19,7 @@ export class ExcursionsService {
 
   async getAllExcursions(params?: any) {
     const excursions = await this.excursionModel
-      .find({...params, excursionStart: {$gt: new Date()}})
+      .find({excursionStart: {$gt: new Date()}, ...params})
       .sort({ _id: -1 })
       .exec();
     return excursions;
