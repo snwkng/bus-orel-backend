@@ -17,15 +17,11 @@ export class Excursion {
   description: string[];
 
   @ApiProperty({
-    example: '[{name: sea.jpg}]',
-    description: 'array of objects',
+    example: '[{imageName.webp}]',
+    description: 'array string',
   })
-  @Prop({ type: [raw({ name: String })], required: true })
-  images: [
-    {
-      name: string;
-    },
-  ];
+  @Prop({ type: [raw(String)], required: true })
+  images: [string];
 
   @ApiProperty({ example: '3', description: 'excursion duration' })
   @Prop({ type: Number, required: true, default: false })

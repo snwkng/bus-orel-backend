@@ -13,13 +13,13 @@ export class ExcursionsService {
   ) {}
 
   async excursionCreate(dto: CreateExcursionDto) {
-    const user = await this.excursionModel.create(dto);
-    return user;
+    const excursion = await this.excursionModel.create(dto);
+    return excursion;
   }
 
   async getAllExcursions(params?: any) {
     const excursions = await this.excursionModel
-      .find(params)
+      .find({...params, excursionStart: {$gt: new Date()}})
       .sort({ _id: -1 })
       .exec();
     return excursions;

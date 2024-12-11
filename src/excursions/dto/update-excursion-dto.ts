@@ -12,8 +12,8 @@ export class UpdateExcursionDto {
   })
   readonly descriptrion: string;
   @ApiProperty({
-    example: '[{name: sea.jpg}]',
-    description: 'array of objects excursion images',
+    example: '[imageName.webp]',
+    description: 'array of string excursion images',
   })
   readonly images: [{ name: string }];
   @ApiProperty({ example: '5', description: 'duration excursion' })

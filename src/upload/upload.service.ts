@@ -49,7 +49,7 @@ export class UploadService {
       );
       return fileName;
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   }
 
