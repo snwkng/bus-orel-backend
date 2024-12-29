@@ -8,6 +8,8 @@ import {
   HttpStatus,
   StreamableFile,
   Param,
+  Delete,
+  Query,
 } from '@nestjs/common';
 import { UploadService } from './upload.service';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -15,6 +17,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 @Controller('s3')
 export class UploadController {
   constructor(private readonly uploadService: UploadService) {}
+
   @Post('/upload')
   @UseInterceptors(FileInterceptor('file'))
   async uploadFile(@UploadedFile() file: Express.Multer.File): Promise<string> {
@@ -40,5 +43,13 @@ export class UploadController {
     return new StreamableFile(response, {
       type: fileType,
     });
+  }
+
+  @Delete('/delete')
+  @HttpCode(HttpStatus.OK)
+  @UseInterceptors(FileInterceptor('file'))
+  async deleteFile(@Query('uuid') uuid: string) {
+    const result = await this.uploadService.delete(uuid);
+    return result;
   }
 }

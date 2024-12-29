@@ -3,6 +3,7 @@ import {
   S3Client,
   GetObjectCommand,
   PutObjectCommand,
+  DeleteObjectCommand,
 } from '@aws-sdk/client-s3';
 import { ConfigService } from '@nestjs/config';
 import { ObjectId } from 'bson';
@@ -61,6 +62,21 @@ export class UploadService {
       }),
     );
     return item.Body;
+  }
+
+  async delete(fileName: string) {
+    try {
+      await this.s3Client.send(
+        new DeleteObjectCommand({
+          Bucket: 'bucket-bus-orel',
+          Key: fileName,
+        })
+      )
+      return true
+    } catch (error) {
+      console.error(error);
+      throw(error)
+    }
   }
 
   async convertToWebP(buffer: Buffer): Promise<Buffer> {
