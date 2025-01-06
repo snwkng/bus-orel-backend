@@ -27,15 +27,11 @@ export class Hotel {
   locationDescription: string;
 
   @ApiProperty({
-    example: '[{name: "hotel.jpg"}]',
+    example: '[123.webp, 456.webp]',
     description: 'hotel images',
   })
-  @Prop({ type: [raw({ name: String })] })
-  images: [
-    {
-      name: string;
-    },
-  ];
+  @Prop({ type: [raw(String)] })
+  images: [string];
 
   @ApiProperty({
     example: 'только завтраки',
@@ -127,5 +123,12 @@ export class Hotel {
   })
   @Prop({ type: String })
   seaType: string;
+
+  @ApiProperty({
+    example: 'tour.docx',
+    description: 'document for tour',
+  })
+  @Prop({ type: String })
+  documentName: string;
 }
 export const HotelSchema = SchemaFactory.createForClass(Hotel);

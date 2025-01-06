@@ -97,4 +97,10 @@ export class UpdateHotelDto {
     description: 'seaType',
   })
   readonly seaType: string;
+
+  @ApiProperty({
+    example: 'document.docx',
+    description: 'price document name'
+  })
+  readonly documentName: string;
 }
