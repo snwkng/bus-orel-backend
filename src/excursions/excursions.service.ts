@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Excursion, ExcursionsDocument } from 'src/shemas/excursions.schema';
+import { Excursion, ExcursionDocument } from 'src/shemas/excursions.schema';
 import { CreateExcursionDto } from './dto/create-excursion-dto';
 import { UpdateExcursionDto } from './dto/update-excursion-dto';
 
 @Injectable()
-export class ExcursionsService {
+export class ExcursionService {
   constructor(
     @InjectModel(Excursion.name)
-    private readonly excursionModel: Model<ExcursionsDocument>,
+    private readonly excursionModel: Model<ExcursionDocument>,
   ) {}
 
   async excursionCreate(dto: CreateExcursionDto) {
@@ -20,13 +20,14 @@ export class ExcursionsService {
   async getAllExcursions(params?: any) {
     const excursions = await this.excursionModel
       .find({excursionStart: {$gt: new Date()}, ...params})
+      .populate('cities')
       .sort({ _id: -1 })
       .exec();
     return excursions;
   }
 
   async getExcursion(id: string) {
-    const excursion = await this.excursionModel.findById(id).exec();
+    const excursion = await this.excursionModel.findById(id).populate('cities').exec();
     return excursion;
   }
 
