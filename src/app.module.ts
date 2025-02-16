@@ -11,6 +11,7 @@ import { AuthModule } from './auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth/auth.guard';
 import { UploadModule } from './upload/upload.module';
+import { CitiesModule } from './cities/cities.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { UploadModule } from './upload/upload.module';
     FileModule,
     AuthModule,
     UploadModule,
+    CitiesModule,
   ],
   controllers: [AppController],
   providers: [
