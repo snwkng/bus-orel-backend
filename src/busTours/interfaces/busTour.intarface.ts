@@ -1,5 +1,4 @@
-// import Document from 'mongoose';
-export interface Hotel {
+export interface BusTour {
   name: string;
   type: string;
   locationDescription: string;

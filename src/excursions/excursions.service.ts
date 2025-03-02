@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Excursion, ExcursionDocument } from 'src/shemas/excursions.schema';
+import { Excursion, ExcursionDocument } from './schemas/excursions.schema';
 import { CreateExcursionDto } from './dto/create-excursion-dto';
 import { UpdateExcursionDto } from './dto/update-excursion-dto';
 

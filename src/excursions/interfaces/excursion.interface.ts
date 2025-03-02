@@ -1,4 +1,7 @@
-export interface Excursion {
+import { Types } from 'mongoose';
+
+export interface IExcursion {
+  _id?: Types.ObjectId
   name: string;
   descriptrion: string[];
   images: { name: string }[];
@@ -6,7 +9,7 @@ export interface Excursion {
   price: number;
   documentName: string;
   excursionStart: Date;
-  city: string;
+  cities: Types.ObjectId[];
   hotelName: string;
   thePriceIncludes: string[];
 }

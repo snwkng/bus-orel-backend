@@ -3,15 +3,15 @@ import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UsersModule } from './users/users.module';
 import { ExcursionsModule } from './excursions/excursions.module';
-import { HotelsModule } from './hotels/hotels.module';
+import { BusToursModule } from './busTours/busTours.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { FileModule } from './file/file.module';
 import { AuthModule } from './auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth/auth.guard';
 import { UploadModule } from './upload/upload.module';
-import { CitiesModule } from './cities/cities.module';
+import { ExcursionCitiesModule } from './excursionCities/excursionCities.module';
+import { TourCitiesModule } from './tourCities/tourCities.module';
 
 @Module({
   imports: [
@@ -21,11 +21,11 @@ import { CitiesModule } from './cities/cities.module';
     ),
     UsersModule,
     ExcursionsModule,
-    HotelsModule,
-    FileModule,
+    ExcursionCitiesModule,
+    BusToursModule,
+    TourCitiesModule,
     AuthModule,
     UploadModule,
-    CitiesModule,
   ],
   controllers: [AppController],
   providers: [

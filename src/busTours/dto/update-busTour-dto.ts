@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-export class CreateHotelDto {
+export class UpdateBusTourDto {
   @ApiProperty({
     example: 'Аврора',
     description: 'Hotel name',

@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class UpdateCityDto {
+export class UpdateTourCityDto {
   @ApiProperty({
     example: 'Орел',
     description: 'city name',
