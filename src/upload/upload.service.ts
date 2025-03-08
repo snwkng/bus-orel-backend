@@ -14,13 +14,14 @@ export class UploadService {
   private readonly s3Client = new S3Client({
     region: this.configService.getOrThrow('AWS_S3_REGION'),
     endpoint: this.configService.getOrThrow('AWS_S3_ENDPOINT'),
+    forcePathStyle: true, 
     credentials: {
       accessKeyId: this.configService.get('AWS_ACCESS_KEY'),
       secretAccessKey: this.configService.get('AWS_SECRET_KEY'),
     },
   });
 
-  constructor(private readonly configService: ConfigService) {}
+  constructor(private readonly configService: ConfigService) { }
 
   async upload(file: Express.Multer.File) {
     try {
@@ -55,13 +56,17 @@ export class UploadService {
   }
 
   async download(fileName: string) {
-    const item: any = await this.s3Client.send(
-      new GetObjectCommand({
-        Bucket: 'bucket-bus-orel',
-        Key: fileName,
-      }),
-    );
-    return item.Body;
+    try {
+      const item: any = await this.s3Client.send(
+        new GetObjectCommand({
+          Bucket: 'bucket-bus-orel',
+          Key: fileName,
+        }),
+      );
+      return item.Body;
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   async delete(fileName: string) {
@@ -71,11 +76,11 @@ export class UploadService {
           Bucket: 'bucket-bus-orel',
           Key: fileName,
         })
-      )
-      return true
+      );
+      return true;
     } catch (error) {
       console.error(error);
-      throw(error)
+      throw (error);
     }
   }
 
