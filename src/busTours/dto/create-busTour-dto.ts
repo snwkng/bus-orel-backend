@@ -21,14 +21,14 @@ export class CreateBusTourDto {
 
   @ApiProperty({
     example:
-      '[type: "стандарт", roomName: "1 местный стандарт", numberOfSeats: "2", inRoom: "две односпальные кровати, шкаф, стол, стулья" [{startDate: "01.01", endDate: "02.02", price: "20000"}]]',
+      '[type: "стандарт", roomName: "1 местный стандарт", capacity: "2", inRoom: "две односпальные кровати, шкаф, стол, стулья" [{startDate: "01.01", endDate: "02.02", price: "20000"}]]',
     description: 'tours array',
   })
   readonly tours: [
     {
       type: string;
       roomName: string;
-      numberOfSeats: number;
+      capacity: number;
       inRoom: string;
       datesAndPrices: {
         startDate: Date;

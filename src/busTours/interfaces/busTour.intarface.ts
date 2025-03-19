@@ -9,7 +9,7 @@ export interface BusTour {
     {
       type: string;
       roomName: string;
-      numberOfSeats: number;
+      capacity: number;
       inRoom: string;
       datesAndPrices: {
         startDate: Date;
