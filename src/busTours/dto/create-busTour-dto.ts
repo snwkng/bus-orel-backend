@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-export class UpdateHotelDto {
+import { Types } from 'mongoose';
+export class CreateBusTourDto {
   @ApiProperty({
     example: 'Аврора',
     description: 'Hotel name',
@@ -81,10 +82,10 @@ export class UpdateHotelDto {
   readonly thePriceIncludes: string[];
 
   @ApiProperty({
-    example: 'Анапа',
+    example: '67c39a962504ac4747e5feae',
     description: 'city',
   })
-  readonly city: string;
+  readonly city: Types.ObjectId;
 
   @ApiProperty({
     example: 'Краснодарский край',

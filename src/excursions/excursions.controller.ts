@@ -14,7 +14,7 @@ import {
 import { CreateExcursionDto } from './dto/create-excursion-dto';
 import { ExcursionService } from './excursions.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Excursion } from 'src/shemas/excursions.schema';
+import { Excursion } from './schemas/excursions.schema';
 import { DeleteResult } from 'mongodb';
 import { UpdateExcursionDto } from './dto/update-excursion-dto';
 
@@ -58,6 +58,7 @@ export class ExcursionsController {
   @ApiOperation({ summary: 'Get all excursions' })
   @ApiResponse({ status: 200, type: [Excursion] })
   @Get()
+  @HttpCode(HttpStatus.OK)
   async getAll(@Query() params: any): Promise<Excursion[]> {
     return this.excursionService.getAllExcursions(params);
   }
