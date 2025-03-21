@@ -28,7 +28,11 @@ export class BusToursService {
   }
 
   async updateBusTour(id, dto: UpdateBusTourDto) {
-    const hotel = await this.hotelModel.findByIdAndUpdate({ _id: id }, dto);
+    const hotel = await this.hotelModel.findByIdAndUpdate(
+      { _id: id },
+      dto,
+      { new: true, returnDocument: "after" }
+    );
     return hotel;
   }
 

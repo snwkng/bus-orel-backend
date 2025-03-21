@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { ObjectId } from 'mongoose';
 
 export class UpdateExcursionDto {
   @ApiProperty({
@@ -15,7 +16,7 @@ export class UpdateExcursionDto {
     example: '[imageName.webp]',
     description: 'array of string excursion images',
   })
-  readonly images: [{ name: string }];
+  readonly images: [{ name: string; }];
   @ApiProperty({ example: '5', description: 'duration excursion' })
   readonly duration: number;
   @ApiProperty({ example: '10500', description: 'price excursion' })
@@ -26,8 +27,8 @@ export class UpdateExcursionDto {
   readonly documentName: string;
   @ApiProperty({ example: '2022-07-01', description: 'excursion start date' })
   readonly excursionStart: Date;
-  @ApiProperty({ example: 'Москва', description: 'excurtion city' })
-  readonly city: string;
+  @ApiProperty({ example: '[id1, id2]', description: 'excurtion cities' })
+  readonly cities: ObjectId[];
   @ApiProperty({ example: 'Отель Эллиот', description: 'hotel name' })
   readonly hotelName: string;
   @ApiProperty({

@@ -34,6 +34,7 @@ export class ExcursionCitiesService {
     const city = await this.cityModel.findByIdAndUpdate(
       { _id: id },
       dto,
+      { new: true, returnDocument: "after" }
     );
     return city;
   }

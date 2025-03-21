@@ -105,7 +105,7 @@ export class BusTour {
 
   @ApiProperty({ example: '{ _id: 60d5e4f8a8c7b94b48d4b4e5, name: "Геленджик"}', description: 'bus tour city object' })
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'TourCity', required: true })
-  city: MongooseSchema.Types.ObjectId;
+  city: MongooseSchema.Types.ObjectId | null;
 
   @ApiProperty({
     example: 'Краснодарский край',

@@ -35,6 +35,7 @@ export class ExcursionService {
     const excursion = await this.excursionModel.findByIdAndUpdate(
       { _id: id },
       dto,
+      { new: true, returnDocument: "after" }
     );
     return excursion;
   }

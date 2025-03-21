@@ -33,7 +33,7 @@ export class Excursion {
 
   @ApiProperty({ example: 'hotel name', description: 'hotel name' })
   @Prop({ type: String })
-  hotel: string;
+  hotelName: string;
 
   @ApiProperty({ example: 'hotel link', description: 'hotel link' })
   @Prop({ type: String })

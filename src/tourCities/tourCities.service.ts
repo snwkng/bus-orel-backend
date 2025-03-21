@@ -18,7 +18,6 @@ export class TourCitiesService {
   }
 
   async getCities() {
-    console.log('zxczxcxzcxz')
     const cities = await this.cityModel
       .find()
       .sort({ _id: -1 })
@@ -35,6 +34,7 @@ export class TourCitiesService {
     const city = await this.cityModel.findByIdAndUpdate(
       { _id: id },
       dto,
+      { new: true, returnDocument: "after" }
     );
     return city;
   }
