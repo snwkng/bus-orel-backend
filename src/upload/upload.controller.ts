@@ -58,7 +58,6 @@ export class UploadController {
   @UseInterceptors(FileInterceptor('file'))
   async getList() {
     const result = await this.uploadService.listObjects();
-    console.log(result)
     return result;
   }
 }
