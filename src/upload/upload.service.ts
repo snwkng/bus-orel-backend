@@ -4,6 +4,7 @@ import {
   GetObjectCommand,
   PutObjectCommand,
   DeleteObjectCommand,
+  ListObjectsV2Command
 } from '@aws-sdk/client-s3';
 import { ConfigService } from '@nestjs/config';
 import { ObjectId } from 'bson';
@@ -44,7 +45,7 @@ export class UploadService {
           : file.buffer;
       await this.s3Client.send(
         new PutObjectCommand({
-          Bucket: 'bucket-bus-orel',
+          Bucket: this.configService.get('AWS_S3_BUCKET'),
           Key: fileName,
           Body: buffer,
         }),
@@ -59,7 +60,7 @@ export class UploadService {
     try {
       const item: any = await this.s3Client.send(
         new GetObjectCommand({
-          Bucket: 'bucket-bus-orel',
+          Bucket: this.configService.get('AWS_S3_BUCKET'),
           Key: fileName,
         }),
       );
@@ -73,11 +74,25 @@ export class UploadService {
     try {
       await this.s3Client.send(
         new DeleteObjectCommand({
-          Bucket: 'bucket-bus-orel',
+          Bucket: this.configService.get('AWS_S3_BUCKET'),
           Key: fileName,
         })
       );
       return true;
+    } catch (error) {
+      console.error(error);
+      throw (error);
+    }
+  }
+
+  async listObjects() {
+    try {
+      const list = await this.s3Client.send(
+        new ListObjectsV2Command({
+          Bucket: this.configService.get('AWS_S3_BUCKET')
+        })
+      );
+      return list;
     } catch (error) {
       console.error(error);
       throw (error);

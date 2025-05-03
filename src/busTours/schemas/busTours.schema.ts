@@ -16,14 +16,14 @@ export class BusTour {
     example: 'гостиница',
     description: 'Hotel type',
   })
-  @Prop({ type: String, required: true })
+  @Prop({ type: String })
   type: string;
 
   @ApiProperty({
     example: 'гостиница располагается с живопистном месте...',
     description: 'location description',
   })
-  @Prop({ type: String, required: true })
+  @Prop({ type: String })
   locationDescription: string;
 
   @ApiProperty({
@@ -104,7 +104,7 @@ export class BusTour {
   ];
 
   @ApiProperty({ example: '{ _id: 60d5e4f8a8c7b94b48d4b4e5, name: "Геленджик"}', description: 'bus tour city object' })
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'TourCity', required: true })
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'TourCity' })
   city: MongooseSchema.Types.ObjectId | null;
 
   @ApiProperty({

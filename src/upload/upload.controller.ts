@@ -52,4 +52,13 @@ export class UploadController {
     const result = await this.uploadService.delete(uuid);
     return result;
   }
+
+  @Get('/list')
+  @HttpCode(HttpStatus.OK)
+  @UseInterceptors(FileInterceptor('file'))
+  async getList() {
+    const result = await this.uploadService.listObjects();
+    console.log(result)
+    return result;
+  }
 }
