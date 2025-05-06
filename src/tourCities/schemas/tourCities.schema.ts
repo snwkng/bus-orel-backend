@@ -7,8 +7,7 @@ export type TourCitiesDocument = TourCity & Document;
 @Schema()
 export class TourCity {
   @ApiProperty({ example: 'Орел', description: 'city name' })
-  @Prop({ type: String, required: true })
+  @Prop({ type: String, required: true, index: true })
   name: string;
 }
-
-export const TourCitiesDocument = SchemaFactory.createForClass(TourCity);
+export const TourCitiesSchema = SchemaFactory.createForClass(TourCity);

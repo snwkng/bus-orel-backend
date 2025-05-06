@@ -23,17 +23,6 @@ import { UpdateExcursionDto } from './dto/update-excursion-dto';
 export class ExcursionsController {
   constructor(private readonly excursionService: ExcursionService) {}
 
-  @ApiOperation({ summary: 'Get city list' })
-  @ApiResponse({ status: 200, type: [Excursion] })
-  @Get('city-list')
-  async getCityList(): Promise<SelectItem[]> {
-    const res: string[] = await this.excursionService.getCityList();
-    return res?.map((item: string, index: number) => ({
-      id: index + 1,
-      name: item,
-    }));
-  }
-
   @ApiOperation({ summary: 'Create excursion' })
   @ApiResponse({ status: 201, type: Excursion })
   @Post()

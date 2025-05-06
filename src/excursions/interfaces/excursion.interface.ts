@@ -13,3 +13,7 @@ export interface IExcursion {
   hotelName: string;
   thePriceIncludes: string[];
 }
+
+export interface IRequestParams {
+  city: Types.ObjectId,
+}

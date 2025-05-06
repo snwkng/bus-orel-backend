@@ -11,4 +11,4 @@ export class ExcursionCity {
   name: string;
 }
 
-export const ExcursionCitiesDocument = SchemaFactory.createForClass(ExcursionCity);
+export const ExcursionCitiesSchema = SchemaFactory.createForClass(ExcursionCity);
