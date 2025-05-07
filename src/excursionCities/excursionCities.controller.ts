@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { CreateExcursionCityDto } from './dto/create-excursionCity-dto';
 import { UpdateExcursionCityDto } from './dto/update-ExcursionCity-dto';
-import { ExcursionCitiesService } from './ExcursionCities.service';
+import { ExcursionCitiesService } from './excursionCities.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { DeleteResult } from 'mongodb';
 import { ExcursionCity } from './schemas/excursionCities.schema';
