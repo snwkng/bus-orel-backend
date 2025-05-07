@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { ExcursionCitiesController } from './ExcursionCities.controller';
-import { ExcursionCitiesService } from './ExcursionCities.service';
-import { ExcursionCity, ExcursionCitiesSchema } from './schemas/ExcursionCities.schema';
+import { ExcursionCitiesController } from './excursionCities.controller';
+import { ExcursionCitiesService } from './excursionCities.service';
+import { ExcursionCity, ExcursionCitiesSchema } from './schemas/excursionCities.schema';
 
 @Module({
   imports: [
