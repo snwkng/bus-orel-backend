@@ -1,5 +1,3 @@
-import { Types } from 'mongoose';
-
 export interface BusTour {
   name: string;
   type: string;
@@ -36,5 +34,5 @@ export interface BusTour {
 
 export interface IRequestParams {
   seaType: string
-  city: Types.ObjectId
+  city: string
 }

@@ -15,5 +15,5 @@ export interface IExcursion {
 }
 
 export interface IRequestParams {
-  city: Types.ObjectId,
+  city: string;
 }
