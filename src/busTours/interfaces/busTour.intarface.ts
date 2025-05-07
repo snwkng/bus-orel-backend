@@ -1,5 +1,6 @@
-// import Document from 'mongoose';
-export interface Hotel {
+import { Types } from 'mongoose';
+
+export interface BusTour {
   name: string;
   type: string;
   locationDescription: string;
@@ -10,7 +11,7 @@ export interface Hotel {
     {
       type: string;
       roomName: string;
-      numberOfSeats: number;
+      capacity: number;
       inRoom: string;
       datesAndPrices: {
         startDate: Date;
@@ -30,4 +31,10 @@ export interface Hotel {
   region: string;
   seaType: string;
   documentName: string;
+}
+
+
+export interface IRequestParams {
+  seaType: string
+  city: Types.ObjectId
 }

@@ -2,13 +2,12 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import { Document } from 'mongoose';
 
-export type CitiesDocument = City & Document;
+export type TourCitiesDocument = TourCity & Document;
 
 @Schema()
-export class City {
+export class TourCity {
   @ApiProperty({ example: 'Орел', description: 'city name' })
-  @Prop({ type: String, required: true })
+  @Prop({ type: String, required: true, index: true })
   name: string;
 }
-
-export const CitiesDocument = SchemaFactory.createForClass(City);
+export const TourCitiesSchema = SchemaFactory.createForClass(TourCity);

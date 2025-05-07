@@ -1,18 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { City, CitiesDocument } from 'src/shemas/cities.schema';
-import { CreateCityDto } from './dto/create-city-dto';
-import { UpdateCityDto } from './dto/update-city-dto';
+import { TourCity, TourCitiesDocument } from './schemas/tourCities.schema';
+import { CreateTourCityDto } from './dto/create-TourCity-dto';
+import { UpdateTourCityDto } from './dto/update-TourCity-dto';
 
 @Injectable()
-export class CitiesService {
+export class TourCitiesService {
   constructor(
-    @InjectModel(City.name)
-    private readonly cityModel: Model<CitiesDocument>,
+    @InjectModel(TourCity.name)
+    private readonly cityModel: Model<TourCitiesDocument>,
   ) {}
 
-  async createCity(dto: CreateCityDto) {
+  async createCity(dto: CreateTourCityDto) {
     const city = await this.cityModel.create(dto);
     return city;
   }
@@ -30,10 +30,11 @@ export class CitiesService {
     return city;
   }
 
-  async updateCity(id: string, dto: UpdateCityDto) {
+  async updateCity(id: string, dto: UpdateTourCityDto) {
     const city = await this.cityModel.findByIdAndUpdate(
       { _id: id },
       dto,
+      { new: true, returnDocument: "after" }
     );
     return city;
   }

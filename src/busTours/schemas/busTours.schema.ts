@@ -1,10 +1,10 @@
 import { Prop, Schema, SchemaFactory, raw } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
-import { HydratedDocument } from 'mongoose';
+import { Document, Schema as MongooseSchema } from 'mongoose';
 
-export type HotelsDocument = HydratedDocument<Hotel>;
+export type BusToursDocument = BusTour & Document;
 @Schema()
-export class Hotel {
+export class BusTour {
   @ApiProperty({
     example: 'Аврора',
     description: 'Hotel name',
@@ -16,14 +16,14 @@ export class Hotel {
     example: 'гостиница',
     description: 'Hotel type',
   })
-  @Prop({ type: String, required: true })
+  @Prop({ type: String })
   type: string;
 
   @ApiProperty({
     example: 'гостиница располагается с живопистном месте...',
     description: 'location description',
   })
-  @Prop({ type: String, required: true })
+  @Prop({ type: String })
   locationDescription: string;
 
   @ApiProperty({
@@ -85,7 +85,7 @@ export class Hotel {
 
   @ApiProperty({
     example:
-      '[type: "стандарт", roomName: "1 местный стандарт", numberOfSeats: "2", inRoom: "две односпальные кровати, шкаф, стол, стулья" [{startDate: "01.01", endDate: "02.02", price: "20000"}]]',
+      '[type: "стандарт", roomName: "1 местный стандарт", capacity: "2", inRoom: "две односпальные кровати, шкаф, стол, стулья" [{startDate: "01.01", endDate: "02.02", price: "20000"}]]',
     description: 'the price includes',
   })
   @Prop({ type: [Object] })
@@ -93,7 +93,7 @@ export class Hotel {
     {
       type: string;
       roomName: string;
-      numberOfSeats: number;
+      capacity: number;
       inRoom: string;
       datesAndPrices: {
         startDate: Date;
@@ -103,12 +103,9 @@ export class Hotel {
     },
   ];
 
-  @ApiProperty({
-    example: 'Анапа',
-    description: 'city',
-  })
-  @Prop({ type: String })
-  city: string;
+  @ApiProperty({ example: '{ _id: 60d5e4f8a8c7b94b48d4b4e5, name: "Геленджик"}', description: 'bus tour city object' })
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'TourCity' })
+  city: MongooseSchema.Types.ObjectId | null;
 
   @ApiProperty({
     example: 'Краснодарский край',
@@ -131,4 +128,4 @@ export class Hotel {
   @Prop({ type: String })
   documentName: string;
 }
-export const HotelSchema = SchemaFactory.createForClass(Hotel);
+export const BusTourSchema = SchemaFactory.createForClass(BusTour);

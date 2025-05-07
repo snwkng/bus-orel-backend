@@ -33,7 +33,7 @@ export class Excursion {
 
   @ApiProperty({ example: 'hotel name', description: 'hotel name' })
   @Prop({ type: String })
-  hotel: string;
+  hotelName: string;
 
   @ApiProperty({ example: 'hotel link', description: 'hotel link' })
   @Prop({ type: String })
@@ -50,8 +50,8 @@ export class Excursion {
   @Prop({ type: Date, required: true })
   excursionStart: Date;
 
-  @ApiProperty({ example: '["60d5e4f8a8c7b94b48d4b4e5"]', description: 'cities array of ObjectIds' })
-  @Prop({ type: [{ type: MongooseSchema.Types.ObjectId, ref: 'City' }], required: true })
+  @ApiProperty({ example: '[{_id: "60d5e4f8a8c7b94b48d4b4e5", name: "Орёл"}]', description: 'cities array of objects' })
+  @Prop({ type: [{ type: MongooseSchema.Types.ObjectId, ref: 'ExcursionCity' }], required: true })
   cities: MongooseSchema.Types.ObjectId[];
 
   @ApiProperty({

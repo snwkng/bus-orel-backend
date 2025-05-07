@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-export class CreateHotelDto {
+import { Types } from 'mongoose';
+export class CreateBusTourDto {
   @ApiProperty({
     example: 'Аврора',
     description: 'Hotel name',
@@ -20,14 +21,14 @@ export class CreateHotelDto {
 
   @ApiProperty({
     example:
-      '[type: "стандарт", roomName: "1 местный стандарт", numberOfSeats: "2", inRoom: "две односпальные кровати, шкаф, стол, стулья" [{startDate: "01.01", endDate: "02.02", price: "20000"}]]',
+      '[type: "стандарт", roomName: "1 местный стандарт", capacity: "2", inRoom: "две односпальные кровати, шкаф, стол, стулья" [{startDate: "01.01", endDate: "02.02", price: "20000"}]]',
     description: 'tours array',
   })
   readonly tours: [
     {
       type: string;
       roomName: string;
-      numberOfSeats: number;
+      capacity: number;
       inRoom: string;
       datesAndPrices: {
         startDate: Date;
@@ -81,10 +82,10 @@ export class CreateHotelDto {
   readonly thePriceIncludes: string[];
 
   @ApiProperty({
-    example: 'Анапа',
+    example: '67c39a962504ac4747e5feae',
     description: 'city',
   })
-  readonly city: string;
+  readonly city: Types.ObjectId;
 
   @ApiProperty({
     example: 'Краснодарский край',
