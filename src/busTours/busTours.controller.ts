@@ -34,6 +34,18 @@ export class BusToursController {
     }));
   }
 
+  @ApiOperation({ summary: 'Get tour cities list' })
+  @ApiResponse({ status: 200, type: [BusTour] })
+  @Get('cities-list')
+  @HttpCode(HttpStatus.OK)
+  async getCitiesList(): Promise<SelectItem[]> {
+    const res: string[] = await this.busToursService.getCitiesList();
+    return res?.map((item: string, index: number) => ({
+      id: index + 1,
+      name: item,
+    }));
+  }
+
   @ApiOperation({ summary: 'Create bus tour' })
   @ApiResponse({ status: 201, type: BusTour })
   @Post()

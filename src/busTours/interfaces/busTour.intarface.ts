@@ -1,4 +1,4 @@
-export interface BusTour {
+export interface IBusTour {
   name: string;
   type: string;
   locationDescription: string;

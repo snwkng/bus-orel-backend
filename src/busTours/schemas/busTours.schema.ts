@@ -1,9 +1,11 @@
 import { Prop, Schema, SchemaFactory, raw } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
-import { Document, Schema as MongooseSchema } from 'mongoose';
-
+import { Document } from 'mongoose';
+import { Address } from '../subschemas/address.subschema';
+import { FacilitiesGroup } from '../subschemas/facilities.subschema';
+import { TourAvailabilitySchema, TourAvailability } from '../subschemas/tour-availability.subschema';
 export type BusToursDocument = BusTour & Document;
-@Schema()
+@Schema({ timestamps: true })
 export class BusTour {
   @ApiProperty({
     example: 'Аврора',
@@ -24,108 +26,68 @@ export class BusTour {
     description: 'location description',
   })
   @Prop({ type: String })
-  locationDescription: string;
+  description: string;
+
+  @ApiProperty({
+    description: 'location description',
+  })
+  @Prop({ type: () => Address })
+  address: Address;
+
+  @Prop({ type: String })
+  seaType: string;
+
+  @ApiProperty({
+    example: '20211',
+    description: 'minimal tour price',
+  })
+  @Prop({ type: Number })
+  minPrice: number;
+
+  @Prop({ type: () => FacilitiesGroup })
+  facilities: FacilitiesGroup;
+
+  @Prop({
+    type: [{
+      type: {
+        type: { type: String },
+        roomType: { type: String },
+        roomName: { type: String },
+        beds: { type: Number },
+        description: { type: String },
+        availability: {
+          type: [raw(TourAvailabilitySchema)],
+          default: []
+        }
+      }
+    }], default: []
+  })
+  tours: Array<{
+    type: string;
+    roomType: string;
+    roomName: string;
+    beds: number;
+    description: string;
+    availability: TourAvailability[];
+  }>;
 
   @ApiProperty({
     example: '[123.webp, 456.webp]',
     description: 'hotel images',
   })
-  @Prop({ type: [raw(String)] })
-  images: [string];
-
-  @ApiProperty({
-    example: 'только завтраки',
-    description: 'food at the hotel',
-  })
-  @Prop({ type: String })
-  food: string;
-
-  @ApiProperty({
-    example: 'городской мелко-галечный',
-    description: 'beach type',
-  })
-  @Prop({ type: String })
-  beach: string;
-
-  @ApiProperty({
-    example: '10 минут хотьбы от гостиницы',
-    description: 'distance to beach',
-  })
-  @Prop({ type: String })
-  distanceToBeach: string;
-
-  @ApiProperty({
-    example:
-      'заселение по номерам после 12:00 в день прибытия. Освобождение номеров до 09:00 в день отъезда',
-    description: 'check-in and check-out conditions',
-  })
-  @Prop({ type: String })
-  checkInConditions: string;
-
-  @ApiProperty({
-    example: 'Краснодарский край, г. Анапа, ул. Горького, 68',
-    description: 'address',
-  })
-  @Prop({ type: String })
-  address: string;
-
-  @ApiProperty({
-    example: '9100',
-    description: 'price',
-  })
-  @Prop({ type: Number })
-  price: number;
-
-  @ApiProperty({
-    example: 'проезд, проживание и другое',
-    description: 'the price includes',
-  })
-  @Prop({ type: [String] })
-  thePriceIncludes: [];
-
-  @ApiProperty({
-    example:
-      '[type: "стандарт", roomName: "1 местный стандарт", capacity: "2", inRoom: "две односпальные кровати, шкаф, стол, стулья" [{startDate: "01.01", endDate: "02.02", price: "20000"}]]',
-    description: 'the price includes',
-  })
-  @Prop({ type: [Object] })
-  tours: [
-    {
-      type: string;
-      roomName: string;
-      capacity: number;
-      inRoom: string;
-      datesAndPrices: {
-        startDate: Date;
-        endDate: Date;
-        price: number;
-      }[];
-    },
-  ];
-
-  @ApiProperty({ example: '{ _id: 60d5e4f8a8c7b94b48d4b4e5, name: "Геленджик"}', description: 'bus tour city object' })
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'TourCity' })
-  city: MongooseSchema.Types.ObjectId | null;
-
-  @ApiProperty({
-    example: 'Краснодарский край',
-    description: 'region',
-  })
-  @Prop({ type: String })
-  region: string;
-
-  @ApiProperty({
-    example: 'Азовское море',
-    description: 'seaType',
-  })
-  @Prop({ type: String })
-  seaType: string;
+  @Prop({ type: [raw(String)], default: [] })
+  images?: string[];
 
   @ApiProperty({
     example: 'tour.docx',
     description: 'document for tour',
   })
-  @Prop({ type: String })
-  documentName: string;
+  @Prop({ type: String, default: '' })
+  documentName?: string;
+
+
+
+
+
 }
 export const BusTourSchema = SchemaFactory.createForClass(BusTour);

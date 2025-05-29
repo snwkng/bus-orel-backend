@@ -11,7 +11,6 @@ import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth/auth.guard';
 import { UploadModule } from './upload/upload.module';
 import { ExcursionCitiesModule } from './excursionCities/excursionCities.module';
-import { TourCitiesModule } from './tourCities/tourCities.module';
 
 @Module({
   imports: [
@@ -22,7 +21,6 @@ import { TourCitiesModule } from './tourCities/tourCities.module';
     UsersModule,
     ExcursionCitiesModule,
     ExcursionsModule,
-    TourCitiesModule,
     BusToursModule,
     AuthModule,
     UploadModule,

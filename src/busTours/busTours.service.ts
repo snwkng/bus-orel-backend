@@ -1,9 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
+import { Model } from 'mongoose';
 import { BusTour } from 'src/busTours/schemas/busTours.schema';
-import { TourCity } from 'src/tourCities/schemas/tourCities.schema';
-import { IRequestParams } from './interfaces/busTour.intarface';
 import { CreateBusTourDto } from './dto/create-busTour-dto';
 import { UpdateBusTourDto } from './dto/update-busTour-dto';
 
@@ -12,8 +10,6 @@ export class BusToursService {
   constructor(
     @InjectModel(BusTour.name)
     private readonly hotelModel: Model<BusTour>,
-    @InjectModel(TourCity.name)
-    private readonly cityModel: Model<TourCity>,
   ) { }
 
   async busTourCreate(dto: CreateBusTourDto) {
@@ -22,32 +18,12 @@ export class BusToursService {
   }
 
   async getBusTours(params: Record<string, any>): Promise<BusTour[]> {
-    const validKeys = new Set<keyof IRequestParams>(['seaType', 'city']);
-    let cityId: Types.ObjectId | undefined;
-    if (typeof params.city === 'string') {
-      const cityDoc = await this.cityModel.findOne({ name: params.city }).exec();
-      if (cityDoc) {
-        cityId = cityDoc._id;
-      }
-    }
-
-    const filteredParams = Object.fromEntries(
-      Object.entries(params)
-        .filter(([key]) => validKeys.has(key as keyof IRequestParams))
-        .map(([key, value]) => {
-          if (key === 'city' && cityId) {
-            return ['city', cityId];
-          }
-          return [key, value];
-        })
-    ) as IRequestParams;
-
-    const hotels = await this.hotelModel.find(filteredParams).sort({ _id: -1 }).populate('city').exec();
+    const hotels = await this.hotelModel.find(params).sort({ _id: -1 }).exec();
     return hotels;
   }
 
   async getBusTour(id: string) {
-    const hotel = await this.hotelModel.findById(id).populate('city').exec();
+    const hotel = await this.hotelModel.findById(id).exec();
     return hotel;
   }
 
@@ -68,5 +44,10 @@ export class BusToursService {
   async getSeaList(): Promise<string[]> {
     const seaList: string[] = await this.hotelModel.distinct('seaType');
     return seaList;
+  }
+
+  async getCitiesList(): Promise<string[]> {
+    const cityList: string[] = await this.hotelModel.distinct('address.city');
+    return cityList;
   }
 }
