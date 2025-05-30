@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { AddressDto } from './address.dto';
-import { FacilitiesDto } from './facilities.dto';
+import { AdditionalInfoDto } from './additional-info.dto';
+import { IncludedInThePriceDto } from './included-in-the-price.dto';
 import { TourItemDto } from './tour-item.dto';
 
 export class CreateBusTourDto {
@@ -22,8 +23,11 @@ export class CreateBusTourDto {
   @ApiProperty({ example: 9100, description: 'Минимальная цена за тур' })
   readonly minPrice?: number;
 
-  @ApiProperty({ type: FacilitiesDto, description: 'Удобства' })
-  readonly facilities?: FacilitiesDto;
+  @ApiProperty({ type: AdditionalInfoDto, description: 'Удобства' })
+  readonly additionalInfo?: AdditionalInfoDto;
+
+  @ApiProperty({ type: [IncludedInThePriceDto], description: 'Услуги включенные в стоимость' })
+  readonly  includedInThePrice?: IncludedInThePriceDto[];
 
   @ApiProperty({ type: [TourItemDto], description: 'Доступные номера и даты' })
   readonly tours?: TourItemDto[];

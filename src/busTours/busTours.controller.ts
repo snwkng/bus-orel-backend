@@ -16,6 +16,7 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { BusTour } from 'src/busTours/schemas/busTours.schema';
 import { DeleteResult } from 'mongodb';
 import { UpdateBusTourDto } from './dto/update-busTour-dto';
+import { type IncludedInThePrice } from './subschemas/includedInThePrice.subschema';
 
 @ApiTags('bus-tours')
 @Controller('bus-tours')
@@ -43,6 +44,19 @@ export class BusToursController {
     return res?.map((item: string, index: number) => ({
       id: index + 1,
       name: item,
+    }));
+  }
+
+  @ApiOperation({ summary: 'Get tour included in the price list' })
+  @ApiResponse({ status: 200, type: [BusTour] })
+  @Get('included-in-the-price-list')
+  @HttpCode(HttpStatus.OK)
+  async getIncludedInThePriceList(): Promise<IncludedInThePrice[]> {
+    const res: IncludedInThePrice[] = await this.busToursService.getIncludedInThePriceList();
+    return res?.map((item: IncludedInThePrice, index: number) => ({
+      id: index + 1,
+      serviceName: item.serviceName,
+      iconForService: item.iconForService
     }));
   }
 

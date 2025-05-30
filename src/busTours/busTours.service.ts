@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import { BusTour } from 'src/busTours/schemas/busTours.schema';
 import { CreateBusTourDto } from './dto/create-busTour-dto';
 import { UpdateBusTourDto } from './dto/update-busTour-dto';
+import { type IncludedInThePrice } from './subschemas/includedInThePrice.subschema';
 
 @Injectable()
 export class BusToursService {
@@ -49,5 +50,10 @@ export class BusToursService {
   async getCitiesList(): Promise<string[]> {
     const cityList: string[] = await this.hotelModel.distinct('address.city');
     return cityList;
+  }
+
+   async getIncludedInThePriceList(): Promise<IncludedInThePrice[]> {
+    const includedInThePrice: IncludedInThePrice[] = await this.hotelModel.distinct('includedInThePrice');
+    return includedInThePrice;
   }
 }

@@ -2,7 +2,8 @@ import { Prop, Schema, SchemaFactory, raw } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import { Document } from 'mongoose';
 import { Address } from '../subschemas/address.subschema';
-import { FacilitiesGroup } from '../subschemas/facilities.subschema';
+import { AdditionalInfo } from '../subschemas/additionalInfo.subschema';
+import { IncludedInThePrice } from '../subschemas/includedInThePrice.subschema';
 import { TourAvailabilitySchema, TourAvailability } from '../subschemas/tour-availability.subschema';
 export type BusToursDocument = BusTour & Document;
 @Schema({ timestamps: true })
@@ -44,8 +45,11 @@ export class BusTour {
   @Prop({ type: Number })
   minPrice: number;
 
-  @Prop({ type: () => FacilitiesGroup })
-  facilities: FacilitiesGroup;
+  @Prop({ type: () => AdditionalInfo })
+  additionalInfo: AdditionalInfo;
+
+  @Prop({ type: () => [IncludedInThePrice], default: [] })
+  includedInThePrice: IncludedInThePrice[];
 
   @Prop({
     type: [{

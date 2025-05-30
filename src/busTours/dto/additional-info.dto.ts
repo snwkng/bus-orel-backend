@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class FacilitiesDto {
+export class AdditionalInfoDto {
   @ApiProperty({ example: { "included": true, "type": "Только завтраки" } })
   readonly food?: {
     included?: boolean;
