@@ -4,7 +4,8 @@ import { Document } from 'mongoose';
 import { Address } from '../subschemas/address.subschema';
 import { AdditionalInfo } from '../subschemas/additionalInfo.subschema';
 import { IncludedInThePrice } from '../subschemas/includedInThePrice.subschema';
-import { TourAvailabilitySchema, TourAvailability } from '../subschemas/tour-availability.subschema';
+import { ITourItem } from '../interfaces/tour-item.interface';
+import { TourAvailabilitySchema } from '../subschemas/tour-availability.subschema';
 export type BusToursDocument = BusTour & Document;
 @Schema({ timestamps: true })
 export class BusTour {
@@ -66,14 +67,7 @@ export class BusTour {
       }
     }], default: []
   })
-  tours: Array<{
-    type: string;
-    roomType: string;
-    roomName: string;
-    beds: number;
-    description: string;
-    availability: TourAvailability[];
-  }>;
+  tours: ITourItem[];
 
   @ApiProperty({
     example: '[123.webp, 456.webp]',
