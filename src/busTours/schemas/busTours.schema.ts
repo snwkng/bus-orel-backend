@@ -54,16 +54,14 @@ export class BusTour {
 
   @Prop({
     type: [{
-      type: {
-        type: { type: String },
-        roomType: { type: String },
-        roomName: { type: String },
-        beds: { type: Number },
-        description: { type: String },
-        availability: {
-          type: [raw(TourAvailabilitySchema)],
-          default: []
-        }
+      type: { type: String },
+      roomType: { type: String },
+      roomName: { type: String },
+      beds: { type: Number },
+      description: { type: String },
+      availability: {
+        type: [raw(TourAvailabilitySchema)],
+        default: []
       }
     }], default: []
   })
