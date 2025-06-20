@@ -72,7 +72,7 @@ export class BusToursController {
   @ApiResponse({ status: 200, type: [BusTour] })
   @Get()
   async getAll(@Query() params: any): Promise<BusTour[]> {
-    return this.busToursService.getBusTours(params);
+    return await this.busToursService.getBusTours(params);
   }
 
   @ApiOperation({ summary: 'Get bus tour' })
@@ -80,7 +80,7 @@ export class BusToursController {
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   async getOne(@Param('id') id: string): Promise<BusTour> {
-    return this.busToursService.getBusTour(id);
+    return await this.busToursService.getBusTour(id);
   }
 
   @ApiOperation({ summary: 'Update bus tour' })
@@ -91,7 +91,7 @@ export class BusToursController {
     @Body() hotelDto: UpdateBusTourDto,
     @Param('id') id: string,
   ): Promise<BusTour> {
-    return this.busToursService.updateBusTour(id, hotelDto);
+    return await this.busToursService.updateBusTour(id, hotelDto);
   }
 
   @ApiOperation({ summary: 'Delete bus tour' })
@@ -99,6 +99,6 @@ export class BusToursController {
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
   async delete(@Param('id') id: string): Promise<DeleteResult> {
-    return this.busToursService.deleteBusTour(id);
+    return await this.busToursService.deleteBusTour(id);
   }
 }

@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory, raw } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
-import { Document, Schema as MongooseSchema } from 'mongoose';
+import { Document, } from 'mongoose';
 
 export type ExcursionDocument = Excursion & Document;
 @Schema()
@@ -50,9 +50,9 @@ export class Excursion {
   @Prop({ type: Date, required: true })
   excursionStart: Date;
 
-  @ApiProperty({ example: '[{_id: "60d5e4f8a8c7b94b48d4b4e5", name: "Орёл"}]', description: 'cities array of objects' })
-  @Prop({ type: [{ type: MongooseSchema.Types.ObjectId, ref: 'ExcursionCity' }], required: true })
-  cities: MongooseSchema.Types.ObjectId[];
+  @ApiProperty({ example: '["Москва", "Орёл"]', description: 'cities array of string' })
+  @Prop({ type: [String], required: true })
+  cities: string[];
 
   @ApiProperty({
     example: '["экскурсии по программе"]',

@@ -9,7 +9,7 @@ export interface IExcursion {
   price: number;
   documentName: string;
   excursionStart: Date;
-  cities: Types.ObjectId[];
+  cities: string[];
   hotelName: string;
   thePriceIncludes: string[];
 }

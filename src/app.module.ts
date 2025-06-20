@@ -10,7 +10,6 @@ import { AuthModule } from './auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth/auth.guard';
 import { UploadModule } from './upload/upload.module';
-import { ExcursionCitiesModule } from './excursionCities/excursionCities.module';
 
 @Module({
   imports: [
@@ -19,7 +18,6 @@ import { ExcursionCitiesModule } from './excursionCities/excursionCities.module'
       `mongodb://${process.env.MONGODB_HOST}:${process.env.MONGODB_PORT}/${process.env.MONGODB_DATABASE_NAME}`,
     ),
     UsersModule,
-    ExcursionCitiesModule,
     ExcursionsModule,
     BusToursModule,
     AuthModule,
