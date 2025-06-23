@@ -30,10 +30,10 @@ export class ExcursionsController {
   @HttpCode(HttpStatus.OK)
   async getCitiesList(): Promise<SelectItem[]> {
     const res = await this.excursionService.getCitiesList();
-    return res?.uniqueCities.map((item: string, index: number) => ({
+    return res?.uniqueCities?.map((item: string, index: number) => ({
       id: index + 1,
       name: item,
-    }));
+    })) ?? [];
   }
 
   @ApiOperation({ summary: 'Create excursion' })
