@@ -19,7 +19,11 @@ export class ExcursionService {
   }
 
   async getAllExcursions(params: Partial<IRequestParams> & Record<string, any>) {
-    const excursions = await this.excursionModel.find(params).sort({ _id: -1 }).exec();
+    const query = {};
+    if (params?.city) {
+      query['cities'] = params.city;
+    }
+    const excursions = await this.excursionModel.find(query).sort({ _id: -1 }).exec();
     return excursions;
   }
 
@@ -42,7 +46,7 @@ export class ExcursionService {
     return excursion;
   }
 
-  async getCitiesList(): Promise<{uniqueCities: string[]}> {
+  async getCitiesList(): Promise<{ uniqueCities: string[]; }> {
     const cityList = await this.excursionModel.aggregate([
       { $unwind: "$cities" },
       { $group: { _id: null, uniqueCities: { $addToSet: "$cities" } } },

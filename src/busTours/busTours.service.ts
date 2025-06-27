@@ -19,7 +19,17 @@ export class BusToursService {
   }
 
   async getBusTours(params: Record<string, any>): Promise<BusTour[]> {
-    const hotels = await this.hotelModel.find(params).sort({ _id: -1 }).exec();
+    const query = {};
+    if (params) {
+      Object.entries(params).forEach(([key, value]) => {
+        if (key === 'city') {
+          query['address.'+key] = value
+        } else {
+          query[key] = value
+        }
+      });
+    }
+    const hotels = await this.hotelModel.find(query).sort({ _id: -1 }).exec();
     return hotels;
   }
 
@@ -48,11 +58,11 @@ export class BusToursService {
   }
 
   async getCitiesList(seaType: string): Promise<string[]> {
-    const cityList: string[] = await this.hotelModel.distinct('address.city', {seaType});
+    const cityList: string[] = await this.hotelModel.distinct('address.city', { seaType });
     return cityList;
   }
 
-   async getIncludedInThePriceList(): Promise<IncludedInThePrice[]> {
+  async getIncludedInThePriceList(): Promise<IncludedInThePrice[]> {
     const includedInThePrice: IncludedInThePrice[] = await this.hotelModel.distinct('includedInThePrice');
     return includedInThePrice;
   }
