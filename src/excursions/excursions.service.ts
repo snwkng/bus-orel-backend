@@ -23,7 +23,29 @@ export class ExcursionService {
     if (params?.city) {
       query['cities'] = params.city;
     }
-    const excursions = await this.excursionModel.find(query).sort({ _id: -1 }).exec();
+    const today = new Date();
+    const excursions = this.excursionModel.aggregate([
+      {
+        $match: {
+          excursionStartDates: {
+            $elemMatch: { $gte: today }
+          },
+          ...query,
+        }
+      },
+      {
+        $addFields: {
+          excursionStartDates: {
+            $filter: {
+              input: "$excursionStartDates",
+              as: "date",
+              cond: { $gte: ["$$date", today] }
+            }
+          }
+        }
+      }
+    ]).exec();
+    // const excursions = await this.excursionModel.find(query).sort({ _id: -1 }).exec();
     return excursions;
   }
 

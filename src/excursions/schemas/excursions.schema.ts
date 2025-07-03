@@ -46,9 +46,9 @@ export class Excursion {
   @Prop({ type: String })
   documentName: string;
 
-  @ApiProperty({ example: '2022-06-01', description: 'excursions start date' })
-  @Prop({ type: Date, required: true })
-  excursionStart: Date;
+  @ApiProperty({ example: '[2022-06-01, 2025-01-01]', description: 'excursions start date' })
+  @Prop({ type: [Date], required: true })
+  excursionStartDates: Date[];
 
   @ApiProperty({ example: '["Москва", "Орёл"]', description: 'cities array of string' })
   @Prop({ type: [String], required: true })
