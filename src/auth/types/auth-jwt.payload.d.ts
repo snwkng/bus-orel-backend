@@ -1,3 +1,6 @@
+import { type ObjectId } from 'mongoose';
+
 export type AuthJwtPayload = {
-  sub: number;
-}
+  username: string;
+  sub: ObjectId;
+};

@@ -9,8 +9,8 @@ export class UsersService {
     @InjectModel(User.name) private readonly userModel: Model<UsersDocument>,
   ) {}
 
-  async findOne(username: string, password: string): Promise<User | undefined> {
-    const user = await this.userModel.findOne({ username, password }).exec();
+  async findOne(username: string): Promise<User | undefined> {
+    const user = await this.userModel.findOne({ username }).exec();
     return user;
   }
 }
