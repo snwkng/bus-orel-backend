@@ -1,18 +1,18 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ExcursionsController } from './excursions.controller';
+import { ExcursionsAdminController } from './excursions.admin.controller';
 import { ExcursionService } from './excursions.service';
+import { ExcursionsAdminService } from './excursions.admin.service';
 import { Excursion, ExcursionDocument } from './schemas/excursions.schema';
-import { ExcursionCity, ExcursionCitiesSchema } from 'src/excursionCities/schemas/excursionCities.schema';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: Excursion.name, schema: ExcursionDocument },
-      { name: ExcursionCity.name, schema: ExcursionCitiesSchema },
     ]),
   ],
-  controllers: [ExcursionsController],
-  providers: [ExcursionService],
+  controllers: [ExcursionsController, ExcursionsAdminController],
+  providers: [ExcursionService, ExcursionsAdminService],
 })
 export class ExcursionsModule {}

@@ -1,106 +1,40 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { AddressDto } from './address.dto';
+import { AdditionalInfoDto } from './additional-info.dto';
+import { TourItemDto } from './tour-item.dto';
+import { IncludedInThePriceDto } from './included-in-the-price.dto';
+
 export class UpdateBusTourDto {
-  @ApiProperty({
-    example: 'Аврора',
-    description: 'Hotel name',
-  })
+  @ApiProperty({ example: 'Аврора', description: 'Название отеля' })
   readonly name: string;
 
-  @ApiProperty({
-    example: 'гостиница',
-    description: 'Hotel type',
-  })
-  readonly type: string;
+  @ApiProperty({ example: 'Гостиница', description: 'Тип жилья' })
+  readonly type?: string;
 
-  @ApiProperty({
-    example: 'гостиница располагается с живопистном месте...',
-    description: 'location description',
-  })
-  readonly locationDescription: string;
+  @ApiProperty({ example: 'гостиница в живописном месте...', description: 'Описание отеля' })
+  readonly description?: string;
 
-  @ApiProperty({
-    example:
-      '[type: "стандарт", roomName: "1 местный стандарт", capacity: "2", inRoom: "две односпальные кровати, шкаф, стол, стулья" [{startDate: "01.01", endDate: "02.02", price: "20000"}]]',
-    description: 'tours array',
-  })
-  readonly tours: [
-    {
-      type: string;
-      roomName: string;
-      capacity: number;
-      inRoom: string;
-      datesAndPrices: {
-        startDate: Date;
-        endDate: Date;
-        price: number;
-      }[];
-    },
-  ];
+  @ApiProperty({ type: AddressDto, description: 'Адрес отеля' })
+  readonly address?: AddressDto;
 
-  @ApiProperty({
-    example: 'только завтраки',
-    description: 'food at the hotel',
-  })
-  readonly food: string;
+  @ApiProperty({ example: 'Черное море', description: 'Тип моря' })
+  readonly seaType?: string;
 
-  @ApiProperty({
-    example: 'городской мелко-галечный',
-    description: 'beach type',
-  })
-  readonly beach: string;
+  @ApiProperty({ example: 9100, description: 'Минимальная цена за тур' })
+  readonly minPrice?: number;
 
-  @ApiProperty({
-    example: '10 минут хотьбы от гостиницы',
-    description: 'distance to beach',
-  })
-  readonly distanceToBeach: string;
+  @ApiProperty({ type: AdditionalInfoDto, description: 'Удобства' })
+  readonly additionalInfo?: AdditionalInfoDto;
 
-  @ApiProperty({
-    example:
-      'заселение по номерам после 12:00 в день прибытия. Освобождение номеров до 09:00 в день отъезда',
-    description: 'check-in and check-out conditions',
-  })
-  readonly checkInConditions: string;
+  @ApiProperty({ type: [IncludedInThePriceDto], description: 'Услуги включенные в стоимость' })
+  readonly includedInThePrice?: IncludedInThePriceDto[];
 
-  @ApiProperty({
-    example: 'Краснодарский край, г. Анапа, ул. Горького, 68',
-    description: 'address',
-  })
-  readonly address: string;
+  @ApiProperty({ type: [TourItemDto], description: 'Доступные номера и даты' })
+  readonly tours?: TourItemDto[];
 
-  @ApiProperty({
-    example: '9100',
-    description: 'price',
-  })
-  readonly price: number;
+  @ApiProperty({ example: [], description: 'Фотографии отеля' })
+  readonly images?: string[];
 
-  @ApiProperty({
-    example: 'проезд, проживание и другое',
-    description: 'the price includes',
-  })
-  readonly thePriceIncludes: string[];
-
-  @ApiProperty({
-    example: 'Анапа',
-    description: 'city',
-  })
-  readonly city: string;
-
-  @ApiProperty({
-    example: 'Краснодарский край',
-    description: 'region',
-  })
-  readonly region: string;
-
-  @ApiProperty({
-    example: 'Азовское море',
-    description: 'seaType',
-  })
-  readonly seaType: string;
-
-  @ApiProperty({
-    example: 'document.docx',
-    description: 'price document name'
-  })
-  readonly documentName: string;
+  @ApiProperty({ example: 'tour.docx', description: 'Имя документа' })
+  readonly documentName?: string;
 }

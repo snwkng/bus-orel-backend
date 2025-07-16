@@ -8,10 +8,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
-import { AuthGuard } from './auth/auth.guard';
+// import { AuthGuard } from './auth/auth.guard';
 import { UploadModule } from './upload/upload.module';
-import { ExcursionCitiesModule } from './excursionCities/excursionCities.module';
-import { TourCitiesModule } from './tourCities/tourCities.module';
 
 @Module({
   imports: [
@@ -20,20 +18,18 @@ import { TourCitiesModule } from './tourCities/tourCities.module';
       `mongodb://${process.env.MONGODB_HOST}:${process.env.MONGODB_PORT}/${process.env.MONGODB_DATABASE_NAME}`,
     ),
     UsersModule,
-    ExcursionCitiesModule,
     ExcursionsModule,
-    TourCitiesModule,
     BusToursModule,
     AuthModule,
     UploadModule,
   ],
-  controllers: [AppController],
-  providers: [
-    AppService,
-    {
-      provide: APP_GUARD,
-      useClass: AuthGuard,
-    },
-  ],
+  // controllers: [AppController],
+  // providers: [
+  //   AppService,
+  //   {
+  //     provide: APP_GUARD,
+  //     useClass: AuthGuard,
+  //   },
+  // ],
 })
 export class AppModule {}

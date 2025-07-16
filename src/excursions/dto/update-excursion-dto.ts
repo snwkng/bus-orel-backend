@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ObjectId } from 'mongoose';
 
 export class UpdateExcursionDto {
   @ApiProperty({
@@ -25,10 +24,10 @@ export class UpdateExcursionDto {
   readonly hotelLink: string;
   @ApiProperty({ example: 'document.docx', description: 'price document name' })
   readonly documentName: string;
-  @ApiProperty({ example: '2022-07-01', description: 'excursion start date' })
-  readonly excursionStart: Date;
-  @ApiProperty({ example: '[id1, id2]', description: 'excurtion cities' })
-  readonly cities: ObjectId[];
+  @ApiProperty({ example: '[2022-07-01]', description: 'excursion start date' })
+  readonly excursionStartDates: Date[];
+  @ApiProperty({ example: '[Москва, Орёл]', description: 'excurtion cities' })
+  readonly cities: string[];
   @ApiProperty({ example: 'Отель Эллиот', description: 'hotel name' })
   readonly hotelName: string;
   @ApiProperty({

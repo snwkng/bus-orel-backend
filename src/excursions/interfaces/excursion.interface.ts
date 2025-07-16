@@ -8,8 +8,8 @@ export interface IExcursion {
   duration: number;
   price: number;
   documentName: string;
-  excursionStart: Date;
-  cities: Types.ObjectId[];
+  excursionStartDates: Date[];
+  cities: string[];
   hotelName: string;
   thePriceIncludes: string[];
 }
