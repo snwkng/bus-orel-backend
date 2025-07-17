@@ -15,15 +15,16 @@ async function bootstrap() {
     index: false,
     prefix: '/public/',
   });
-
-  const config = new DocumentBuilder()
-    .setTitle('bus-orel.ru')
-    .setDescription('REST API')
-    .setVersion('1.0.0')
-    .addBearerAuth()
-    .build();
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('/api/docs', app, document);
+  if (process.env.NODE_ENV !== 'production') {
+    const config = new DocumentBuilder()
+      .setTitle('bus-orel.ru')
+      .setDescription('REST API')
+      .setVersion('1.0.0')
+      .addBearerAuth()
+      .build();
+    const document = SwaggerModule.createDocument(app, config);
+    SwaggerModule.setup('/api/docs', app, document);
+  }
   await app.listen(PORT, () => console.log(`Server start on port - ${PORT}`));
 }
 bootstrap();

@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Error } from 'mongoose';
 import { Excursion, ExcursionDocument } from './schemas/excursions.schema';
 import { IRequestParams } from './interfaces/excursion.interface';
 
@@ -43,8 +43,16 @@ export class ExcursionService {
   }
 
   async getExcursion(id: string) {
-    const excursion = await this.excursionModel.findById(id).exec();
-    return excursion;
+    try {
+      const excursion = await this.excursionModel.findById(id).exec();
+      return excursion;
+    } catch (error) {
+      // все CastError будут отдавать 404
+      if (error instanceof Error.CastError) {
+        throw new NotFoundException(`Invalid ID format: "${id}"`);
+      }
+      throw error; // Re-throw other errors
+    }
   }
 
   async getCitiesList(): Promise<{ uniqueCities: string[]; }> {
