@@ -4,11 +4,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { UsersModule } from './users/users.module';
 import { ExcursionsModule } from './excursions/excursions.module';
 import { BusToursModule } from './busTours/busTours.module';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
-import { APP_GUARD } from '@nestjs/core';
-// import { AuthGuard } from './auth/auth.guard';
 import { UploadModule } from './upload/upload.module';
 
 @Module({
@@ -23,13 +19,5 @@ import { UploadModule } from './upload/upload.module';
     AuthModule,
     UploadModule,
   ],
-  // controllers: [AppController],
-  // providers: [
-  //   AppService,
-  //   {
-  //     provide: APP_GUARD,
-  //     useClass: AuthGuard,
-  //   },
-  // ],
 })
 export class AppModule {}
