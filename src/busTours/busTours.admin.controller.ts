@@ -21,7 +21,7 @@ import { type IncludedInThePrice } from './subschemas/includedInThePrice.subsche
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth/jwr-auth.guard';
 
 
-@ApiBearerAuth()
+@ApiBearerAuth('JWT-auth')
 @UseGuards(JwtAuthGuard)
 @ApiTags('AdminBusTours')
 @Controller('admin/bus-tours')

@@ -21,7 +21,7 @@ import { UpdateExcursionDto } from './dto/update-excursion-dto';
 import { IRequestParams } from './interfaces/excursion.interface';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth/jwr-auth.guard';
 
-@ApiBearerAuth()
+@ApiBearerAuth('JWT-auth')
 @UseGuards(JwtAuthGuard)
 @ApiTags('AdminExcursions')
 @Controller('admin/excursions')
