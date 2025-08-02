@@ -45,11 +45,14 @@ export class ExcursionService {
   async getExcursion(id: string) {
     try {
       const excursion = await this.excursionModel.findById(id).exec();
+      if (excursion === null) {
+        throw new NotFoundException({statusMessage: 'Страница не найдена'});
+      }
       return excursion;
     } catch (error) {
       // все CastError будут отдавать 404
       if (error instanceof Error.CastError) {
-        throw new NotFoundException(`Invalid ID format: "${id}"`);
+        throw new NotFoundException({statusMessage: 'Страница не найдена'});
       }
       throw error; // Re-throw other errors
     }
