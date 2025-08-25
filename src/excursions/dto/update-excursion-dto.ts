@@ -22,8 +22,8 @@ export class UpdateExcursionDto {
   readonly price: number;
   @ApiProperty({ example: 'ссылка на сайт отеля', description: 'hotel link' })
   readonly hotelLink: string;
-  @ApiProperty({ example: 'document.docx', description: 'price document name' })
-  readonly documentName: string;
+  @ApiProperty({ example: '[document.docx]', description: 'price document name' })
+  readonly documentName: string[];
   @ApiProperty({ example: '[2022-07-01]', description: 'excursion start date' })
   readonly excursionStartDates: Date[];
   @ApiProperty({ example: '[Москва, Орёл]', description: 'excurtion cities' })

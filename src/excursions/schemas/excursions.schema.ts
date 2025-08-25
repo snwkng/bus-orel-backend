@@ -43,8 +43,8 @@ export class Excursion {
     example: 'excursions.docx',
     description: 'document for excursion',
   })
-  @Prop({ type: String })
-  documentName: string;
+  @Prop({ type: [raw(String)] })
+  documentName: [string];
 
   @ApiProperty({ example: '[2022-06-01, 2025-01-01]', description: 'excursions start date' })
   @Prop({ type: [Date], required: true })

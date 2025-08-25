@@ -20,8 +20,8 @@ export class CreateExcursionDto {
   readonly duration: number;
   @ApiProperty({ example: '10500', description: 'price excursion' })
   readonly price: number;
-  @ApiProperty({ example: 'document.docx', description: 'price document name' })
-  readonly documentName: string;
+  @ApiProperty({ example: '[document.docx]', description: 'price document name' })
+  readonly documentName: string[];
   @ApiProperty({ example: '[2022-07-01]', description: 'excursion start date' })
   readonly excursionStartDates: Date[];
   @ApiProperty({ example: '[Москва, Орёл]', description: 'excurtion cities' })
