@@ -3,7 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Document, } from 'mongoose';
 
 export type ExcursionDocument = Excursion & Document;
-@Schema()
+@Schema({versionKey: false})
 export class Excursion {
   @ApiProperty({ example: 'Excursion name', description: 'Excursion name' })
   @Prop({ type: String, required: true })

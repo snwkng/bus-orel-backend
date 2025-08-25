@@ -18,13 +18,6 @@ import { FileInterceptor } from '@nestjs/platform-express';
 export class UploadController {
   constructor(private readonly uploadService: UploadService) {}
 
-  @Post('/upload')
-  @UseInterceptors(FileInterceptor('file'))
-  async uploadFile(@UploadedFile() file: Express.Multer.File): Promise<string> {
-    const fileName = await this.uploadService.upload(file);
-    return fileName;
-  }
-
   @Get('/download/:uuid')
   @HttpCode(HttpStatus.OK)
   @UseInterceptors(FileInterceptor('file'))
@@ -43,21 +36,5 @@ export class UploadController {
     return new StreamableFile(response, {
       type: fileType,
     });
-  }
-
-  @Delete('/delete')
-  @HttpCode(HttpStatus.OK)
-  @UseInterceptors(FileInterceptor('file'))
-  async deleteFile(@Query('uuid') uuid: string) {
-    const result = await this.uploadService.delete(uuid);
-    return result;
-  }
-
-  @Get('/list')
-  @HttpCode(HttpStatus.OK)
-  @UseInterceptors(FileInterceptor('file'))
-  async getList() {
-    const result = await this.uploadService.listObjects();
-    return result;
   }
 }
