@@ -35,6 +35,6 @@ export class CreateBusTourDto {
   @ApiProperty({ example: [], description: 'Фотографии отеля' })
   readonly images?: string[];
 
-  @ApiProperty({ example: 'tour.docx', description: 'Имя документа' })
-  readonly documentName?: string;
+  @ApiProperty({ example: '[tour.docx]', description: 'Имя документа' })
+  readonly documentName?: string[];
 }
