@@ -23,6 +23,9 @@ export class ExcursionsAdminService {
     if (params?.city) {
       query['cities'] = params.city;
     }
+    if (params?.search) {
+      query['name'] = params.search;
+    }
     const excursions = await this.excursionModel.find(query).sort({ _id: -1 }).exec();
     return excursions;
   }
