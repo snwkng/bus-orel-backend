@@ -44,9 +44,13 @@ export class ExcursionService {
 
   async getExcursion(id: string) {
     try {
+      const today = new Date();
       const excursion = await this.excursionModel.findById(id).exec();
-      if (excursion === null) {
+      if (!excursion || !excursion?.excursionStartDates.some((x) => new Date(x) >= today)) {
         throw new NotFoundException({statusMessage: 'Страница не найдена'});
+      }
+      if (excursion?.excursionStartDates?.length) {
+        excursion.excursionStartDates = excursion?.excursionStartDates.filter((x) => new Date(x) >= today).sort((a: Date, b: Date) => a.getTime() - b.getTime())
       }
       return excursion;
     } catch (error) {

@@ -57,8 +57,9 @@ export class BusToursAdminService {
     return seaList;
   }
 
-  async getCitiesList(seaType: string): Promise<string[]> {
-    const cityList: string[] = await this.hotelModel.distinct('address.city', { seaType });
+  async getCitiesList(seaType?: string): Promise<string[]> {
+    const filter = seaType ? { seaType } : {};
+    const cityList: string[] = await this.hotelModel.distinct('address.city', { ...filter });
     return cityList;
   }
 
