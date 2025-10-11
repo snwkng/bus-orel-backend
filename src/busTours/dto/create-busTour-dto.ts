@@ -37,4 +37,7 @@ export class CreateBusTourDto {
 
   @ApiProperty({ example: '[tour.docx]', description: 'Имя документа' })
   readonly documentName?: string[];
+
+  @ApiProperty({ example: 'false', description: 'Мероприятие опубликовано' })
+  readonly published: boolean;
 }

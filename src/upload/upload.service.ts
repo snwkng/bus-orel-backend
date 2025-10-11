@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import {
   S3Client,
   GetObjectCommand,
@@ -15,7 +15,7 @@ export class UploadService {
   private readonly s3Client = new S3Client({
     region: this.configService.getOrThrow('AWS_S3_REGION'),
     endpoint: this.configService.getOrThrow('AWS_S3_ENDPOINT'),
-    forcePathStyle: true, 
+    forcePathStyle: true,
     credentials: {
       accessKeyId: this.configService.get('AWS_ACCESS_KEY'),
       secretAccessKey: this.configService.get('AWS_SECRET_KEY'),
@@ -51,8 +51,8 @@ export class UploadService {
         }),
       );
       return fileName;
-    } catch (err) {
-      console.error(err)
+    } catch (error) {
+      // 
     }
   }
 
@@ -66,7 +66,10 @@ export class UploadService {
       );
       return item.Body;
     } catch (e) {
-      console.error(e);
+      if (e.$metadata.httpStatusCode === 404) {
+        throw new NotFoundException({statusMessage: 'Файл не найден'});
+      }
+      throw e; // Re-throw other errors
     }
   }
 

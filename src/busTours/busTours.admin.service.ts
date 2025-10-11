@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { BusTour } from 'src/busTours/schemas/busTours.schema';
 import { CreateBusTourDto } from './dto/create-busTour-dto';
 import { UpdateBusTourDto } from './dto/update-busTour-dto';
@@ -14,7 +14,8 @@ export class BusToursAdminService {
   ) { }
 
   async busTourCreate(dto: CreateBusTourDto) {
-    const hotel = await this.hotelModel.create(dto);
+    // по умолчанию создаем не опубликованные туры
+    const hotel = await this.hotelModel.create({...dto, published: false});
     return hotel;
   }
 
@@ -38,7 +39,7 @@ export class BusToursAdminService {
     return hotel;
   }
 
-  async updateBusTour(id, dto: UpdateBusTourDto) {
+  async updateBusTour(id, dto: UpdateBusTourDto | { published: boolean }) {
     const hotel = await this.hotelModel.findByIdAndUpdate(
       { _id: id },
       dto,

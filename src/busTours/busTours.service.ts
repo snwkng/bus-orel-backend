@@ -20,7 +20,8 @@ export class BusToursService {
         }
       });
     }
-    const hotels = await this.hotelModel.find(query).sort({ _id: -1 }).exec();
+    // по умолчанию возвращаем только опубликованные туры
+    const hotels = await this.hotelModel.find({...query, published: true}).sort({ _id: -1 }).exec();
     return hotels;
   }
 
