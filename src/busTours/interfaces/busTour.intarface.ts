@@ -28,7 +28,7 @@ export interface IBusTour {
   city: string;
   region: string;
   seaType: string;
-  documentName: string;
+  documentName: string[];
 }
 
 

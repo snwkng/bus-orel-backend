@@ -3,7 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Document, } from 'mongoose';
 
 export type ExcursionDocument = Excursion & Document;
-@Schema()
+@Schema({versionKey: false})
 export class Excursion {
   @ApiProperty({ example: 'Excursion name', description: 'Excursion name' })
   @Prop({ type: String, required: true })
@@ -43,8 +43,8 @@ export class Excursion {
     example: 'excursions.docx',
     description: 'document for excursion',
   })
-  @Prop({ type: String })
-  documentName: string;
+  @Prop({ type: [raw(String)] })
+  documentName: [string];
 
   @ApiProperty({ example: '[2022-06-01, 2025-01-01]', description: 'excursions start date' })
   @Prop({ type: [Date], required: true })

@@ -78,8 +78,8 @@ export class BusTour {
     example: 'tour.docx',
     description: 'document for tour',
   })
-  @Prop({ type: String, default: '' })
-  documentName?: string;
+  @Prop({ type: [raw(String)], default: [] })
+  documentName?: string[];
 
 
 
