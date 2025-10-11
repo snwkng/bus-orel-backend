@@ -28,7 +28,7 @@ export class BusToursService {
   async getBusTour(id: string) {
     try {
       const hotel = await this.hotelModel.findById(id).exec();
-      if (hotel === null) {
+      if (hotel === null || ('published' in hotel && hotel.published === false)) {
         throw new NotFoundException({statusMessage: 'Страница не найдена'});
       }
       return hotel;
