@@ -6,6 +6,7 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  Patch,
   Post,
   Put,
   Query,
@@ -16,6 +17,7 @@ import { BusToursAdminService } from './busTours.admin.service';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { BusTour } from 'src/busTours/schemas/busTours.schema';
 import { DeleteResult } from 'mongodb';
+import { Types } from 'mongoose';
 import { UpdateBusTourDto } from './dto/update-busTour-dto';
 import { type IncludedInThePrice } from './subschemas/includedInThePrice.subschema';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth/jwr-auth.guard';
@@ -97,6 +99,17 @@ export class BusToursAdminController {
     @Param('id') id: string,
   ): Promise<BusTour> {
     return await this.busToursAdminService.updateBusTour(id, hotelDto);
+  }
+
+  @ApiOperation({ summary: 'Publish / unpublish bus tour' })
+  @ApiResponse({ status: 200, type: Boolean })
+  @Patch('published/:id')
+  @HttpCode(HttpStatus.OK)
+  async published(
+    @Param('id') id: Types.ObjectId,
+    @Body() dto: {published: boolean},
+  ): Promise<BusTour> {
+    return await this.busToursAdminService.updateBusTour(id, dto);
   }
 
   @ApiOperation({ summary: 'Delete bus tour' })

@@ -81,7 +81,12 @@ export class BusTour {
   @Prop({ type: [raw(String)], default: [] })
   documentName?: string[];
 
-
+   @ApiProperty({
+    example: 'false',
+    description: 'Tour publish',
+  })
+  @Prop({ type: Boolean, required: true })
+  published: boolean;
 
 
 
