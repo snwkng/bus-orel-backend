@@ -52,7 +52,7 @@ export class UploadService {
       );
       return fileName;
     } catch (error) {
-      // 
+      console.error(error?.message)
     }
   }
 
