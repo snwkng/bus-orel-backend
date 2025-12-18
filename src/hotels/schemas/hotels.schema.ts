@@ -7,9 +7,6 @@ import { IncludedInThePrice } from '../subschemas/includedInThePrice.subschema';
 export type HotelsDocument = Hotel & Document;
 @Schema({ timestamps: true })
 export class Hotel {
-  @Prop({ type: Types.ObjectId })
-  _id: Types.ObjectId;
-  
   @ApiProperty({
     example: 'Аврора',
     description: 'Hotel name',

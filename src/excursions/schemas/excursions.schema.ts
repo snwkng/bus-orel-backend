@@ -5,9 +5,6 @@ import { Document, Types, } from 'mongoose';
 export type ExcursionDocument = Excursion & Document;
 @Schema({versionKey: false, autoIndex: false})
 export class Excursion {
-  @Prop({ type: Types.ObjectId })
-  _id: Types.ObjectId;
-
   @ApiProperty({ example: 'Excursion name', description: 'Excursion name' })
   @Prop({ type: String, required: true, index: true })
   name: string;
