@@ -7,10 +7,6 @@ async function bootstrap() {
   const PORT = process.env.PORT || 3000;
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.setGlobalPrefix('api');
-  app.enableCors({
-    origin: '*',
-  });
-
   app.useStaticAssets(join(__dirname, '..', 'public'), {
     index: false,
     prefix: '/public/',
