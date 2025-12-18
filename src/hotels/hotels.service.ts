@@ -1,17 +1,17 @@
 import { Injectable, NotFoundException, Query } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Error } from 'mongoose';
-import { BusTour } from 'src/busTours/schemas/busTours.schema';
+import { Hotel } from 'src/hotels/schemas/hotels.schema';
 import { IBusToursQuery } from './interfaces/query.interface';
 
 @Injectable()
-export class BusToursService {
+export class HotelsService {
   constructor(
-    @InjectModel(BusTour.name)
-    private readonly hotelModel: Model<BusTour>,
+    @InjectModel(Hotel.name)
+    private readonly hotelModel: Model<Hotel>,
   ) { }
 
-  async getBusTours(@Query() params: IBusToursQuery): Promise<BusTour[]> {
+  async getBusTours(@Query() params: IBusToursQuery): Promise<Hotel[]> {
     const query: IBusToursQuery = {};
     if (params) {
       Object.entries(params).forEach(([key, value]) => {

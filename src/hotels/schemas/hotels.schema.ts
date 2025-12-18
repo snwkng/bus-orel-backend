@@ -1,14 +1,15 @@
 import { Prop, Schema, SchemaFactory, raw } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
 import { Address } from '../subschemas/address.subschema';
 import { AdditionalInfo } from '../subschemas/additionalInfo.subschema';
 import { IncludedInThePrice } from '../subschemas/includedInThePrice.subschema';
-import { ITourItem } from '../interfaces/tour-item.interface';
-import { TourAvailabilitySchema } from '../subschemas/tour-availability.subschema';
-export type BusToursDocument = BusTour & Document;
+export type HotelsDocument = Hotel & Document;
 @Schema({ timestamps: true })
-export class BusTour {
+export class Hotel {
+  @Prop({ type: Types.ObjectId })
+  _id: Types.ObjectId;
+  
   @ApiProperty({
     example: 'Аврора',
     description: 'Hotel name',
@@ -52,21 +53,6 @@ export class BusTour {
   @Prop({ type: () => [IncludedInThePrice], default: [] })
   includedInThePrice: IncludedInThePrice[];
 
-  @Prop({
-    type: [{
-      type: { type: String },
-      roomType: { type: String },
-      roomName: { type: String },
-      beds: { type: Number },
-      description: { type: String },
-      availability: {
-        type: [raw(TourAvailabilitySchema)],
-        default: []
-      }
-    }], default: []
-  })
-  tours: ITourItem[];
-
   @ApiProperty({
     example: '[123.webp, 456.webp]',
     description: 'hotel images',
@@ -81,7 +67,7 @@ export class BusTour {
   @Prop({ type: [raw(String)], default: [] })
   documentName?: string[];
 
-   @ApiProperty({
+  @ApiProperty({
     example: 'false',
     description: 'Tour publish',
   })
@@ -91,4 +77,4 @@ export class BusTour {
 
 
 }
-export const BusTourSchema = SchemaFactory.createForClass(BusTour);
+export const HotelSchema = SchemaFactory.createForClass(Hotel);

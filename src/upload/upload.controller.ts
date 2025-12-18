@@ -1,15 +1,12 @@
 import {
   Controller,
-  Post,
   Get,
-  UploadedFile,
   UseInterceptors,
   HttpCode,
   HttpStatus,
   StreamableFile,
   Param,
-  Delete,
-  Query,
+  Header,
 } from '@nestjs/common';
 import { UploadService } from './upload.service';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -19,6 +16,7 @@ export class UploadController {
   constructor(private readonly uploadService: UploadService) {}
 
   @Get('/download/:uuid')
+  @Header('vary', 'Accept-Encoding')
   @HttpCode(HttpStatus.OK)
   @UseInterceptors(FileInterceptor('file'))
   async downloadFile(@Param('uuid') uuid: string) {

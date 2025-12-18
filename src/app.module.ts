@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UsersModule } from './users/users.module';
 import { ExcursionsModule } from './excursions/excursions.module';
+import { HotelsModule } from './hotels/hotels.module';
 import { BusToursModule } from './busTours/busTours.module';
 import { AuthModule } from './auth/auth.module';
 import { UploadModule } from './upload/upload.module';
@@ -15,9 +16,10 @@ import { UploadModule } from './upload/upload.module';
     ),
     UsersModule,
     ExcursionsModule,
-    BusToursModule,
+    HotelsModule,
     AuthModule,
     UploadModule,
+    BusToursModule
   ],
 })
 export class AppModule {}

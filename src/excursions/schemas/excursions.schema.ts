@@ -1,12 +1,15 @@
 import { Prop, Schema, SchemaFactory, raw } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
-import { Document, } from 'mongoose';
+import { Document, Types, } from 'mongoose';
 
 export type ExcursionDocument = Excursion & Document;
-@Schema({versionKey: false})
+@Schema({versionKey: false, autoIndex: false})
 export class Excursion {
+  @Prop({ type: Types.ObjectId })
+  _id: Types.ObjectId;
+
   @ApiProperty({ example: 'Excursion name', description: 'Excursion name' })
-  @Prop({ type: String, required: true })
+  @Prop({ type: String, required: true, index: true })
   name: string;
 
   @ApiProperty({
@@ -51,7 +54,7 @@ export class Excursion {
   excursionStartDates: Date[];
 
   @ApiProperty({ example: '["Москва", "Орёл"]', description: 'cities array of string' })
-  @Prop({ type: [String], required: true })
+  @Prop({ type: [String], required: true, index: true })
   cities: string[];
 
   @ApiProperty({

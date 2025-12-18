@@ -25,7 +25,7 @@ export class ExcursionsController {
     return res?.uniqueCities?.map((item: string, index: number) => ({
       id: index + 1,
       name: item,
-    })) ?? [];
+    }))?.sort((a, b) => a.name.localeCompare(b.name)) ?? [];
   }
 
   @ApiOperation({ summary: 'Get all excursions' })
