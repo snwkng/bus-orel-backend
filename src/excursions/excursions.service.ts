@@ -38,6 +38,7 @@ export class ExcursionService {
         }
       }
     ]).exec();
+    console.log(excursions)
     // const excursions = await this.excursionModel.find(query).sort({ _id: -1 }).exec();
     return excursions;
   }
@@ -46,6 +47,7 @@ export class ExcursionService {
     try {
       const today = new Date();
       const excursion = await this.excursionModel.findById(id).exec();
+      console.log(excursion)
       if (!excursion || !excursion?.excursionStartDates?.some((x) => new Date(x) >= today)) {
         throw new NotFoundException({ statusMessage: 'Страница не найдена' });
       }
