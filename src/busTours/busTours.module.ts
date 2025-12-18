@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { BusToursController } from './busTours.controller';
+// import { BusToursController } from './busTours.controller';
 import { BusToursAdminController } from './busTours.admin.controller';
-import { BusToursService } from './busTours.service';
+// import { BusToursService } from './busTours.service';
 import { BusToursAdminService } from './busTours.admin.service';
-import { BusTour, BusTourSchema } from './schemas/busTours.schema';
+import { BusTour, BusTourSchema } from './schemas/busTour.schema'
 
 @Module({
   imports: [
@@ -12,7 +12,7 @@ import { BusTour, BusTourSchema } from './schemas/busTours.schema';
       { name: BusTour.name, schema: BusTourSchema },
     ]),
   ],
-  controllers: [BusToursController, BusToursAdminController],
-  providers: [BusToursService, BusToursAdminService],
+  controllers: [BusToursAdminController],
+  providers: [BusToursAdminService],
 })
 export class BusToursModule {}

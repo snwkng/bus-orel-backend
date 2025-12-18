@@ -2,9 +2,8 @@ import { ApiProperty } from '@nestjs/swagger';
 import { AddressDto } from './address.dto';
 import { AdditionalInfoDto } from './additional-info.dto';
 import { IncludedInThePriceDto } from './included-in-the-price.dto';
-import { TourItemDto } from './tour-item.dto';
 
-export class CreateBusTourDto {
+export class UpdateHotelDto {
   @ApiProperty({ example: 'Аврора', description: 'Название отеля' })
   readonly name: string;
 
@@ -27,10 +26,7 @@ export class CreateBusTourDto {
   readonly additionalInfo?: AdditionalInfoDto;
 
   @ApiProperty({ type: [IncludedInThePriceDto], description: 'Услуги включенные в стоимость' })
-  readonly  includedInThePrice?: IncludedInThePriceDto[];
-
-  @ApiProperty({ type: [TourItemDto], description: 'Доступные номера и даты' })
-  readonly tours?: TourItemDto[];
+  readonly includedInThePrice?: IncludedInThePriceDto[];
 
   @ApiProperty({ example: [], description: 'Фотографии отеля' })
   readonly images?: string[];

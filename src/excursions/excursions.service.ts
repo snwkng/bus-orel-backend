@@ -17,7 +17,7 @@ export class ExcursionService {
       query['cities'] = params.city;
     }
     const today = new Date();
-    const excursions = this.excursionModel.aggregate([
+    const excursions = await this.excursionModel.aggregate([
       {
         $match: {
           excursionStartDates: {
@@ -44,30 +44,28 @@ export class ExcursionService {
 
   async getExcursion(id: string) {
     try {
+      console.log(id);
       const today = new Date();
       const excursion = await this.excursionModel.findById(id).exec();
+      console.log(excursion);
       if (!excursion || !excursion?.excursionStartDates.some((x) => new Date(x) >= today)) {
-        throw new NotFoundException({statusMessage: 'Страница не найдена'});
+        throw new NotFoundException({ statusMessage: 'Страница не найдена' });
       }
       if (excursion?.excursionStartDates?.length) {
-        excursion.excursionStartDates = excursion?.excursionStartDates.filter((x) => new Date(x) >= today).sort((a: Date, b: Date) => a.getTime() - b.getTime())
+        excursion.excursionStartDates = excursion?.excursionStartDates.filter((x) => new Date(x) >= today).sort((a: Date, b: Date) => a.getTime() - b.getTime());
       }
       return excursion;
     } catch (error) {
       // все CastError будут отдавать 404
       if (error instanceof Error.CastError) {
-        throw new NotFoundException({statusMessage: 'Страница не найдена'});
+        throw new NotFoundException({ statusMessage: 'Страница не найдена' });
       }
       throw error; // Re-throw other errors
     }
   }
 
   async getCitiesList(): Promise<{ uniqueCities: string[]; }> {
-    const cityList = await this.excursionModel.aggregate([
-      { $unwind: "$cities" },
-      { $group: { _id: null, uniqueCities: { $addToSet: "$cities" } } },
-      { $project: { _id: 0 } }
-    ]);
-    return cityList[0];
+    const uniqueCities = await this.excursionModel.distinct("cities");
+    return { uniqueCities };
   }
 }

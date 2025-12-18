@@ -6,21 +6,21 @@ import {
   Param,
   Query,
 } from '@nestjs/common';
-import { BusToursService } from './busTours.service';
+import { HotelsService } from './hotels.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { BusTour } from 'src/busTours/schemas/busTours.schema';
+import { Hotel } from 'src/hotels/schemas/hotels.schema';
 
 @ApiTags('BusTours')
-@Controller('bus-tours')
-export class BusToursController {
-  constructor(private readonly busToursService: BusToursService) {}
+@Controller('hotels')
+export class HotelsController {
+  constructor(private readonly HotelsService: HotelsService) {}
 
   @ApiOperation({ summary: 'Get sea list' })
-  @ApiResponse({ status: 200, type: [BusTour] })
+  @ApiResponse({ status: 200, type: [Hotel] })
   @Get('sea-list')
   @HttpCode(HttpStatus.OK)
   async getSeaList(): Promise<SelectItem[]> {
-    const res: string[] = await this.busToursService.getSeaList();
+    const res: string[] = await this.HotelsService.getSeaList();
     return res?.map((item: string, index: number) => ({
       id: index + 1,
       name: item,
@@ -28,11 +28,11 @@ export class BusToursController {
   }
 
   @ApiOperation({ summary: 'Get tour cities list' })
-  @ApiResponse({ status: 200, type: [BusTour] })
+  @ApiResponse({ status: 200, type: [Hotel] })
   @Get('cities-list')
   @HttpCode(HttpStatus.OK)
   async getCitiesList(@Query('seaType') seaType: string = ''): Promise<SelectItem[]> {
-    const res: string[] = await this.busToursService.getCitiesList(seaType);
+    const res: string[] = await this.HotelsService.getCitiesList(seaType);
     return res?.map((item: string, index: number) => ({
       id: index + 1,
       name: item,
@@ -40,17 +40,17 @@ export class BusToursController {
   }
 
   @ApiOperation({ summary: 'Get all bus tours' })
-  @ApiResponse({ status: 200, type: [BusTour] })
+  @ApiResponse({ status: 200, type: [Hotel] })
   @Get()
-  async getAll(@Query() params: any): Promise<BusTour[]> {
-    return await this.busToursService.getBusTours(params);
+  async getAll(@Query() params: any): Promise<Hotel[]> {
+    return await this.HotelsService.getBusTours(params);
   }
 
   @ApiOperation({ summary: 'Get bus tour' })
-  @ApiResponse({ status: 200, type: [BusTour] })
+  @ApiResponse({ status: 200, type: [Hotel] })
   @Get(':id')
   @HttpCode(HttpStatus.OK)
-  async getOne(@Param('id') id: string): Promise<BusTour> {
-    return await this.busToursService.getBusTour(id);
+  async getOne(@Param('id') id: string): Promise<Hotel> {
+    return await this.HotelsService.getBusTour(id);
   }
 }
