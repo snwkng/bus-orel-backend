@@ -4,6 +4,7 @@ import { Document, Types } from 'mongoose';
 import { Address } from '../subschemas/address.subschema';
 import { AdditionalInfo } from '../subschemas/additionalInfo.subschema';
 import { IncludedInThePrice } from '../subschemas/includedInThePrice.subschema';
+import { Room } from '../subschemas/rooms.subschema';
 export type HotelsDocument = Hotel & Document;
 @Schema({ timestamps: true })
 export class Hotel {
@@ -71,7 +72,8 @@ export class Hotel {
   @Prop({ type: Boolean, required: true })
   published: boolean;
 
-
+  @Prop({ type: () => [Room], default: [], minlength: 1 })
+  rooms: Room[];
 
 }
 export const HotelSchema = SchemaFactory.createForClass(Hotel);

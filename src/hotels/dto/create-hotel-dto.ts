@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { AddressDto } from './address.dto';
 import { AdditionalInfoDto } from './additional-info.dto';
 import { IncludedInThePriceDto } from './included-in-the-price.dto';
+import { RoomDto } from './room.dto';
 
 export class CreateHotelDto {
   @ApiProperty({ example: 'Аврора', description: 'Название отеля' })
@@ -36,4 +37,7 @@ export class CreateHotelDto {
 
   @ApiProperty({ example: 'false', description: 'Мероприятие опубликовано' })
   readonly published: boolean;
+
+  @ApiProperty({ type: [RoomDto], description: 'Номера' })
+  readonly  rooms?: RoomDto[];
 }

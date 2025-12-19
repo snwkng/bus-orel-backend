@@ -38,8 +38,6 @@ export class ExcursionService {
         }
       }
     ]).exec();
-    console.log(excursions);
-    // const excursions = await this.excursionModel.find(query).sort({ _id: -1 }).exec();
     return excursions;
   }
 
