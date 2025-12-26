@@ -25,7 +25,7 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth/jwr-auth.guard';
 
 @ApiBearerAuth('JWT-auth')
 @UseGuards(JwtAuthGuard)
-@ApiTags('AdminBusTours')
+@ApiTags('AdminHotels')
 @Controller('admin/hotels')
 export class HotelsAdminController {
   constructor(private readonly HotelsAdminService: HotelsAdminService) {}

@@ -42,6 +42,7 @@ jobs:
         echo "AWS_S3_REGION=${{secrets.AWS_S3_REGION}}" >> .env
         echo "AWS_S3_ENDPOINT=${{secrets.AWS_S3_ENDPOINT}}" >> .env
         echo "AWS_S3_BUCKET=${{secrets.AWS_S3_BUCKET}}" >> .env
+        echo "NODE_ENV=${{secrets.NODE_ENV}}" >> .env
     - run: npm ci
     - run: npm run build --if-present
     - run: pm2 restart backend

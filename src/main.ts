@@ -1,8 +1,10 @@
+import { join } from 'node:path';
 import { NestFactory } from '@nestjs/core';
+import { ValidationPipe } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
-import { join } from 'node:path';
+import { AllExceptionsFilter } from './common/filters/http-exception.filter';
 async function bootstrap() {
   const PORT = process.env.PORT || 3000;
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -11,6 +13,11 @@ async function bootstrap() {
     index: false,
     prefix: '/public/',
   });
+  app.useGlobalPipes(new ValidationPipe({
+    transform: true, 
+    whitelist: true
+  }));
+  app.useGlobalFilters(new AllExceptionsFilter());
   if (process.env.NODE_ENV !== 'production') {
     const config = new DocumentBuilder()
       .setTitle('bus-orel.ru')
