@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
-import { Hotel } from 'src/hotels/schemas/hotels.schema';
+import { Model } from 'mongoose';
+import { Hotel } from '../hotels/schemas/hotels.schema';
 import { CreateHotelDto } from './dto/create-hotel-dto';
 import { UpdateHotelDto } from './dto/update-hotel-dto';
-import { type IncludedInThePrice } from './subschemas/includedInThePrice.subschema';
+import { IncludedInThePrice } from './subschemas/includedInThePrice.subschema';
+import { mapToSelectItem, mapToIncludedInThePriceItem } from '../common/utils/mapper.util';
+import { SelectItemDto } from '../common/dto/select-item.dto';
 
 @Injectable()
 export class HotelsAdminService {
@@ -15,23 +17,19 @@ export class HotelsAdminService {
 
   async busTourCreate(dto: CreateHotelDto) {
     // по умолчанию создаем не опубликованные туры
-    const hotel = await this.hotelModel.create({...dto, published: false});
+    const hotel = await this.hotelModel.create({ ...dto, published: false });
     return hotel;
   }
 
   async getBusTours(params: Record<string, any>): Promise<Hotel[]> {
-    const query = {};
-    if (params) {
-      Object.entries(params).forEach(([key, value]) => {
-        if (key === 'city') {
-          query['address.'+key] = value
-        } else {
-          query[key] = value
-        }
-      });
+    const filter: Record<string, any> = {};
+    if (params.city) {
+      filter['address.city'] = params.city;
     }
-    const hotels = await this.hotelModel.find(query).sort({ _id: -1 }).exec();
-    return hotels;
+    return this.hotelModel
+      .find(filter)
+      .sort({ _id: -1 })
+      .exec();
   }
 
   async getBusTour(id: string) {
@@ -39,7 +37,7 @@ export class HotelsAdminService {
     return hotel;
   }
 
-  async updateBusTour(id, dto: UpdateHotelDto | { published: boolean }) {
+  async updateBusTour(id, dto: UpdateHotelDto | { published: boolean; }) {
     const hotel = await this.hotelModel.findByIdAndUpdate(
       { _id: id },
       dto,
@@ -49,23 +47,23 @@ export class HotelsAdminService {
   }
 
   async deleteBusTour(id: string) {
-    const hotel = await this.hotelModel.deleteOne({ _id: id });
-    return hotel;
+    return await this.hotelModel.deleteOne({ _id: id });
   }
 
-  async getSeaList(): Promise<string[]> {
-    const seaList: string[] = await this.hotelModel.distinct('seaType');
-    return seaList;
+  async getSeaList(): Promise<SelectItemDto[]> {
+    const res = await this.hotelModel.distinct('seaType');
+    return mapToSelectItem(res);
   }
 
-  async getCitiesList(seaType?: string): Promise<string[]> {
-    const filter = seaType ? { seaType } : {};
-    const cityList: string[] = await this.hotelModel.distinct('address.city', { ...filter });
-    return cityList;
+  async getCitiesList(seaType?: string): Promise<SelectItemDto[]> {
+    const filter: Record<string, any> = {};
+    if (seaType) filter.seaType = seaType;
+    const res = await this.hotelModel.distinct('address.city', { ...filter });
+    return mapToSelectItem(res);
   }
 
   async getIncludedInThePriceList(): Promise<IncludedInThePrice[]> {
-    const includedInThePrice: IncludedInThePrice[] = await this.hotelModel.distinct('includedInThePrice');
-    return includedInThePrice;
+    const res =  await this.hotelModel.distinct('includedInThePrice');
+    return mapToIncludedInThePriceItem(res);
   }
 }

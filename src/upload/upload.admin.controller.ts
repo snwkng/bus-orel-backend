@@ -4,8 +4,6 @@ import {
   Get,
   UploadedFile,
   UseInterceptors,
-  HttpCode,
-  HttpStatus,
   Delete,
   Query,
   UseGuards,
@@ -30,7 +28,6 @@ export class UploadAdminController {
   }
 
   @Delete('/delete')
-  @HttpCode(HttpStatus.OK)
   @UseInterceptors(FileInterceptor('file'))
   async deleteFile(@Query('uuid') uuid: string) {
     const result = await this.uploadService.delete(uuid);
@@ -38,7 +35,6 @@ export class UploadAdminController {
   }
 
   @Get('/list')
-  @HttpCode(HttpStatus.OK)
   @UseInterceptors(FileInterceptor('file'))
   async getList() {
     const result = await this.uploadService.listObjects();

@@ -1,10 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Hotel } from 'src/hotels/schemas/hotels.schema';
+import { Hotel } from '../hotels/schemas/hotels.schema';
 import { HotelQueryDto } from './dto/hotel-query.dto';
 import { mapToSelectItem } from '../common/utils/mapper.util';
-import { SelectItemDto } from 'src/common/dto/select-item.dto';
+import { SelectItemDto } from '../common/dto/select-item.dto';
 
 @Injectable()
 export class HotelsService {

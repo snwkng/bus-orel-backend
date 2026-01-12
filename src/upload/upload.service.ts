@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import {
   S3Client,
   GetObjectCommand,
@@ -9,6 +9,8 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { ObjectId } from 'bson';
 import * as sharp from 'sharp';
+import { Readable } from 'node:stream';
+import * as lookup from 'mime-types';
 
 @Injectable()
 export class UploadService {
@@ -25,52 +27,46 @@ export class UploadService {
   constructor(private readonly configService: ConfigService) { }
 
   async upload(file: Express.Multer.File) {
-    try {
-      let fileName = new ObjectId().toString();
-      const mimetype = file.mimetype;
-      const currentFileType = file.mimetype.split('/')[1];
-      const type = file.originalname.split('.')[1];
-      if (mimetype.includes('image')) {
-        if (currentFileType != 'svg+xml') {
-          fileName = `${fileName}.webp`;
-        } else {
-          fileName = `${fileName}.svg`;
-        }
+    let fileName = new ObjectId().toString();
+    const contentType = lookup.lookup(fileName) || 'application/octet-stream';
+    const mimetype = file.mimetype;
+    const currentFileType = file.mimetype.split('/')[1];
+    const type = file.originalname.split('.')[1];
+    if (mimetype.includes('image')) {
+      if (currentFileType == 'svg+xml') {
+        fileName = `${fileName}.svg`;
       } else {
-        fileName = `${fileName}.${type}`;
+        fileName = `${fileName}.webp`;
       }
-      const buffer =
-        mimetype.includes('image') && currentFileType != 'svg+xml'
-          ? await this.convertToWebP(file.buffer)
-          : file.buffer;
-      await this.s3Client.send(
-        new PutObjectCommand({
-          Bucket: this.configService.get('AWS_S3_BUCKET'),
-          Key: fileName,
-          Body: buffer,
-        }),
-      );
-      return fileName;
-    } catch (error) {
-      console.error(error?.message)
+    } else {
+      fileName = `${fileName}.${type}`;
     }
+    const buffer =
+      mimetype.includes('image') && currentFileType != 'svg+xml'
+        ? await this.convertToWebP(file.buffer)
+        : file.buffer;
+    const command = new PutObjectCommand({
+      Bucket: this.configService.get('AWS_S3_BUCKET'),
+      Key: fileName,
+      Body: buffer,
+      ContentType: contentType,
+    });
+    await this.s3Client.send(command);
+    return fileName;
   }
 
   async download(fileName: string) {
-    try {
-      const item: any = await this.s3Client.send(
-        new GetObjectCommand({
-          Bucket: this.configService.get('AWS_S3_BUCKET'),
-          Key: fileName,
-        }),
-      );
-      return item.Body;
-    } catch (e) {
-      if (e.$metadata.httpStatusCode === 404) {
-        throw new NotFoundException({statusMessage: 'Файл не найден'});
-      }
-      throw e; // Re-throw other errors
+    const command = new GetObjectCommand({ Bucket: this.configService.get('AWS_S3_BUCKET'), Key: fileName });
+    const response = await this.s3Client.send(command);
+    let contentType = response.ContentType;
+    if (!contentType || contentType === 'application/octet-stream') {
+      contentType = lookup.lookup(fileName) || 'application/octet-stream';
     }
+    return {
+      stream: response.Body as Readable,
+      contentType,
+    };
+
   }
 
   async delete(fileName: string) {

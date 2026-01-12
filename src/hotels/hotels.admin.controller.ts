@@ -15,12 +15,14 @@ import {
 import { CreateHotelDto } from './dto/create-hotel-dto';
 import { HotelsAdminService } from './hotels.admin.service';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Hotel } from 'src/hotels/schemas/hotels.schema';
+import { Hotel } from '../hotels/schemas/hotels.schema';
 import { DeleteResult } from 'mongodb';
 import { Types } from 'mongoose';
 import { UpdateHotelDto } from './dto/update-hotel-dto';
 import { type IncludedInThePrice } from './subschemas/includedInThePrice.subschema';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth/jwr-auth.guard';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth/jwr-auth.guard';
+import { SelectItemDto } from '../common/dto/select-item.dto';
+import { IncludedInThePriceDto } from './dto/included-in-the-price.dto';
 
 
 @ApiBearerAuth('JWT-auth')
@@ -28,43 +30,30 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth/jwr-auth.guard';
 @ApiTags('AdminHotels')
 @Controller('admin/hotels')
 export class HotelsAdminController {
-  constructor(private readonly HotelsAdminService: HotelsAdminService) {}
+  constructor(private readonly hotelsAdminService: HotelsAdminService) {}
 
   @ApiOperation({ summary: 'Get sea list' })
   @ApiResponse({ status: 200, type: [Hotel] })
   @Get('sea-list')
   @HttpCode(HttpStatus.OK)
-  async getSeaList(): Promise<SelectItem[]> {
-    const res: string[] = await this.HotelsAdminService.getSeaList();
-    return res?.map((item: string, index: number) => ({
-      id: index + 1,
-      name: item,
-    }));
+  async getSeaList(): Promise<SelectItemDto[]> {
+    return await this.hotelsAdminService.getSeaList();
   }
 
   @ApiOperation({ summary: 'Get tour cities list' })
   @ApiResponse({ status: 200, type: [Hotel] })
   @Get('cities-list')
   @HttpCode(HttpStatus.OK)
-  async getCitiesList(@Query('seaType') seaType: string = ''): Promise<SelectItem[]> {
-    const res: string[] = await this.HotelsAdminService.getCitiesList(seaType);
-    return res?.map((item: string, index: number) => ({
-      id: index + 1,
-      name: item,
-    }));
+  async getCitiesList(@Query('seaType') seaType: string = ''): Promise<SelectItemDto[]> {
+    return await this.hotelsAdminService.getCitiesList(seaType);
   }
 
   @ApiOperation({ summary: 'Get tour included in the price list' })
   @ApiResponse({ status: 200, type: [Hotel] })
   @Get('included-in-the-price-list')
   @HttpCode(HttpStatus.OK)
-  async getIncludedInThePriceList(): Promise<IncludedInThePrice[]> {
-    const res: IncludedInThePrice[] = await this.HotelsAdminService.getIncludedInThePriceList();
-    return res?.map((item: IncludedInThePrice, index: number) => ({
-      id: index + 1,
-      serviceName: item.serviceName,
-      iconForService: item.iconForService
-    }));
+  async getIncludedInThePriceList(): Promise<IncludedInThePriceDto[]> {
+    return await this.hotelsAdminService.getIncludedInThePriceList();
   }
 
   @ApiOperation({ summary: 'Create bus tour' })
@@ -72,14 +61,14 @@ export class HotelsAdminController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async create(@Body() hotelDto: CreateHotelDto) {
-    return await this.HotelsAdminService.busTourCreate(hotelDto);
+    return await this.hotelsAdminService.busTourCreate(hotelDto);
   }
 
   @ApiOperation({ summary: 'Get all bus tours' })
   @ApiResponse({ status: 200, type: [Hotel] })
   @Get()
   async getAll(@Query() params: any): Promise<Hotel[]> {
-    return await this.HotelsAdminService.getBusTours(params);
+    return await this.hotelsAdminService.getBusTours(params);
   }
 
   @ApiOperation({ summary: 'Get bus tour' })
@@ -87,7 +76,7 @@ export class HotelsAdminController {
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   async getOne(@Param('id') id: string): Promise<Hotel> {
-    return await this.HotelsAdminService.getBusTour(id);
+    return await this.hotelsAdminService.getBusTour(id);
   }
 
   @ApiOperation({ summary: 'Update bus tour' })
@@ -98,7 +87,7 @@ export class HotelsAdminController {
     @Body() hotelDto: UpdateHotelDto,
     @Param('id') id: string,
   ): Promise<Hotel> {
-    return await this.HotelsAdminService.updateBusTour(id, hotelDto);
+    return await this.hotelsAdminService.updateBusTour(id, hotelDto);
   }
 
   @ApiOperation({ summary: 'Publish / unpublish bus tour' })
@@ -109,7 +98,7 @@ export class HotelsAdminController {
     @Param('id') id: Types.ObjectId,
     @Body() dto: {published: boolean},
   ): Promise<Hotel> {
-    return await this.HotelsAdminService.updateBusTour(id, dto);
+    return await this.hotelsAdminService.updateBusTour(id, dto);
   }
 
   @ApiOperation({ summary: 'Delete bus tour' })
@@ -117,6 +106,6 @@ export class HotelsAdminController {
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
   async delete(@Param('id') id: string): Promise<DeleteResult> {
-    return await this.HotelsAdminService.deleteBusTour(id);
+    return await this.hotelsAdminService.deleteBusTour(id);
   }
 }
