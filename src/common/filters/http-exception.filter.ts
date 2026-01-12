@@ -15,7 +15,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
       const originalMessage = typeof responseBody === 'object'
         ? responseBody.message
         : responseBody;
-        
+
       if (exception instanceof NotFoundException) {
         const isDefaultMessage =
           originalMessage === 'Not Found' ||
@@ -39,7 +39,6 @@ export class AllExceptionsFilter implements ExceptionFilter {
       message = 'Указан неверный идентификатор, либо страницы больше не существует';
     }
 
-    console.log(message);
     response.status(status).json({
       success: false,
       statusCode: status, // Полезно добавить для фронтенда
