@@ -28,7 +28,7 @@ export class UploadService {
 
   async upload(file: Express.Multer.File) {
     let fileName = new ObjectId().toString();
-    const contentType = lookup.lookup(fileName) || 'application/octet-stream';
+    const contentType = lookup.lookup(file.filename) || 'application/octet-stream';
     const mimetype = file.mimetype;
     const currentFileType = file.mimetype.split('/')[1];
     const type = file.originalname.split('.')[1];
@@ -71,12 +71,11 @@ export class UploadService {
 
   async delete(fileName: string) {
     try {
-      await this.s3Client.send(
-        new DeleteObjectCommand({
+      const command = new DeleteObjectCommand({
           Bucket: this.configService.get('AWS_S3_BUCKET'),
           Key: fileName,
         })
-      );
+      await this.s3Client.send(command);
       return true;
     } catch (error) {
       console.error(error);

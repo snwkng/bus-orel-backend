@@ -1,12 +1,12 @@
-import { Prop, Schema, SchemaFactory, raw } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
-import { Document, Types, } from 'mongoose';
+import { Document } from 'mongoose';
 
 export type ExcursionDocument = Excursion & Document;
-@Schema({versionKey: false, autoIndex: false})
+@Schema({ versionKey: false, autoIndex: false })
 export class Excursion {
   @ApiProperty({ example: 'Excursion name', description: 'Excursion name' })
-  @Prop({ type: String, required: true, index: true })
+  @Prop({ type: String, required: true, trim: true, index: true })
   name: string;
 
   @ApiProperty({
@@ -20,10 +20,10 @@ export class Excursion {
     example: '[{imageName.webp}]',
     description: 'array string',
   })
-  @Prop({ type: [raw(String)], required: true })
+  @Prop({ type: [String], required: true })
   images: [string];
 
-  @ApiProperty({ example: '3', description: 'excursion duration' })
+  @ApiProperty({ example: 3, description: 'excursion duration' })
   @Prop({ type: Number, required: true, default: false })
   duration: number;
 
@@ -43,23 +43,33 @@ export class Excursion {
     example: 'excursions.docx',
     description: 'document for excursion',
   })
-  @Prop({ type: [raw(String)] })
+  @Prop({ type: [String] })
   documentName: [string];
 
-  @ApiProperty({ example: '[2022-06-01, 2025-01-01]', description: 'excursions start date' })
+  @ApiProperty({ example: ['2022-06-01', '2025-01-01'], description: 'excursions start dates' })
   @Prop({ type: [Date], required: true })
   excursionStartDates: Date[];
 
-  @ApiProperty({ example: '["Москва", "Орёл"]', description: 'cities array of string' })
+  @ApiProperty({ example: ["Москва", "Орёл"], description: 'cities array of string' })
   @Prop({ type: [String], required: true, index: true })
   cities: string[];
 
   @ApiProperty({
-    example: '["экскурсии по программе"]',
-    description: 'array of strings',
+    example: ["экскурсии по программе"],
+    description: 'массив строк',
   })
   @Prop({ type: [String], required: true })
   thePriceIncludes: [];
+
+  @ApiProperty({
+    example: ["Аренда самокатов", "Проживание в отеле"],
+    description: 'массив строк',
+  })
+  @Prop({ type: [String], required: true })
+  additionallyPaid: [];
 }
 
-export const ExcursionDocument = SchemaFactory.createForClass(Excursion);
+export const ExcursionSchema = SchemaFactory.createForClass(Excursion);
+
+// Составной индекс для оптимизации поиска в публичной части
+ExcursionSchema.index({ name: 1 });

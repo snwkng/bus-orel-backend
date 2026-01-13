@@ -5,6 +5,8 @@ import { Excursion, ExcursionDocument } from './schemas/excursions.schema';
 import { CreateExcursionDto } from './dto/create-excursion-dto';
 import { UpdateExcursionDto } from './dto/update-excursion-dto';
 import { IRequestParams } from './interfaces/excursion.interface';
+import { mapToSelectItem } from '../common/utils/mapper.util';
+import { SelectItemDto } from '../common/dto/select-item.dto';
 
 @Injectable()
 export class ExcursionsAdminService {
@@ -19,20 +21,22 @@ export class ExcursionsAdminService {
   }
 
   async getAllExcursions(params: Partial<IRequestParams> & Record<string, any>) {
-    const query = {};
+    const filter: Record<string, any> = {};
+    
     if (params?.city) {
-      query['cities'] = params.city;
+      filter['cities'] = params.city;
     }
     if (params?.search) {
-      query['name'] = params.search;
+      filter['name'] = params.search;
     }
-    const excursions = await this.excursionModel.find(query).sort({ _id: -1 }).exec();
-    return excursions;
+    return await this.excursionModel
+      .find(filter)
+      .sort({ _id: -1 })
+      .exec();
   }
 
-  async getExcursion(id: string) {
-    const excursion = await this.excursionModel.findById(id).exec();
-    return excursion;
+  async getExcursion(id: string): Promise<Excursion> {
+    return await this.excursionModel.findById(id).exec();
   }
 
   async updateExcursion(id, dto: UpdateExcursionDto) {
@@ -49,12 +53,8 @@ export class ExcursionsAdminService {
     return excursion;
   }
 
-  async getCitiesList(): Promise<{ uniqueCities: string[]; }> {
-    const cityList = await this.excursionModel.aggregate([
-      { $unwind: "$cities" },
-      { $group: { _id: null, uniqueCities: { $addToSet: "$cities" } } },
-      { $project: { _id: 0 } }
-    ]);
-    return cityList[0];
+  async getCitiesList(): Promise<SelectItemDto[]> {
+    const res = await this.excursionModel.distinct('cities');
+    return mapToSelectItem(res);
   }
 }

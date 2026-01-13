@@ -1,6 +1,6 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, isValidObjectId, FilterQuery } from 'mongoose';
 import { Hotel } from '../hotels/schemas/hotels.schema';
 import { HotelQueryDto } from './dto/hotel-query.dto';
 import { mapToSelectItem } from '../common/utils/mapper.util';
@@ -13,8 +13,8 @@ export class HotelsService {
     private readonly hotelModel: Model<Hotel>,
   ) { }
 
-  async getBusTours(params: HotelQueryDto): Promise<Hotel[]> {
-    const filter: Record<string, any> = { published: true };
+  async getHotels(params: HotelQueryDto): Promise<Hotel[]> {
+    const filter: FilterQuery<Hotel> = { published: true };
 
     if (params.city) {
       filter['address.city'] = params.city;
@@ -26,28 +26,34 @@ export class HotelsService {
     return this.hotelModel
       .find(filter)
       .sort({ _id: -1 })
+      .lean()
       .exec();
   }
 
-  async getBusTour(id: string): Promise<Hotel> {
-    const hotel = await this.hotelModel.findOne({ _id: id, published: true }).exec();
+  async getHotel(id: string): Promise<Hotel> {
+    if (!isValidObjectId(id)) {
+      throw new BadRequestException('Некорректный формат идентификатора');
+    }
+    const hotel = await this.hotelModel.findOne({ _id: id, published: true }).lean().exec();
 
     if (!hotel) {
       throw new NotFoundException('Страница не найдена');
     }
 
-    return hotel;
+    return hotel as Hotel;
   }
 
   async getSeaList(): Promise<SelectItemDto[]> {
-    const res = await this.hotelModel.distinct('seaType');
+    const res = await this.hotelModel.distinct('seaType', { published: true });
     return mapToSelectItem(res);
   }
 
   async getCitiesList(seaType?: string): Promise<SelectItemDto[]> {
-    const filter: Record<string, any> = { published: true };
-    if (seaType) filter.seaType = seaType;
-    const res = await this.hotelModel.distinct('address.city', { ...filter });
+    const filter: FilterQuery<Hotel> = { published: true };
+    if (seaType) {
+      filter.seaType = seaType;
+    }
+    const res = await this.hotelModel.distinct('address.city', filter);
     return mapToSelectItem(res);
   }
 }

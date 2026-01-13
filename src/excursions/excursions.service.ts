@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Error, Types } from 'mongoose';
+import { Model, Error } from 'mongoose';
 import { Excursion, ExcursionDocument } from './schemas/excursions.schema';
 import { IRequestParams } from './interfaces/excursion.interface';
 

@@ -12,5 +12,5 @@ export class HotelQueryDto {
   @IsOptional()
   @IsInt()
   @Type(() => Number)
-  readonly count?: number;
+  readonly count?: number = 10;
 }

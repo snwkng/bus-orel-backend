@@ -18,28 +18,28 @@ export class HotelsController {
   @ApiOperation({ summary: 'Get sea list' })
   @ApiResponse({ status: 200, type: [SelectItemDto] })
   @Get('sea-list')
-  async getSeaList(): Promise<SelectItemDto[]> {
-    return await this.hotelsService.getSeaList();
+  getSeaList(): Promise<SelectItemDto[]> {
+    return this.hotelsService.getSeaList();
   }
 
-  @ApiOperation({ summary: 'Get tour cities list' })
+  @ApiOperation({ summary: 'Get cities list' })
   @ApiResponse({ status: 200, type: [SelectItemDto] })
   @Get('cities-list')
-  async getCitiesList(@Query('seaType') seaType: string = ''): Promise<SelectItemDto[]> {
-    return await this.hotelsService.getCitiesList(seaType);
+  getCitiesList(@Query('seaType') seaType: string = ''): Promise<SelectItemDto[]> {
+    return this.hotelsService.getCitiesList(seaType);
   }
 
-  @ApiOperation({ summary: 'Get all bus tours' })
+  @ApiOperation({ summary: 'Get all hotels' })
   @ApiResponse({ status: 200, type: [Hotel] })
   @Get()
-  async getAll(@Query() params: HotelQueryDto): Promise<Hotel[]> {
-    return await this.hotelsService.getBusTours(params);
+  getAll(@Query() params: HotelQueryDto): Promise<Hotel[]> {
+    return this.hotelsService.getHotels(params);
   }
 
-  @ApiOperation({ summary: 'Get bus tour' })
+  @ApiOperation({ summary: 'Get hotel' })
   @ApiResponse({ status: 200, type: Hotel })
   @Get(':id')
-  async getOne(@Param('id') id: string): Promise<Hotel> {
-    return await this.hotelsService.getBusTour(id);
+  getOne(@Param('id') id: string): Promise<Hotel> {
+    return this.hotelsService.getHotel(id);
   }
 }

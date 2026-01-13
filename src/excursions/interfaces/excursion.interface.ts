@@ -16,4 +16,5 @@ export interface IExcursion {
 
 export interface IRequestParams {
   city: string;
+  name: string;
 }

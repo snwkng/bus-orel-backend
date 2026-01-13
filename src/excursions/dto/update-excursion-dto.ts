@@ -32,7 +32,12 @@ export class UpdateExcursionDto {
   readonly hotelName: string;
   @ApiProperty({
     example: '["Экскурсии по программе"]',
-    description: 'array of string the price includes',
+    description: 'Массив строк что включено в стоимоссть',
   })
   readonly thePriceIncludes: string[];
+   @ApiProperty({
+    example: '["Аренда самокатов", "Оплата отеля"]',
+    description: 'Массив строк дополнительных услуг',
+  })
+  readonly additionallyPaid: string[];
 }
