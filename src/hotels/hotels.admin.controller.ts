@@ -95,7 +95,7 @@ export class HotelsAdminController {
   }
 
   @ApiOperation({ summary: 'Delete bus tour' })
-  @ApiResponse({ status: 200, type: Hotel })
+  @ApiResponse({ status: 200 })
   @Delete(':id')
   delete(@Param('id') id: string): Promise<DeleteResult> {
     return this.hotelsAdminService.deleteHotel(id);

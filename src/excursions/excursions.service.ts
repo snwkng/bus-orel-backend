@@ -1,8 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Error } from 'mongoose';
+import { Model, FilterQuery, isValidObjectId, Types } from 'mongoose';
 import { Excursion, ExcursionDocument } from './schemas/excursions.schema';
-import { IRequestParams } from './interfaces/excursion.interface';
+import { ExcursionQueryDto } from './dto/excursion-query.dto';
+import { mapToSelectItem } from '../common/utils/mapper.util';
+import { SelectItemDto } from '../common/dto/select-item.dto';
 
 @Injectable()
 export class ExcursionService {
@@ -11,58 +13,87 @@ export class ExcursionService {
     private readonly excursionModel: Model<ExcursionDocument>,
   ) { }
 
-  async getAllExcursions(params: Partial<IRequestParams> & Record<string, any>) {
-    const query = {};
+  async getAllExcursions(params: ExcursionQueryDto) {
+    const filter: FilterQuery<ExcursionDocument> = {};
     if (params?.city) {
-      query['cities'] = params.city;
+      filter['cities'] = params.city;
     }
     const today = new Date();
+
     const excursions = await this.excursionModel.aggregate([
       {
         $match: {
           excursionStartDates: {
             $elemMatch: { $gte: today }
           },
-          ...query,
+          ...filter,
         }
       },
       {
         $addFields: {
           excursionStartDates: {
-            $filter: {
-              input: "$excursionStartDates",
-              as: "date",
-              cond: { $gte: ["$$date", today] }
+            $sortArray: {
+              input: {
+                $filter: {
+                  input: "$excursionStartDates",
+                  as: "date",
+                  cond: { $gte: ["$$date", today] }
+                }
+              },
+              sortBy: 1 // Сортировка дат от ближайшей к дальней
             }
           }
         }
-      }
+      },
+      { $sort: { createdAt: -1 } } // Сортировка самих экскурсий
     ]).exec();
     return excursions;
   }
 
   async getExcursion(id: string) {
-    try {
-      const today = new Date();
-      const excursion = await this.excursionModel.findById(id).exec();
-      if (!excursion || !excursion?.excursionStartDates?.some((x) => new Date(x) >= today)) {
-        throw new NotFoundException({ statusMessage: 'Страница не найдена' });
-      }
-      if (excursion?.excursionStartDates?.length) {
-        excursion.excursionStartDates = excursion?.excursionStartDates.filter((x) => new Date(x) >= today).sort((a: Date, b: Date) => a.getTime() - b.getTime());
-      }
-      return excursion;
-    } catch (error) {
-      // все CastError будут отдавать 404
-      if (error instanceof Error.CastError) {
-        throw new NotFoundException({ statusMessage: 'Страница не найдена' });
-      }
-      throw error; // Re-throw other errors
+    if (!isValidObjectId(id)) {
+      throw new BadRequestException('Некорректный формат идентификатора');
     }
+
+    const today = new Date();
+    const result = await this.excursionModel.aggregate([
+      { $match: { _id: new Types.ObjectId(id) } },
+      {
+        $addFields: {
+          excursionStartDates: {
+            $sortArray: {
+              input: {
+                $filter: {
+                  input: "$excursionStartDates",
+                  as: "date",
+                  cond: { $gte: ["$$date", today] }
+                }
+              },
+              sortBy: 1
+            }
+          }
+        }
+      }
+    ]).exec();
+
+    const excursion = result[0];
+
+    if (!excursion || !excursion.excursionStartDates?.length) {
+      throw new NotFoundException('Экскурсия не найдена или уже завершена');
+    }
+
+    return excursion;
   }
 
-  async getCitiesList(): Promise<{ uniqueCities: string[]; }> {
-    const uniqueCities = await this.excursionModel.distinct("cities");
-    return { uniqueCities };
+  async getCitiesList(): Promise<SelectItemDto[]> {
+    const today = new Date();
+
+    // Возвращаем только те города, где есть актуальные экскурсии
+    const res = await this.excursionModel.distinct("cities", {
+      excursionStartDates: { $elemMatch: { $gte: today } }
+    }).exec();
+
+    console.log(res)
+    return mapToSelectItem(res);
   }
 }

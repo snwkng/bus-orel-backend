@@ -7,6 +7,7 @@ import { UpdateHotelDto } from './dto/update-hotel-dto';
 import { IncludedInThePrice } from './subschemas/includedInThePrice.subschema';
 import { mapToSelectItem, mapToIncludedInThePriceItem } from '../common/utils/mapper.util';
 import { SelectItemDto } from '../common/dto/select-item.dto';
+import { HotelQueryDto } from './dto/hotel-query.dto';
 
 @Injectable()
 export class HotelsAdminService {
@@ -20,9 +21,9 @@ export class HotelsAdminService {
     return await this.hotelModel.create({ ...dto, published: false });
   }
 
-  async getHotels(params: Record<string, any>): Promise<Hotel[]> {
+  async getHotels(params: HotelQueryDto): Promise<Hotel[]> {
     const filter: FilterQuery<Hotel> = {};
-    if (params.city) {
+    if (params?.city) {
       filter['address.city'] = params.city;
     }
     return this.hotelModel
@@ -51,7 +52,7 @@ export class HotelsAdminService {
     const hotel = await this.hotelModel.findByIdAndUpdate(
       { _id: id },
       { $set: dto },
-      { new: true, returnDocument: "after" }
+      { new: true }
     );
 
     if (!hotel) {

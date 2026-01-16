@@ -1,12 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { FilterQuery, isValidObjectId, Model } from 'mongoose';
 import { Excursion, ExcursionDocument } from './schemas/excursions.schema';
 import { CreateExcursionDto } from './dto/create-excursion-dto';
 import { UpdateExcursionDto } from './dto/update-excursion-dto';
-import { IRequestParams } from './interfaces/excursion.interface';
 import { mapToSelectItem } from '../common/utils/mapper.util';
 import { SelectItemDto } from '../common/dto/select-item.dto';
+import { ExcursionQueryDto } from './dto/excursion-query.dto';
 
 @Injectable()
 export class ExcursionsAdminService {
@@ -15,46 +15,73 @@ export class ExcursionsAdminService {
     private readonly excursionModel: Model<ExcursionDocument>,
   ) { }
 
-  async excursionCreate(dto: CreateExcursionDto) {
-    const excursion = await this.excursionModel.create(dto);
-    return excursion;
+  async createExcursion(dto: CreateExcursionDto) {
+    return await this.excursionModel.create(dto);
   }
 
-  async getAllExcursions(params: Partial<IRequestParams> & Record<string, any>) {
-    const filter: Record<string, any> = {};
-    
+  async getAllExcursions(params: ExcursionQueryDto) {
+    const filter: FilterQuery<ExcursionDocument> = {};
+
     if (params?.city) {
       filter['cities'] = params.city;
     }
     if (params?.search) {
-      filter['name'] = params.search;
+      filter.name = { $regex: params.search, $options: 'i' };
     }
     return await this.excursionModel
       .find(filter)
       .sort({ _id: -1 })
+      .lean()
       .exec();
   }
 
   async getExcursion(id: string): Promise<Excursion> {
-    return await this.excursionModel.findById(id).exec();
+    if (!isValidObjectId(id)) {
+      throw new BadRequestException('Некорректный формат идентификатора');
+    }
+
+    const excursion = await this.excursionModel.findById(id).exec();
+
+    if (!excursion) {
+      throw new NotFoundException('Экскурсия не найдена');
+    }
+
+    return excursion;
   }
 
-  async updateExcursion(id, dto: UpdateExcursionDto) {
+  async updateExcursion(id: string, dto: UpdateExcursionDto) {
+    if (!isValidObjectId(id)) {
+      throw new BadRequestException('Некорректный формат идентификатора');
+    }
+
     const excursion = await this.excursionModel.findByIdAndUpdate(
       { _id: id },
-      dto,
-      { new: true, returnDocument: "after" }
+      { $set: dto },
+      { new: true }
     );
+
+    if (!excursion) {
+      throw new NotFoundException('Экскурсия не найдена');
+    }
     return excursion;
   }
 
   async deleteExcursion(id: string) {
-    const excursion = await this.excursionModel.deleteOne({ _id: id });
-    return excursion;
+    if (!isValidObjectId(id)) {
+      throw new BadRequestException('Некорректный формат идентификатора');
+    }
+
+    const result = await this.excursionModel.deleteOne({ _id: id }).exec();
+
+    if (result.deletedCount === 0) {
+      throw new NotFoundException('Экскурсия не найдена, удаление невозможно');
+    }
+
+    return result;
   }
 
   async getCitiesList(): Promise<SelectItemDto[]> {
-    const res = await this.excursionModel.distinct('cities');
+    const res = await this.excursionModel.distinct('cities').exec();
     return mapToSelectItem(res);
   }
 }
