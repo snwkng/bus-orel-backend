@@ -35,9 +35,10 @@ export class ApiResponseInterceptor<T>
           data,
           meta: {
             timestamp: now.toISOString(),
-            // path: context.switchToHttp().getRequest().url,
+            path: context.switchToHttp().getRequest().url,
+            statusCode: context.switchToHttp().getResponse().statusCode,
           }
-        } as Response<T>;
+        } satisfies Response<T>;
       })
     );
   }
