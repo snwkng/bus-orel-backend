@@ -15,7 +15,8 @@ async function bootstrap() {
   });
   app.useGlobalPipes(new ValidationPipe({
     transform: true, 
-    whitelist: true
+    whitelist: true,
+    transformOptions: { enableImplicitConversion: true }
   }));
   app.useGlobalFilters(new AllExceptionsFilter());
   if (process.env.NODE_ENV !== 'production') {

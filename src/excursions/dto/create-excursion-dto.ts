@@ -1,41 +1,92 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
+import { 
+  IsString, 
+  IsArray, 
+  IsNumber, 
+  IsOptional,
+  ArrayMinSize, 
+  Min,
+  IsDate
+} from 'class-validator';
 
 export class CreateExcursionDto {
-  @ApiProperty({
-    example: 'название экскурсии',
-    description: 'excursion name',
-  })
+  @ApiProperty({ example: 'Золотое кольцо', description: 'excursion name' })
+  @IsString() // Обязательно для ValidationPipe
   readonly name: string;
+
   @ApiProperty({
-    example: '["Описание первого дня", "Описание второго дня"]',
+    example: ["Описание первого дня", "Описание второго дня"],
     description: 'excursion description',
   })
-  readonly descriptrion: string[];
+  @IsArray()
+  @IsString({ each: true }) // Проверяет, что каждый элемент массива - строка
+  readonly description: string[]; // Исправил опечатку: было descriptrion
+
   @ApiProperty({
-    example: '[imageName.webp]',
+    example: ['imageName.webp'],
     description: 'array of string excursion images',
   })
+  @IsArray()
+  @IsOptional()
+  @IsString({ each: true })
   readonly images: string[];
-  @ApiProperty({ example: '5', description: 'duration excursion' })
+
+  @ApiProperty({ example: 5, description: 'duration excursion' })
+  @IsNumber()
+  @Min(0)
+  @Type(() => Number)
   readonly duration: number;
-  @ApiProperty({ example: '10500', description: 'price excursion' })
+
+  @ApiProperty({ example: 10500, description: 'price excursion' })
+  @IsNumber()
+  @Min(0)
+  @Type(() => Number)
   readonly price: number;
-  @ApiProperty({ example: '[document.docx]', description: 'price document name' })
+
+  @ApiProperty({ example: ['document.docx'], description: 'document names' })
+  @IsOptional() // Если поле не обязательно
+  @IsArray()
+  @IsString({ each: true })
   readonly documentName: string[];
-  @ApiProperty({ example: '[2022-07-01]', description: 'excursion start date' })
+
+  @ApiProperty({ example: ['2026-07-01'], description: 'excursion start date' })
+  @IsArray()
+  @Type(() => Date) // 1. Сначала конвертируем строку в объект Date
+  @IsDate({ each: true })
   readonly excursionStartDates: Date[];
-  @ApiProperty({ example: '[Москва, Орёл]', description: 'excurtion cities' })
+
+  @ApiProperty({ example: ['Москва', 'Орёл'], description: 'excursion cities' })
+  @IsArray()
+  @ArrayMinSize(1)
+  @IsString({ each: true })
   readonly cities: string[];
-  @ApiProperty({ example: 'Отель Эллиот', description: 'hotel name' })
+
+  @ApiProperty({ example: 'Отель Эллиот', description: 'hotel name', required: false })
+  @IsOptional()
+  @IsString()
   readonly hotelName: string;
+
+  @ApiProperty({ example: 'https://hotel.com', description: 'hotel link', required: false })
+  @IsOptional()
+  @IsString()
+  readonly hotelLink: string;
+
   @ApiProperty({
-    example: '["Экскурсии по программе"]',
-    description: 'Массив строк что включено в стоимоссть',
+    example: ["Экскурсии по программе"],
+    description: 'Что включено в стоимость',
   })
+  @IsArray()
+  @IsOptional()
+  @IsString({ each: true })
   readonly thePriceIncludes: string[];
+
   @ApiProperty({
-    example: '["Аренда самокатов", "Оплата отеля"]',
-    description: 'Массив строк дополнительных услуг',
+    example: ["Аренда самокатов"],
+    description: 'Дополнительные услуги',
   })
+  @IsArray()
+  @IsOptional()
+  @IsString({ each: true })
   readonly additionallyPaid: string[];
 }

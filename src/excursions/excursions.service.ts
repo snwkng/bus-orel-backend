@@ -92,8 +92,6 @@ export class ExcursionService {
     const res = await this.excursionModel.distinct("cities", {
       excursionStartDates: { $elemMatch: { $gte: today } }
     }).exec();
-
-    console.log(res)
     return mapToSelectItem(res);
   }
 }

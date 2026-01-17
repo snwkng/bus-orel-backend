@@ -41,10 +41,14 @@ export class AllExceptionsFilter implements ExceptionFilter {
 
     response.status(status).json({
       success: false,
-      statusCode: status, // Полезно добавить для фронтенда
-      message: Array.isArray(message) ? message : [message],
-      error: exception.name || 'Error',
-      timestamp: new Date().toISOString(), // Хорошая практика 2025 года
+      data: {
+        message: Array.isArray(message) ? message : [message],
+      },
+      meta: {
+        statusCode: status, // Полезно добавить для фронтенда
+        error: exception.name || 'Error',
+        timestamp: new Date().toISOString(), // Хорошая практика 2025 года
+      }
     });
   }
 }
