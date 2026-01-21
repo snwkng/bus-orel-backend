@@ -45,7 +45,6 @@ export class UploadService {
         finalContentType = 'image/webp';
         fileName = `${new ObjectId().toString()}.webp`;
       } catch (error) {
-        // Если файл битый или sharp не справился — не паникуем
         this.logger.warn(`Sharp failed to process image, uploading original: ${file.originalname}`);
       }
     } else {
@@ -53,12 +52,6 @@ export class UploadService {
       fileName = `${new ObjectId().toString()}.${extension}`;
       finalContentType = originalMime;
     }
-
-
-
-    console.log(this.bucket);
-    console.log(fileName);
-    console.log(finalContentType);
     try {
       const command = new PutObjectCommand({
         Bucket: this.bucket,
