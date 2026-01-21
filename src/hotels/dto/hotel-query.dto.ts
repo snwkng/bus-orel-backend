@@ -8,6 +8,11 @@ export class HotelQueryDto {
   @IsOptional()
   readonly city?: string;
 
+  @ApiProperty({ example: 'Азовское море', required: false })
+  @IsString()
+  @IsOptional()
+  readonly seaType?: string;
+
   @ApiProperty({ example: 123, required: false })
   @IsOptional()
   @IsInt()

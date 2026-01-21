@@ -20,8 +20,9 @@ export class HotelsService {
       filter['address.city'] = params.city;
     }
 
-    // Если параметров станет много, можно добавить другие условия:
-    // if (params.seaType) filter.seaType = params.seaType;
+    if (params.seaType) {
+      filter.seaType = params.seaType;
+    }
 
     return this.hotelModel
       .find(filter)
