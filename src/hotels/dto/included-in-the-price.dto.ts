@@ -1,9 +1,19 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiPropertyOptional } from '@nestjs/swagger';
+import { IsOptional, IsString, IsNotEmpty } from 'class-validator';
+import { Transform } from 'class-transformer';
 
 export class IncludedInThePriceDto {
-  @ApiProperty({ example: "wi-fi" })
+  @ApiPropertyOptional({ example: "wi-fi" })
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  @Transform(({ value }) => typeof value === 'string' ? value.trim() : value)
   readonly serviceName?: string;
 
-  @ApiProperty({ example: "" })
+  @ApiPropertyOptional({ example: "icon.svg" })
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  @Transform(({ value }) => typeof value === 'string' ? value.trim() : value)
   readonly iconForService?: string;
 }

@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   HttpCode,
-  HttpException,
   HttpStatus,
   Param,
   Post,
@@ -18,8 +17,9 @@ import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagg
 import { Excursion } from './schemas/excursions.schema';
 import { DeleteResult } from 'mongodb';
 import { UpdateExcursionDto } from './dto/update-excursion-dto';
-import { IRequestParams } from './interfaces/excursion.interface';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth/jwr-auth.guard';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth/jwr-auth.guard';
+import { SelectItemDto } from '../common/dto/select-item.dto';
+import { ExcursionQueryDto } from './dto/excursion-query.dto';
 
 @ApiBearerAuth('JWT-auth')
 @UseGuards(JwtAuthGuard)
@@ -29,67 +29,48 @@ export class ExcursionsAdminController {
   constructor(private readonly excursionAdminService: ExcursionsAdminService) { }
 
   @ApiOperation({ summary: 'Get all cities' })
-  @ApiResponse({ status: 200, type: [String] })
+  @ApiResponse({ status: 200, type: [SelectItemDto] })
   @Get('cities-list')
-  @HttpCode(HttpStatus.OK)
-  async getCitiesList(): Promise<SelectItem[]> {
-    const res = await this.excursionAdminService.getCitiesList();
-    return res?.uniqueCities?.map((item: string, index: number) => ({
-      id: index + 1,
-      name: item,
-    })) ?? [];
+  getCitiesList(): Promise<SelectItemDto[]> {
+    return this.excursionAdminService.getCitiesList();
   }
 
   @ApiOperation({ summary: 'Create excursion' })
   @ApiResponse({ status: 201, type: Excursion })
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  async create(@Body() excursionDto: CreateExcursionDto) {
-    try {
-      await this.excursionAdminService.excursionCreate(excursionDto);
-    } catch (error) {
-      throw new HttpException(
-        {
-          status: HttpStatus.INTERNAL_SERVER_ERROR,
-          error: 'Something went wrong',
-        },
-        HttpStatus.INTERNAL_SERVER_ERROR,
-        {
-          cause: error,
-        },
-      );
-    }
+  create(@Body() excursionDto: CreateExcursionDto) {
+      return this.excursionAdminService.createExcursion(excursionDto);
   }
 
   @ApiOperation({ summary: 'Get all excursions' })
   @ApiResponse({ status: 200, type: [Excursion] })
   @Get()
-  @HttpCode(HttpStatus.OK)
-  async getAll(@Query() params: Partial<IRequestParams> & Record<string, any>): Promise<Excursion[]> {
-    return await this.excursionAdminService.getAllExcursions(params);
+  getAll(@Query() params: ExcursionQueryDto): Promise<Excursion[]> {
+    return this.excursionAdminService.getAllExcursions(params);
   }
 
   @ApiOperation({ summary: 'Get one excursion' })
-  @ApiResponse({ status: 200, type: [Excursion] })
+  @ApiResponse({ status: 200, type: Excursion })
   @Get(':id')
-  async getOne(@Param('id') id: string): Promise<Excursion> {
-    return await this.excursionAdminService.getExcursion(id);
+  getOne(@Param('id') id: string): Promise<Excursion> {
+    return this.excursionAdminService.getExcursion(id);
   }
 
   @ApiOperation({ summary: 'Update excursion' })
   @ApiResponse({ status: 200, type: Excursion })
   @Put(':id')
-  async update(
-    @Body() excursionDto: UpdateExcursionDto,
+  update(
     @Param('id') id: string,
+    @Body() excursionDto: UpdateExcursionDto,
   ): Promise<Excursion> {
-    return await this.excursionAdminService.updateExcursion(id, excursionDto);
+    return this.excursionAdminService.updateExcursion(id, excursionDto);
   }
 
   @ApiOperation({ summary: 'Delete excursion' })
-  @ApiResponse({ status: 200, type: Boolean })
+  @ApiResponse({ status: 200 })
   @Delete(':id')
-  async delete(@Param('id') id: string): Promise<DeleteResult> {
-    return await this.excursionAdminService.deleteExcursion(id);
+  delete(@Param('id') id: string): Promise<DeleteResult> {
+    return this.excursionAdminService.deleteExcursion(id);
   }
 }

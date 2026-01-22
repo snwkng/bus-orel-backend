@@ -1,9 +1,10 @@
-import { Prop, Schema, SchemaFactory, raw } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
-import { Document, Types } from 'mongoose';
+import { Document } from 'mongoose';
 import { Address } from '../subschemas/address.subschema';
 import { AdditionalInfo } from '../subschemas/additionalInfo.subschema';
 import { IncludedInThePrice } from '../subschemas/includedInThePrice.subschema';
+import { Room } from '../subschemas/rooms.subschema';
 export type HotelsDocument = Hotel & Document;
 @Schema({ timestamps: true })
 export class Hotel {
@@ -11,14 +12,14 @@ export class Hotel {
     example: 'Аврора',
     description: 'Hotel name',
   })
-  @Prop({ type: String, required: true })
+  @Prop({ type: String, required: true, trim: true })
   name: string;
 
   @ApiProperty({
     example: 'гостиница',
     description: 'Hotel type',
   })
-  @Prop({ type: String })
+  @Prop({ type: String, index: true })
   type: string;
 
   @ApiProperty({
@@ -34,14 +35,14 @@ export class Hotel {
   @Prop({ type: () => Address })
   address: Address;
 
-  @Prop({ type: String })
+  @Prop({ type: String, index: true })
   seaType: string;
 
   @ApiProperty({
     example: '20211',
-    description: 'minimal tour price',
+    description: 'minimal tour to hotel price',
   })
-  @Prop({ type: Number })
+  @Prop({ type: Number, index: true })
   minPrice: number;
 
   @Prop({ type: () => AdditionalInfo })
@@ -51,27 +52,31 @@ export class Hotel {
   includedInThePrice: IncludedInThePrice[];
 
   @ApiProperty({
-    example: '[123.webp, 456.webp]',
+    example: ['123.webp', '456.webp'],
     description: 'hotel images',
   })
-  @Prop({ type: [raw(String)], default: [] })
+  @Prop({ type: [String], default: [] })
   images?: string[];
 
   @ApiProperty({
-    example: 'tour.docx',
-    description: 'document for tour',
+    example: ['contract.pdf'],
+    description: 'document for hotel',
   })
-  @Prop({ type: [raw(String)], default: [] })
+  @Prop({ type: [String], default: [] })
   documentName?: string[];
 
   @ApiProperty({
-    example: 'false',
-    description: 'Tour publish',
+    example: false,
+    description: 'hotel publish',
   })
   @Prop({ type: Boolean, required: true })
   published: boolean;
 
-
+  @Prop({ type: () => [Room], default: [], validate: [v => Array.isArray(v) && v.length > 0, 'Hotel must have at least one room'] })
+  rooms: Room[];
 
 }
 export const HotelSchema = SchemaFactory.createForClass(Hotel);
+
+// Составной индекс для оптимизации поиска в публичной части
+HotelSchema.index({ published: 1, 'address.city': 1, seaType: 1 });

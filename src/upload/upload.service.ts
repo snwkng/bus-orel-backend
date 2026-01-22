@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
 import {
   S3Client,
   GetObjectCommand,
@@ -9,9 +9,13 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { ObjectId } from 'bson';
 import * as sharp from 'sharp';
+import { Readable } from 'node:stream';
+import * as lookup from 'mime-types';
 
 @Injectable()
 export class UploadService {
+  private readonly logger = new Logger(UploadService.name);
+  private readonly bucket = this.configService.getOrThrow('AWS_S3_BUCKET');
   private readonly s3Client = new S3Client({
     region: this.configService.getOrThrow('AWS_S3_REGION'),
     endpoint: this.configService.getOrThrow('AWS_S3_ENDPOINT'),
@@ -25,62 +29,66 @@ export class UploadService {
   constructor(private readonly configService: ConfigService) { }
 
   async upload(file: Express.Multer.File) {
-    try {
-      let fileName = new ObjectId().toString();
-      const mimetype = file.mimetype;
-      const currentFileType = file.mimetype.split('/')[1];
-      const type = file.originalname.split('.')[1];
-      if (mimetype.includes('image')) {
-        if (currentFileType != 'svg+xml') {
-          fileName = `${fileName}.webp`;
-        } else {
-          fileName = `${fileName}.svg`;
-        }
-      } else {
-        fileName = `${fileName}.${type}`;
+    const originalMime = lookup.lookup(file.originalname) || 'application/octet-stream';
+    const isImage = originalMime.includes('image') && !originalMime.includes('svg');
+
+    let buffer = file.buffer;
+    let finalContentType = originalMime;
+    const extension = file.originalname.split('.').pop() || '';
+    let fileName = `${new ObjectId().toString()}.${extension}`;
+
+
+    if (isImage) {
+      // Пытаемся конвертировать
+      try {
+        buffer = await this.convertToWebP(file.buffer);
+        finalContentType = 'image/webp';
+        fileName = `${new ObjectId().toString()}.webp`;
+      } catch (error) {
+        this.logger.warn(`Sharp failed to process image, uploading original: ${file.originalname}`);
       }
-      const buffer =
-        mimetype.includes('image') && currentFileType != 'svg+xml'
-          ? await this.convertToWebP(file.buffer)
-          : file.buffer;
-      await this.s3Client.send(
-        new PutObjectCommand({
-          Bucket: this.configService.get('AWS_S3_BUCKET'),
-          Key: fileName,
-          Body: buffer,
-        }),
-      );
+    } else {
+      buffer = file.buffer;
+      fileName = `${new ObjectId().toString()}.${extension}`;
+      finalContentType = originalMime;
+    }
+    try {
+      const command = new PutObjectCommand({
+        Bucket: this.bucket,
+        Key: fileName,
+        Body: buffer,
+        ContentType: finalContentType,
+      });
+
+      await this.s3Client.send(command);
       return fileName;
     } catch (error) {
-      console.error(error?.message)
+      this.logger.error(`Failed to upload file: ${error.message}`);
+      throw new InternalServerErrorException('Ошибка при загрузке файла в хранилище');
     }
+
   }
 
   async download(fileName: string) {
-    try {
-      const item: any = await this.s3Client.send(
-        new GetObjectCommand({
-          Bucket: this.configService.get('AWS_S3_BUCKET'),
-          Key: fileName,
-        }),
-      );
-      return item.Body;
-    } catch (e) {
-      if (e.$metadata.httpStatusCode === 404) {
-        throw new NotFoundException({statusMessage: 'Файл не найден'});
-      }
-      throw e; // Re-throw other errors
+    const command = new GetObjectCommand({ Bucket: this.configService.get('AWS_S3_BUCKET'), Key: fileName });
+    const response = await this.s3Client.send(command);
+    let contentType = response.ContentType;
+    if (!contentType || contentType === 'application/octet-stream') {
+      contentType = lookup.lookup(fileName) || 'application/octet-stream';
     }
+    return {
+      stream: response.Body as Readable,
+      contentType,
+    };
   }
 
   async delete(fileName: string) {
     try {
-      await this.s3Client.send(
-        new DeleteObjectCommand({
-          Bucket: this.configService.get('AWS_S3_BUCKET'),
-          Key: fileName,
-        })
-      );
+      const command = new DeleteObjectCommand({
+        Bucket: this.bucket,
+        Key: fileName,
+      });
+      await this.s3Client.send(command);
       return true;
     } catch (error) {
       console.error(error);
@@ -92,7 +100,7 @@ export class UploadService {
     try {
       const list = await this.s3Client.send(
         new ListObjectsV2Command({
-          Bucket: this.configService.get('AWS_S3_BUCKET')
+          Bucket: this.bucket
         })
       );
       return list;
@@ -103,6 +111,6 @@ export class UploadService {
   }
 
   async convertToWebP(buffer: Buffer): Promise<Buffer> {
-    return sharp(buffer).webp({ quality: 100 }).toBuffer();
-  }
+    return sharp(buffer).webp({ quality: 85 }).toBuffer();
+  };
 }

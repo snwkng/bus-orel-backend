@@ -4,8 +4,6 @@ import {
   Get,
   UploadedFile,
   UseInterceptors,
-  HttpCode,
-  HttpStatus,
   Delete,
   Query,
   UseGuards,
@@ -24,24 +22,22 @@ export class UploadAdminController {
 
   @Post('/upload')
   @UseInterceptors(FileInterceptor('file'))
-  async uploadFile(@UploadedFile() file: Express.Multer.File): Promise<string> {
-    const fileName = await this.uploadService.upload(file);
+  uploadFile(@UploadedFile() file: Express.Multer.File): Promise<string> {
+    const fileName = this.uploadService.upload(file);
     return fileName;
   }
 
   @Delete('/delete')
-  @HttpCode(HttpStatus.OK)
   @UseInterceptors(FileInterceptor('file'))
-  async deleteFile(@Query('uuid') uuid: string) {
-    const result = await this.uploadService.delete(uuid);
+  deleteFile(@Query('uuid') uuid: string) {
+    const result = this.uploadService.delete(uuid);
     return result;
   }
 
   @Get('/list')
-  @HttpCode(HttpStatus.OK)
   @UseInterceptors(FileInterceptor('file'))
-  async getList() {
-    const result = await this.uploadService.listObjects();
+  getList() {
+    const result = this.uploadService.listObjects();
     return result;
   }
 }

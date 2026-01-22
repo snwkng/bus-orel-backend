@@ -1,15 +1,34 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiPropertyOptional } from '@nestjs/swagger';
+import {
+  IsString,
+  IsOptional,
+  IsNotEmpty,
+} from 'class-validator';
+import { Transform } from 'class-transformer';
 
 export class AddressDto {
-  @ApiProperty({ example: 'Краснодарский край, ул. Пушкина, д. 111' })
+  @ApiPropertyOptional({ example: 'Краснодарский край, ул. Пушкина, д. 111' })
+  @IsOptional()
+  @IsString()
+  @Transform(({ value }) => typeof value === 'string' ? value.trim() : value)
   readonly fullAddress?: string;
 
-  @ApiProperty({ example: 'Анапа' })
+  @ApiPropertyOptional({ example: 'Анапа' })
+  @IsOptional()
+  @IsNotEmpty()
+  @IsString()
+  @Transform(({ value }) => typeof value === 'string' ? value.trim() : value)
   readonly city?: string;
 
-  @ApiProperty({ example: 'Краснодарский край' })
+  @ApiPropertyOptional({ example: 'Краснодарский край' })
+  @IsOptional()
+  @IsString()
+  @Transform(({ value }) => typeof value === 'string' ? value.trim() : value)
   readonly region?: string;
 
-  @ApiProperty({ example: 'Россия' })
+  @ApiPropertyOptional({ example: 'Россия' })
+  @IsOptional()
+  @IsString()
+  @Transform(({ value }) => typeof value === 'string' ? value.trim() : value)
   readonly country?: string;
 }
