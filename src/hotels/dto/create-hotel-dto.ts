@@ -88,6 +88,12 @@ export class CreateHotelDto {
   @IsOptional()
   readonly published: boolean;
 
+  @ApiProperty({ example: 'CSO7772222', description: 'Регистрационный номер отеля' })
+  @IsString()
+  @IsNotEmpty()
+  @Transform(({ value }) => typeof value === 'string' ? value.trim() : value)
+  readonly registryNumber: string;
+
   @ApiProperty({ type: [RoomDto], description: 'Номера' })
   @IsArray()
   @ArrayMinSize(1)
