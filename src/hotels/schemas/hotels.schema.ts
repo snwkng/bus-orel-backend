@@ -72,6 +72,13 @@ export class Hotel {
   @Prop({ type: Boolean, required: true })
   published: boolean;
 
+  @ApiProperty({
+    example: 'CSO777121323',
+    description: 'Регистрационный номер отеля',
+  })
+  @Prop({ type: String, required: true })
+  registryNumber: string;
+
   @Prop({ type: () => [Room], default: [], validate: [v => Array.isArray(v) && v.length > 0, 'Hotel must have at least one room'] })
   rooms: Room[];
 

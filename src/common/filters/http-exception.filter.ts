@@ -45,9 +45,9 @@ export class AllExceptionsFilter implements ExceptionFilter {
         message: Array.isArray(message) ? message : [message],
       },
       meta: {
-        statusCode: status, // Полезно добавить для фронтенда
+        statusCode: status,
         error: exception.name || 'Error',
-        timestamp: new Date().toISOString(), // Хорошая практика 2025 года
+        timestamp: new Date().toISOString(),
       }
     });
   }
