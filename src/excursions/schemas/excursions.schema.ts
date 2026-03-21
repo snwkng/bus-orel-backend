@@ -71,4 +71,4 @@ export class Excursion {
 
 export const ExcursionSchema = SchemaFactory.createForClass(Excursion);
 
-ExcursionSchema.index({ createdAt: -1 });
+ExcursionSchema.index({ createdAt: -1, _id: -1 });
