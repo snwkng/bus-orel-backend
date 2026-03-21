@@ -10,6 +10,7 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Excursion } from './schemas/excursions.schema';
 import { ExcursionQueryDto } from './dto/excursion-query.dto';
 import { SelectItemDto } from '../common/dto/select-item.dto';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 @ApiTags('Excursions')
 @Controller('excursions')
@@ -27,8 +28,8 @@ export class ExcursionsController {
   @ApiOperation({ summary: 'Get all excursions' })
   @ApiResponse({ status: 200, type: [Excursion] })
   @Get()
-  getAll(@Query() params: ExcursionQueryDto): Promise<Excursion[]> {
-    return this.excursionService.getAllExcursions(params);
+  getAll(@Query() params: ExcursionQueryDto, @Query() pagination?: PaginationDto) {
+    return this.excursionService.getAllExcursions(params, pagination);
   }
 
   @ApiOperation({ summary: 'Get one excursion' })

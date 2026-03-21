@@ -7,6 +7,8 @@ import { UpdateExcursionDto } from './dto/update-excursion-dto';
 import { mapToSelectItem } from '../common/utils/mapper.util';
 import { SelectItemDto } from '../common/dto/select-item.dto';
 import { ExcursionQueryDto } from './dto/excursion-query.dto';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { PaginatedResponse } from 'src/common/interfaces/pagination.interface';
 
 @Injectable()
 export class ExcursionsAdminService {
@@ -19,7 +21,8 @@ export class ExcursionsAdminService {
     return await this.excursionModel.create(dto);
   }
 
-  async getAllExcursions(params: ExcursionQueryDto) {
+  async getAllExcursions(params: ExcursionQueryDto, pagination?: PaginationDto): Promise<Excursion[] | PaginatedResponse<Excursion>> {
+    const { page, limit } = pagination;
     const filter: FilterQuery<ExcursionDocument> = {};
 
     if (params?.city) {
@@ -28,11 +31,31 @@ export class ExcursionsAdminService {
     if (params?.search) {
       filter.name = { $regex: params.search, $options: 'i' };
     }
-    return await this.excursionModel
-      .find(filter)
-      .sort({ _id: -1 })
-      .lean()
-      .exec();
+
+    if (!page || !limit) {
+      return await this.excursionModel
+        .find(filter)
+        .sort({ _id: -1 })
+        .lean()
+        .exec();
+    }
+
+    const skip = (page - 1) * limit;
+    const [data, total] = await Promise.all([
+      this.excursionModel.find(filter).sort({ _id: -1 }).skip(skip).limit(limit).lean().exec(),
+      this.excursionModel.countDocuments(filter).exec(),
+    ]);
+
+    return {
+      items: data,
+      meta: {
+        total,
+        page,
+        limit,
+        lastPage: Math.ceil(total / limit),
+      },
+    };
+
   }
 
   async getExcursion(id: string): Promise<Excursion> {

@@ -5,6 +5,8 @@ import { Excursion, ExcursionDocument } from './schemas/excursions.schema';
 import { ExcursionQueryDto } from './dto/excursion-query.dto';
 import { mapToSelectItem } from '../common/utils/mapper.util';
 import { SelectItemDto } from '../common/dto/select-item.dto';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { PaginatedResponse } from 'src/common/interfaces/pagination.interface';
 
 @Injectable()
 export class ExcursionService {
@@ -13,22 +15,18 @@ export class ExcursionService {
     private readonly excursionModel: Model<ExcursionDocument>,
   ) { }
 
-  async getAllExcursions(params: ExcursionQueryDto) {
-    const filter: FilterQuery<ExcursionDocument> = {};
-    if (params?.city) {
-      filter['cities'] = params.city;
-    }
+  async getAllExcursions(params: ExcursionQueryDto, pagination?: PaginationDto): Promise<Excursion[] | PaginatedResponse<Excursion>> {
+    const page = pagination?.page;
+    const limit = pagination?.limit;
     const today = new Date();
 
-    const excursions = await this.excursionModel.aggregate([
-      {
-        $match: {
-          excursionStartDates: {
-            $elemMatch: { $gte: today }
-          },
-          ...filter,
-        }
-      },
+    const matchFilter: FilterQuery<ExcursionDocument> = {
+      excursionStartDates: { $elemMatch: { $gte: today } },
+      ...(params?.city ? { cities: params.city } : {}),
+    };
+
+    const pipeline: any[] = [
+      { $match: matchFilter },
       {
         $addFields: {
           excursionStartDates: {
@@ -40,14 +38,38 @@ export class ExcursionService {
                   cond: { $gte: ["$$date", today] }
                 }
               },
-              sortBy: 1 // Сортировка дат от ближайшей к дальней
+              sortBy: 1
             }
           }
         }
       },
-      { $sort: { createdAt: -1 } } // Сортировка самих экскурсий
-    ]).exec();
-    return excursions;
+      { $sort: { createdAt: -1 } }
+    ];
+
+    if (!page || !limit) {
+      return await this.excursionModel.aggregate(pipeline).exec();
+    }
+
+    const skip = (page - 1) * limit;
+
+    const [data, total] = await Promise.all([
+      this.excursionModel.aggregate([
+        ...pipeline,
+        { $skip: skip },
+        { $limit: limit }
+      ]).exec(),
+      this.excursionModel.countDocuments(matchFilter).exec(),
+    ]);
+
+    return {
+      items: data,
+      meta: {
+        total,
+        page,
+        limit,
+        lastPage: Math.ceil(total / limit),
+      },
+    };
   }
 
   async getExcursion(id: string) {

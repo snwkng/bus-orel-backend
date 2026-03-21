@@ -22,6 +22,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth/jwr-auth.guard';
 import { SelectItemDto } from '../common/dto/select-item.dto';
 import { IncludedInThePriceDto } from './dto/included-in-the-price.dto';
 import { HotelQueryDto } from './dto/hotel-query.dto';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 
 @ApiBearerAuth('JWT-auth')
@@ -29,7 +30,7 @@ import { HotelQueryDto } from './dto/hotel-query.dto';
 @ApiTags('AdminHotels')
 @Controller('admin/hotels')
 export class HotelsAdminController {
-  constructor(private readonly hotelsAdminService: HotelsAdminService) {}
+  constructor( private readonly hotelsAdminService: HotelsAdminService ) {}
 
   @ApiOperation({ summary: 'Get sea list' })
   @ApiResponse({ status: 200, type: [SelectItemDto] })
@@ -63,8 +64,8 @@ export class HotelsAdminController {
   @ApiOperation({ summary: 'Get all hotels' })
   @ApiResponse({ status: 200, type: [Hotel] })
   @Get()
-  getAll(@Query() params: HotelQueryDto): Promise<Hotel[]> {
-    return this.hotelsAdminService.getHotels(params);
+  getAll(@Query() params: HotelQueryDto, @Query() pagination?: PaginationDto) {
+    return this.hotelsAdminService.getHotels(params, pagination);
   }
 
   @ApiOperation({ summary: 'Get hotel by ID' })

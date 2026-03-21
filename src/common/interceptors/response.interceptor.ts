@@ -7,39 +7,59 @@ import {
 } from '@nestjs/common';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { PaginatedResponse, PaginationMetadata } from '../interfaces/pagination.interface';
+
 
 export interface Response<T> {
   success: boolean;
-  data?: T;
-  error?: { code: string; message: string; statusCode?: number; };
-  meta?: Record<string, unknown>;
+  data: T; // Убрали опциональность для предсказуемости
+  error?: { code: string; message: string; statusCode?: number };
+  meta: {
+    timestamp: string;
+    path: string;
+    statusCode: number;
+    pagination?: PaginationMetadata;
+  };
 }
 
 @Injectable()
 export class ApiResponseInterceptor<T>
-  implements NestInterceptor<T, T | Response<T>> {
+  implements NestInterceptor<T | PaginatedResponse<T>, Response<T | T[]> | StreamableFile>
+{
   intercept(
     context: ExecutionContext,
-    next: CallHandler<T>,
-  ): Observable<T | Response<T>> {
+    next: CallHandler<T | PaginatedResponse<T>>,
+  ): Observable<Response<T | T[]> | StreamableFile> {
     const now = new Date();
+    const http = context.switchToHttp();
+
     return next.handle().pipe(
-      map((data) => {
-        // Если это поток (StreamableFile), возвращаем его как есть без обертки
-        if (data instanceof StreamableFile) {
-          return data;
+      map((res) => {
+        if (res instanceof StreamableFile) {
+          return res;
         }
-        // В противном случае оборачиваем в объект data
+
+        // Type Guard: проверяем, является ли ответ пагинированным
+        const isPaginated = (
+          obj: T | PaginatedResponse<T>
+        ): obj is PaginatedResponse<T> => {
+          return !!obj && typeof obj === 'object' && 'items' in obj && 'meta' in obj;
+        };
+
+        const responseData = isPaginated(res) ? res.items : res;
+        const pagination = isPaginated(res) ? res.meta : undefined;
+
         return {
           success: true,
-          data,
+          data: responseData,
           meta: {
             timestamp: now.toISOString(),
-            path: context.switchToHttp().getRequest().url,
-            statusCode: context.switchToHttp().getResponse().statusCode,
-          }
-        } satisfies Response<T>;
-      })
+            path: http.getRequest().url,
+            statusCode: http.getResponse().statusCode,
+            ...(pagination ? { pagination } : {}),
+          },
+        };
+      }),
     );
   }
 }

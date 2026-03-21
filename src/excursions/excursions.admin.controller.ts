@@ -20,6 +20,7 @@ import { UpdateExcursionDto } from './dto/update-excursion-dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth/jwr-auth.guard';
 import { SelectItemDto } from '../common/dto/select-item.dto';
 import { ExcursionQueryDto } from './dto/excursion-query.dto';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 @ApiBearerAuth('JWT-auth')
 @UseGuards(JwtAuthGuard)
@@ -46,9 +47,9 @@ export class ExcursionsAdminController {
   @ApiOperation({ summary: 'Get all excursions' })
   @ApiResponse({ status: 200, type: [Excursion] })
   @Get()
-  getAll(@Query() params: ExcursionQueryDto): Promise<Excursion[]> {
-    return this.excursionAdminService.getAllExcursions(params);
-  }
+  getAll(@Query() params: ExcursionQueryDto, @Query() pagination?: PaginationDto) {
+      return this.excursionAdminService.getAllExcursions(params, pagination);
+    }
 
   @ApiOperation({ summary: 'Get one excursion' })
   @ApiResponse({ status: 200, type: Excursion })
