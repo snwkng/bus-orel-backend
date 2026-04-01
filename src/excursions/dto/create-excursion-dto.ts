@@ -33,8 +33,8 @@ export class CreateExcursionDto {
   readonly images: string[];
 
   @ApiProperty({ example: 5, description: 'duration excursion' })
-  @IsNumber()
-  @Min(0)
+  @IsNumber({}, {message: 'Поле Длительность экскурсии (в днях) должно быть числом'})
+  @Min(1, {message: 'Длительность экскурсии должна быть больше 0'})
   @Type(() => Number)
   readonly duration: number;
 
