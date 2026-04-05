@@ -20,8 +20,8 @@ export class CreateExcursionDto {
     description: 'excursion description',
   })
   @IsArray()
-  @IsString({ each: true }) // Проверяет, что каждый элемент массива - строка
-  readonly description: string[]; // Исправил опечатку: было descriptrion
+  @IsString({ each: true })
+  readonly description: string[];
 
   @ApiProperty({
     example: ['imageName.webp'],
