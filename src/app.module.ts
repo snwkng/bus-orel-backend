@@ -9,6 +9,7 @@ import { AuthModule } from './auth/auth.module';
 import { UploadModule } from './upload/upload.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { ApiResponseInterceptor } from './common/interceptors/response.interceptor';
+import { ToursModule } from './tours/tours.module';
 
 @Module({
   imports: [
@@ -21,7 +22,8 @@ import { ApiResponseInterceptor } from './common/interceptors/response.intercept
     HotelsModule,
     AuthModule,
     UploadModule,
-    BusToursModule
+    BusToursModule,
+    ToursModule
   ],
   providers: [
     {
