@@ -105,11 +105,11 @@ export class ExcursionsAdminService {
 
   async getCitiesList(): Promise<SelectItemDto[]> {
     const res = await this.excursionModel.distinct('cities').exec();
-    return mapToSelectItem(res);
+    return mapToSelectItem(res.filter(Boolean));
   }
 
   async getTypesList(): Promise<SelectItemDto[]> {
-    const res = await this.excursionModel.distinct('type').exec();
+    const res = await this.excursionModel.distinct('type', { type: { $exists: true, $nin: [null, '', undefined] } }).exec();
     return mapToSelectItem(res);
   }
 }
