@@ -16,6 +16,10 @@ export class Excursion {
   @Prop({ type: [String], required: true })
   description: string[];
 
+  @ApiProperty({ example: 'Новогодняя', description: 'Тип экскурсии' })
+  @Prop({ type: String, required: true, trim: true, index: true })
+  type: string;
+
   @ApiProperty({
     example: ['image1.webp', 'image2.webp'],
     description: 'Массив имен файлов изображений',
@@ -71,4 +75,4 @@ export class Excursion {
 
 export const ExcursionSchema = SchemaFactory.createForClass(Excursion);
 
-ExcursionSchema.index({ createdAt: -1 });
+ExcursionSchema.index({ createdAt: -1, _id: -1 });
