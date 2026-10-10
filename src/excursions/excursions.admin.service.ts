@@ -107,4 +107,9 @@ export class ExcursionsAdminService {
     const res = await this.excursionModel.distinct('cities').exec();
     return mapToSelectItem(res);
   }
+
+  async getTypesList(): Promise<SelectItemDto[]> {
+    const res = await this.excursionModel.distinct('type').exec();
+    return mapToSelectItem(res);
+  }
 }

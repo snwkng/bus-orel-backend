@@ -23,6 +23,10 @@ export class CreateExcursionDto {
   @IsString({ each: true })
   readonly description: string[];
 
+  @ApiProperty({ example: 'Новогодняя', description: 'Тип экскурсии' })
+  @IsString() // Обязательно для ValidationPipe
+  readonly type: string;
+
   @ApiProperty({
     example: ['imageName.webp'],
     description: 'array of string excursion images',

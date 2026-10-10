@@ -36,20 +36,27 @@ export class ExcursionsAdminController {
     return this.excursionAdminService.getCitiesList();
   }
 
+  @ApiOperation({ summary: 'Get all types' })
+  @ApiResponse({ status: 200, type: [SelectItemDto] })
+  @Get('types-list')
+  getTypesList(): Promise<SelectItemDto[]> {
+    return this.excursionAdminService.getTypesList();
+  }
+
   @ApiOperation({ summary: 'Create excursion' })
   @ApiResponse({ status: 201, type: Excursion })
   @Post()
   @HttpCode(HttpStatus.CREATED)
   create(@Body() excursionDto: CreateExcursionDto) {
-      return this.excursionAdminService.createExcursion(excursionDto);
+    return this.excursionAdminService.createExcursion(excursionDto);
   }
 
   @ApiOperation({ summary: 'Get all excursions' })
   @ApiResponse({ status: 200, type: [Excursion] })
   @Get()
   getAll(@Query() params: ExcursionQueryDto, @Query() pagination?: PaginationDto) {
-      return this.excursionAdminService.getAllExcursions(params, pagination);
-    }
+    return this.excursionAdminService.getAllExcursions(params, pagination);
+  }
 
   @ApiOperation({ summary: 'Get one excursion' })
   @ApiResponse({ status: 200, type: Excursion })
