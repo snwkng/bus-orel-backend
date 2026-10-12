@@ -18,7 +18,7 @@ import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagg
 import { Hotel } from '../hotels/schemas/hotels.schema';
 import { DeleteResult } from 'mongodb';
 import { UpdateHotelDto } from './dto/update-hotel-dto';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth/jwr-auth.guard';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth/jwt-auth.guard';
 import { SelectItemDto } from '../common/dto/select-item.dto';
 import { IncludedInThePriceDto } from './dto/included-in-the-price.dto';
 import { HotelQueryDto } from './dto/hotel-query.dto';

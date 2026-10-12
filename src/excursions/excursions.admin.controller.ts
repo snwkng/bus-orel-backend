@@ -17,7 +17,7 @@ import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagg
 import { Excursion } from './schemas/excursions.schema';
 import { DeleteResult } from 'mongodb';
 import { UpdateExcursionDto } from './dto/update-excursion-dto';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth/jwr-auth.guard';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth/jwt-auth.guard';
 import { SelectItemDto } from '../common/dto/select-item.dto';
 import { ExcursionQueryDto } from './dto/excursion-query.dto';
 import { PaginationDto } from 'src/common/dto/pagination.dto';

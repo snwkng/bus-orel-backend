@@ -19,7 +19,7 @@ import { BusTour } from './schemas/busTour.schema';
 import { DeleteResult } from 'mongodb';
 import { Types } from 'mongoose';
 import { UpdateBusTourDto } from './dto/update-bus-tour-dto';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth/jwr-auth.guard';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth/jwt-auth.guard';
 
 
 @ApiBearerAuth('JWT-auth')
