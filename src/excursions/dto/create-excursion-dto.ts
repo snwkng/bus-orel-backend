@@ -1,13 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { 
-  IsString, 
-  IsArray, 
-  IsNumber, 
+import {
+  IsString,
+  IsArray,
+  IsNumber,
   IsOptional,
-  ArrayMinSize, 
+  ArrayMinSize,
   Min,
-  IsDate
+  IsDate,
 } from 'class-validator';
 
 export class CreateExcursionDto {
@@ -16,7 +16,7 @@ export class CreateExcursionDto {
   readonly name: string;
 
   @ApiProperty({
-    example: ["Описание первого дня", "Описание второго дня"],
+    example: ['Описание первого дня', 'Описание второго дня'],
     description: 'excursion description',
   })
   @IsArray()
@@ -37,8 +37,11 @@ export class CreateExcursionDto {
   readonly images: string[];
 
   @ApiProperty({ example: 5, description: 'duration excursion' })
-  @IsNumber({}, {message: 'Поле Длительность экскурсии (в днях) должно быть числом'})
-  @Min(1, {message: 'Длительность экскурсии должна быть больше 0'})
+  @IsNumber(
+    {},
+    { message: 'Поле Длительность экскурсии (в днях) должно быть числом' },
+  )
+  @Min(1, { message: 'Длительность экскурсии должна быть больше 0' })
   @Type(() => Number)
   readonly duration: number;
 
@@ -66,18 +69,26 @@ export class CreateExcursionDto {
   @IsString({ each: true })
   readonly cities: string[];
 
-  @ApiProperty({ example: 'Отель Эллиот', description: 'hotel name', required: false })
+  @ApiProperty({
+    example: 'Отель Эллиот',
+    description: 'hotel name',
+    required: false,
+  })
   @IsOptional()
   @IsString()
   readonly hotelName: string;
 
-  @ApiProperty({ example: 'https://hotel.com', description: 'hotel link', required: false })
+  @ApiProperty({
+    example: 'https://hotel.com',
+    description: 'hotel link',
+    required: false,
+  })
   @IsOptional()
   @IsString()
   readonly hotelLink: string;
 
   @ApiProperty({
-    example: ["Экскурсии по программе"],
+    example: ['Экскурсии по программе'],
     description: 'Что включено в стоимость',
   })
   @IsArray()
@@ -86,7 +97,7 @@ export class CreateExcursionDto {
   readonly thePriceIncludes: string[];
 
   @ApiProperty({
-    example: ["Аренда самокатов"],
+    example: ['Аренда самокатов'],
     description: 'Дополнительные услуги',
   })
   @IsArray()

@@ -10,12 +10,15 @@ export class UsersService {
   ) {}
 
   async findOne(username: string): Promise<User | undefined> {
-    const user = await this.userModel.findOne({ username }).select('-password').exec();
+    const user = await this.userModel.findOne({ username }).exec();
     return user;
   }
 
-  async checkUser(username: string): Promise<User | undefined> {
-    const user = await this.userModel.findOne({ username }).exec();
+  async checkUser(username: string): Promise<UsersDocument | undefined> {
+    const user = await this.userModel
+      .findOne({ username })
+      .select('+password')
+      .exec();
     return user;
   }
 }

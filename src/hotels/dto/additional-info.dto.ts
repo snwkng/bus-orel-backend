@@ -7,7 +7,7 @@ import {
   Min,
   IsBoolean,
   IsObject,
-  ValidateNested
+  ValidateNested,
 } from 'class-validator';
 export class Food {
   @ApiPropertyOptional({ example: false, description: 'Включено ли питание' })
@@ -15,21 +15,27 @@ export class Food {
   @IsBoolean()
   readonly included?: boolean;
 
-  @ApiPropertyOptional({ example: "Только завтраки", description: 'Тип питания (завтрак, всё включено и т.д.)' })
+  @ApiPropertyOptional({
+    example: 'Только завтраки',
+    description: 'Тип питания (завтрак, всё включено и т.д.)',
+  })
   @IsOptional()
   @IsString()
-  @Transform(({ value }) => typeof value === 'string' ? value.trim() : value)
+  @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
   readonly type?: string;
 }
 
 export class Beach {
-  @ApiPropertyOptional({ example: "Галечный", description: 'Тип пляжа' })
+  @ApiPropertyOptional({ example: 'Галечный', description: 'Тип пляжа' })
   @IsOptional()
   @IsString()
-  @Transform(({ value }) => typeof value === 'string' ? value.trim() : value)
+  @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
   readonly type?: string;
 
-  @ApiPropertyOptional({ example: 5, description: 'Расстояние до пляжа в минутах ходьбы' })
+  @ApiPropertyOptional({
+    example: 5,
+    description: 'Расстояние до пляжа в минутах ходьбы',
+  })
   @IsOptional()
   @IsNumber()
   @Min(0)
@@ -38,16 +44,16 @@ export class Beach {
 }
 
 export class CheckInOut {
-  @ApiPropertyOptional({ example: "14:00", description: 'Время заезда' })
+  @ApiPropertyOptional({ example: '14:00', description: 'Время заезда' })
   @IsOptional()
   @IsString()
-  @Transform(({ value }) => typeof value === 'string' ? value.trim() : value)
+  @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
   readonly checkIn?: string;
 
-  @ApiPropertyOptional({ example: "12:00", description: 'Время выезда' })
+  @ApiPropertyOptional({ example: '12:00', description: 'Время выезда' })
   @IsOptional()
   @IsString()
-  @Transform(({ value }) => typeof value === 'string' ? value.trim() : value)
+  @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
   readonly checkOut?: string;
 }
 
@@ -66,7 +72,10 @@ export class AdditionalInfoDto {
   @Type(() => Beach)
   readonly beach?: Beach;
 
-  @ApiPropertyOptional({ type: CheckInOut, description: 'Режим работы (заезд/выезд)' })
+  @ApiPropertyOptional({
+    type: CheckInOut,
+    description: 'Режим работы (заезд/выезд)',
+  })
   @IsOptional()
   @IsObject()
   @ValidateNested()

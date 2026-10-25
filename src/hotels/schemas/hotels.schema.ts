@@ -79,9 +79,15 @@ export class Hotel {
   @Prop({ type: String, required: true })
   registryNumber: string;
 
-  @Prop({ type: () => [Room], default: [], validate: [v => Array.isArray(v) && v.length > 0, 'Hotel must have at least one room'] })
+  @Prop({
+    type: () => [Room],
+    default: [],
+    validate: [
+      (v) => Array.isArray(v) && v.length > 0,
+      'Hotel must have at least one room',
+    ],
+  })
   rooms: Room[];
-
 }
 export const HotelSchema = SchemaFactory.createForClass(Hotel);
 

@@ -7,8 +7,10 @@ import {
 } from '@nestjs/common';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { PaginatedResponse, PaginationMetadata } from '../interfaces/pagination.interface';
-
+import {
+  PaginatedResponse,
+  PaginationMetadata,
+} from '../interfaces/pagination.interface';
 
 export interface Response<T> {
   success: boolean;
@@ -23,9 +25,10 @@ export interface Response<T> {
 }
 
 @Injectable()
-export class ApiResponseInterceptor<T>
-  implements NestInterceptor<T | PaginatedResponse<T>, Response<T | T[]> | StreamableFile>
-{
+export class ApiResponseInterceptor<T> implements NestInterceptor<
+  T | PaginatedResponse<T>,
+  Response<T | T[]> | StreamableFile
+> {
   intercept(
     context: ExecutionContext,
     next: CallHandler<T | PaginatedResponse<T>>,
@@ -41,9 +44,11 @@ export class ApiResponseInterceptor<T>
 
         // Type Guard: проверяем, является ли ответ пагинированным
         const isPaginated = (
-          obj: T | PaginatedResponse<T>
+          obj: T | PaginatedResponse<T>,
         ): obj is PaginatedResponse<T> => {
-          return !!obj && typeof obj === 'object' && 'items' in obj && 'meta' in obj;
+          return (
+            !!obj && typeof obj === 'object' && 'items' in obj && 'meta' in obj
+          );
         };
 
         const responseData = isPaginated(res) ? res.items : res;

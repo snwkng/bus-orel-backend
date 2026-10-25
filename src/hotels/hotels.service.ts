@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, isValidObjectId, FilterQuery } from 'mongoose';
 import { Hotel } from '../hotels/schemas/hotels.schema';
@@ -13,10 +17,13 @@ export class HotelsService {
   constructor(
     @InjectModel(Hotel.name)
     private readonly hotelModel: Model<Hotel>,
-  ) { }
+  ) {}
 
-  async getHotels(params: HotelQueryDto, pagination?: PaginationDto): Promise<Hotel[] | PaginatedResponse<Hotel>> {
-    const { page, limit } = pagination;
+  async getHotels(
+    params: HotelQueryDto,
+    pagination?: PaginationDto,
+  ): Promise<PaginatedResponse<Hotel>> {
+    const { page = 1, limit = 20 } = pagination ?? {};
     const filter: FilterQuery<Hotel> = { published: true };
 
     if (params.city) {
@@ -27,17 +34,15 @@ export class HotelsService {
       filter.seaType = params.seaType;
     }
 
-    if (!page || !limit) {
-      return await this.hotelModel
-        .find(filter)
-        .sort({ _id: -1 })
-        .lean()
-        .exec();
-    }
-
     const skip = (page - 1) * limit;
     const [data, total] = await Promise.all([
-      this.hotelModel.find(filter).sort({ _id: -1 }).skip(skip).limit(limit).lean().exec(),
+      this.hotelModel
+        .find(filter)
+        .sort({ _id: -1 })
+        .skip(skip)
+        .limit(limit)
+        .lean()
+        .exec(),
       this.hotelModel.countDocuments(filter).exec(),
     ]);
 
@@ -56,7 +61,10 @@ export class HotelsService {
     if (!isValidObjectId(id)) {
       throw new BadRequestException('Некорректный формат идентификатора');
     }
-    const hotel = await this.hotelModel.findOne({ _id: id, published: true }).lean().exec();
+    const hotel = await this.hotelModel
+      .findOne({ _id: id, published: true })
+      .lean()
+      .exec();
 
     if (!hotel) {
       throw new NotFoundException('Страница не найдена');

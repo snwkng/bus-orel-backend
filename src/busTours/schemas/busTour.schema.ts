@@ -1,7 +1,10 @@
 import { Prop, Schema, SchemaFactory, raw } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import { Document, Types } from 'mongoose';
-import { TourAvailabilitySchema, TourAvailability } from '../subschemas/tour-availability.subschema';
+import {
+  TourAvailabilitySchema,
+  TourAvailability,
+} from '../subschemas/tour-availability.subschema';
 export type BusToursDocument = BusTour & Document;
 @Schema({ timestamps: true })
 export class BusTour {
@@ -9,8 +12,8 @@ export class BusTour {
     example: '123123as23',
     description: 'Hotel id',
   })
-  @Prop({ type: Types.ObjectId, required: true })
-  hoteId: Types.ObjectId;
+  @Prop({ type: Types.ObjectId, ref: 'Hotel', required: true })
+  hotelId: Types.ObjectId;
 
   @ApiProperty({
     example: '123123as23',
@@ -20,9 +23,10 @@ export class BusTour {
   roomId: Types.ObjectId;
 
   @Prop({
-    type: [raw(TourAvailabilitySchema)], default: []
+    type: [raw(TourAvailabilitySchema)],
+    default: [],
   })
-  tours: TourAvailability[]
-
+  tours: TourAvailability[];
 }
 export const BusTourSchema = SchemaFactory.createForClass(BusTour);
+BusTourSchema.index({ hotelId: 1 });

@@ -5,7 +5,10 @@ import { Document } from 'mongoose';
 export type ExcursionDocument = Excursion & Document;
 @Schema({ timestamps: true, versionKey: false })
 export class Excursion {
-  @ApiProperty({ example: 'Золотое кольцо России', description: 'Название экскурсии' })
+  @ApiProperty({
+    example: 'Золотое кольцо России',
+    description: 'Название экскурсии',
+  })
   @Prop({ type: String, required: true, trim: true, index: true })
   name: string;
 
@@ -35,11 +38,17 @@ export class Excursion {
   @Prop({ type: Number, required: true, index: true })
   price: number;
 
-  @ApiProperty({ example: 'Отель Аврора', description: 'Название отеля проживания' })
+  @ApiProperty({
+    example: 'Отель Аврора',
+    description: 'Название отеля проживания',
+  })
   @Prop({ type: String })
   hotelName: string;
 
-  @ApiProperty({ example: 'https://hotel-link.test', description: 'Ссылка на отель' })
+  @ApiProperty({
+    example: 'https://hotel-link.test',
+    description: 'Ссылка на отель',
+  })
   @Prop({ type: String })
   hotelLink: string;
 
@@ -50,23 +59,26 @@ export class Excursion {
   @Prop({ type: [String], default: [] })
   documentName: string[];
 
-  @ApiProperty({ example: ['2022-06-01', '2025-01-01'], description: 'Даты начала экскурсий' })
+  @ApiProperty({
+    example: ['2022-06-01', '2025-01-01'],
+    description: 'Даты начала экскурсий',
+  })
   @Prop({ type: [Date], required: true })
   excursionStartDates: Date[];
 
-  @ApiProperty({ example: ["Москва", "Орёл"], description: 'Города маршрута' })
+  @ApiProperty({ example: ['Москва', 'Орёл'], description: 'Города маршрута' })
   @Prop({ type: [String], required: true, index: true })
   cities: string[];
 
- @ApiProperty({
-    example: ["Экскурсии по программе", "Транспорт"],
+  @ApiProperty({
+    example: ['Экскурсии по программе', 'Транспорт'],
     description: 'Что включено в стоимость',
   })
   @Prop({ type: [String], required: true, default: [] })
   thePriceIncludes: string[];
 
-    @ApiProperty({
-    example: ["Аренда самокатов", "Проживание в отеле"],
+  @ApiProperty({
+    example: ['Аренда самокатов', 'Проживание в отеле'],
     description: 'Оплачивается отдельно',
   })
   @Prop({ type: [String], required: true, default: [] })

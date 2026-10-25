@@ -1,2 +1,27 @@
 /node_modules
 /dist
+/coverage
+/test
+
+# секреты
+.env
+.env.*
+
+# VCS и CI
+/.git
+/.github
+
+# docker-файлы
+/dockerfile
+/docker-compose.yml
+/.dockerignore
+
+# dev-мусор
+/.eslintrc.js
+/.prettierrc
+/.gitignore
+*.log
+
+# markdown, кроме README
+*.md
+!README.md

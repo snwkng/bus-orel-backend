@@ -1,24 +1,52 @@
-version: '3.6'
 services:
   nestjs-app:
+    build:
+      context: .
     image: backend:v1
     container_name: nestjs
     env_file:
       - .env
+    environment:
+      MONGODB_HOST: app-db
+      MONGODB_PORT: 27017
+      MONGODB_DATABASE_NAME: ${MONGODB_DATABASE_NAME:-bus-orel}
+      MONGODB_USERNAME: ${MONGO_INITDB_ROOT_USERNAME:-admin}
+      MONGODB_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD:-changeme}
     ports:
-      - 3001:3001
+      - "3001:3001"
     depends_on:
-      - app-db
+      app-db:
+        condition: service_healthy
     networks:
       - localnet
     restart: unless-stopped
   app-db:
-    image: mongo
+    image: mongo:8
     container_name: app-mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME:-admin}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD:-changeme}
+      MONGO_INITDB_DATABASE: ${MONGODB_DATABASE_NAME:-bus-orel}
     ports:
-      - 27017:27017
+      - "127.0.0.1:27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test: >
+        mongosh --quiet
+        -u $${MONGO_INITDB_ROOT_USERNAME}
+        -p $${MONGO_INITDB_ROOT_PASSWORD}
+        --authenticationDatabase admin
+        --eval "db.adminCommand('ping')"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
     networks:
       - localnet
+    restart: unless-stopped
+volumes:
+  mongo-data:
 networks:
   localnet:
     driver: bridge

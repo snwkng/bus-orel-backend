@@ -31,7 +31,8 @@ export interface MultitourErrorResponse {
 }
 
 // Объединенный тип ответа
-export type MultitourResponse<T> = MultitourSuccessResponse<T> | MultitourErrorResponse;
+export type MultitourResponse<T> =
+  MultitourSuccessResponse<T> | MultitourErrorResponse;
 
 // Интерфейс для страны (из документации)
 export interface Country {
@@ -41,7 +42,7 @@ export interface Country {
 
 // Type guard для проверки типа ответа
 export function isSuccessResponse<T>(
-  response: MultitourResponse<T>
+  response: MultitourResponse<T>,
 ): response is MultitourSuccessResponse<T> {
   return 'response' in response;
 }

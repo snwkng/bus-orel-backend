@@ -4,28 +4,28 @@ import { ApiProperty } from '@nestjs/swagger';
 @Schema()
 export class Room {
   @ApiProperty({
-    example: "room name",
+    example: 'room name',
     description: 'room name',
   })
   @Prop({ type: String, required: true })
   name: string;
 
   @ApiProperty({
-    example: "room type",
+    example: 'room type',
     description: 'room type',
   })
   @Prop({ type: String, required: true })
   type: string;
 
   @ApiProperty({
-    example: "capacity",
+    example: 'capacity',
     description: 'capacity',
   })
   @Prop({ type: Number, required: true })
   capacity: number;
 
   @ApiProperty({
-    example: "in room",
+    example: 'in room',
     description: 'in room',
   })
   @Prop({ type: String })

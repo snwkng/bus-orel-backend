@@ -64,4 +64,5 @@ export class AdditionalInfo {
   checkInOut: CheckIn;
 }
 
-export const AdditionalInfoSchema = SchemaFactory.createForClass(AdditionalInfo);
+export const AdditionalInfoSchema =
+  SchemaFactory.createForClass(AdditionalInfo);
