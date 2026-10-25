@@ -25,7 +25,6 @@ import { UpdateExcursionDto } from './dto/update-excursion-dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth/jwt-auth.guard';
 import { SelectItemDto } from '../common/dto/select-item.dto';
 import { ExcursionQueryDto } from './dto/excursion-query.dto';
-import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 @ApiBearerAuth('JWT-auth')
 @UseGuards(JwtAuthGuard)
@@ -61,9 +60,8 @@ export class ExcursionsAdminController {
   @Get()
   getAll(
     @Query() params: ExcursionQueryDto,
-    @Query() pagination?: PaginationDto,
   ) {
-    return this.excursionAdminService.getAllExcursions(params, pagination);
+    return this.excursionAdminService.getAllExcursions(params, params);
   }
 
   @ApiOperation({ summary: 'Get one excursion' })

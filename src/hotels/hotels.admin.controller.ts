@@ -28,7 +28,6 @@ import { SelectItemDto } from '../common/dto/select-item.dto';
 import { IncludedInThePriceDto } from './dto/included-in-the-price.dto';
 import { HotelQueryDto } from './dto/hotel-query.dto';
 import { PublishHotelDto } from './dto/publish-hotel.dto';
-import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 @ApiBearerAuth('JWT-auth')
 @UseGuards(JwtAuthGuard)
@@ -71,8 +70,8 @@ export class HotelsAdminController {
   @ApiOperation({ summary: 'Get all hotels' })
   @ApiResponse({ status: 200, type: [Hotel] })
   @Get()
-  getAll(@Query() params: HotelQueryDto, @Query() pagination?: PaginationDto) {
-    return this.hotelsAdminService.getHotels(params, pagination);
+  getAll(@Query() params: HotelQueryDto) {
+    return this.hotelsAdminService.getHotels(params, params);
   }
 
   @ApiOperation({ summary: 'Get hotel by ID' })

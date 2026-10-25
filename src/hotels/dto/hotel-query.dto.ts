@@ -1,6 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsOptional, IsInt, IsString, IsIn } from 'class-validator';
 import { Type } from 'class-transformer';
+import { PaginationDto } from '../../common/dto/pagination.dto';
 
 export const HOTEL_SORT_FIELDS = [
   'createdAt',
@@ -10,7 +11,7 @@ export const HOTEL_SORT_FIELDS = [
   'seaType',
 ] as const;
 
-export class HotelQueryDto {
+export class HotelQueryDto extends PaginationDto {
   @ApiProperty({ example: 'Москва', required: false })
   @IsString()
   @IsOptional()
