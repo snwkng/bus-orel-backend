@@ -58,9 +58,7 @@ export class ExcursionsAdminController {
   @ApiOperation({ summary: 'Get all excursions' })
   @ApiResponse({ status: 200, type: [Excursion] })
   @Get()
-  getAll(
-    @Query() params: ExcursionQueryDto,
-  ) {
+  getAll(@Query() params: ExcursionQueryDto) {
     return this.excursionAdminService.getAllExcursions(params, params);
   }
 

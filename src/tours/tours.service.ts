@@ -83,7 +83,10 @@ export class TourService {
    * Получение списка стран
    */
   async getCountries(): Promise<Country[]> {
-    return this.sendRequest<{}, Country[]>('Geo.Country', {});
+    return this.sendRequest<Record<string, never>, Country[]>(
+      'Geo.Country',
+      {},
+    );
   }
 
   /**

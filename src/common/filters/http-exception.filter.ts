@@ -6,14 +6,18 @@ import {
   BadRequestException,
   ArgumentsHost,
   HttpStatus,
+  Logger,
 } from '@nestjs/common';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
+  private readonly logger = new Logger(AllExceptionsFilter.name);
+
   catch(exception: any, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
+    const request = ctx.getRequest<Request>();
     let status: number = HttpStatus.INTERNAL_SERVER_ERROR;
     let message: string[] | string =
       'Произошла непредвиденная ошибка. Пожалуйста, попробуйте позже.';
@@ -31,10 +35,11 @@ export class AllExceptionsFilter implements ExceptionFilter {
             originalMessage.startsWith('Cannot GET'));
         message = isDefaultMessage ? 'Страница не найдена' : originalMessage;
       } else if (exception instanceof BadRequestException) {
-        message = Array.isArray(originalMessage)
-          ? originalMessage
-          : 'Переданы некорректные данные';
-      } else {
+        message =
+          Array.isArray(originalMessage) || originalMessage
+            ? originalMessage
+            : 'Переданы некорректные данные';
+      } else if (originalMessage) {
         message = originalMessage;
       }
     }
@@ -45,15 +50,25 @@ export class AllExceptionsFilter implements ExceptionFilter {
         'Указан неверный идентификатор, либо страницы больше не существует';
     }
 
+    if (status >= HttpStatus.INTERNAL_SERVER_ERROR) {
+      this.logger.error(
+        `${request.method} ${request.url} — ${exception.name || 'Error'}: ${exception.message ?? ''}`,
+        exception instanceof Error ? exception.stack : String(exception),
+      );
+    }
+
     response.status(status).json({
       success: false,
-      data: {
+      data: null,
+      error: {
+        code: exception.name || 'Error',
         message: Array.isArray(message) ? message : [message],
+        statusCode: status,
       },
       meta: {
-        statusCode: status,
-        error: exception.name || 'Error',
         timestamp: new Date().toISOString(),
+        path: request.url,
+        statusCode: status,
       },
     });
   }

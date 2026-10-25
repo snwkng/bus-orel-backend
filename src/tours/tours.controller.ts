@@ -1,4 +1,4 @@
-import { Controller, Get, Header } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { TourService } from './tours.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 

@@ -47,5 +47,9 @@ jobs:
         echo "AWS_S3_BUCKET=${{secrets.AWS_S3_BUCKET}}" >> .env
         echo "NODE_ENV=${{secrets.NODE_ENV}}" >> .env
     - run: npm ci
+    - name: Lint
+      run: npx eslint .
+    - name: Unit tests
+      run: npm run test
     - run: npm run build --if-present
     - run: pm2 restart backend

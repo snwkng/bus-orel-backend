@@ -63,14 +63,13 @@ export class UploadService {
         buffer = await this.convertToWebP(file.buffer);
         finalContentType = 'image/webp';
         fileName = `${new ObjectId().toString()}.webp`;
-      } catch (error) {
+      } catch {
         this.logger.warn(
           `Sharp failed to process image: ${file.originalname} (${detected.mime})`,
         );
-        // Массив — AllExceptionsFilter сохраняет текст только для массива
-        throw new BadRequestException([
+        throw new BadRequestException(
           'Не удалось обработать изображение. Файл повреждён или имеет неверный формат',
-        ]);
+        );
       }
     } else if (
       detected &&
@@ -90,7 +89,7 @@ export class UploadService {
       fileName = `${new ObjectId().toString()}.doc`;
     } else {
       // Нет сигнатуры, svg, html, исполняемые файлы и прочее — отклоняем
-      throw new BadRequestException([DISALLOWED_TYPE_MESSAGE]);
+      throw new BadRequestException(DISALLOWED_TYPE_MESSAGE);
     }
 
     try {
