@@ -30,9 +30,13 @@ export class BusToursAdminService {
       filter.hotelId = params.hotelId;
     }
 
+    const sort: Record<string, 1 | -1> = params?.sortBy
+      ? { [params.sortBy]: params.sortDir === 'asc' ? 1 : -1 }
+      : { _id: -1 };
+
     const busTours = await this.busTourModel
       .find(filter)
-      .sort({ _id: -1 })
+      .sort(sort)
       .lean()
       .exec();
     return busTours as BusTour[];

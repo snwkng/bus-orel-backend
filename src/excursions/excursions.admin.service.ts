@@ -40,11 +40,15 @@ export class ExcursionsAdminService {
       filter.name = { $regex: search, $options: 'i' };
     }
 
+    const sort: Record<string, 1 | -1> = params?.sortBy
+      ? { [params.sortBy]: params.sortDir === 'asc' ? 1 : -1 }
+      : { _id: -1 };
+
     const skip = (page - 1) * limit;
     const [data, total] = await Promise.all([
       this.excursionModel
         .find(filter)
-        .sort({ _id: -1 })
+        .sort(sort)
         .skip(skip)
         .limit(limit)
         .lean()

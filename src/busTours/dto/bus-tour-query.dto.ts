@@ -1,5 +1,11 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsMongoId, IsOptional } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsIn, IsMongoId, IsOptional, IsString } from 'class-validator';
+
+export const BUS_TOUR_SORT_FIELDS = [
+  'createdAt',
+  'updatedAt',
+  'hotelId',
+] as const;
 
 export class BusTourQueryDto {
   @ApiProperty({
@@ -10,4 +16,23 @@ export class BusTourQueryDto {
   @IsOptional()
   @IsMongoId()
   readonly hotelId?: string;
+
+  @ApiPropertyOptional({
+    example: 'createdAt',
+    enum: BUS_TOUR_SORT_FIELDS,
+    description: 'Поле сортировки',
+  })
+  @IsOptional()
+  @IsString()
+  @IsIn(BUS_TOUR_SORT_FIELDS)
+  readonly sortBy?: string;
+
+  @ApiPropertyOptional({
+    example: 'desc',
+    enum: ['asc', 'desc'],
+    description: 'Направление сортировки',
+  })
+  @IsOptional()
+  @IsIn(['asc', 'desc'])
+  readonly sortDir?: 'asc' | 'desc';
 }
