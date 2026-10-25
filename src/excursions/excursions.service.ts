@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, FilterQuery, isValidObjectId, Types } from 'mongoose';
 import { Excursion, ExcursionDocument } from './schemas/excursions.schema';
@@ -13,11 +17,13 @@ export class ExcursionService {
   constructor(
     @InjectModel(Excursion.name)
     private readonly excursionModel: Model<ExcursionDocument>,
-  ) { }
+  ) {}
 
-  async getAllExcursions(params: ExcursionQueryDto, pagination?: PaginationDto): Promise<Excursion[] | PaginatedResponse<Excursion>> {
-    const page = pagination?.page;
-    const limit = pagination?.limit;
+  async getAllExcursions(
+    params: ExcursionQueryDto,
+    pagination?: PaginationDto,
+  ): Promise<PaginatedResponse<Excursion>> {
+    const { page = 1, limit = 20 } = pagination ?? {};
     const today = new Date();
 
     const matchFilter: FilterQuery<ExcursionDocument> = {
@@ -33,31 +39,25 @@ export class ExcursionService {
             $sortArray: {
               input: {
                 $filter: {
-                  input: "$excursionStartDates",
-                  as: "date",
-                  cond: { $gte: ["$$date", today] }
-                }
+                  input: '$excursionStartDates',
+                  as: 'date',
+                  cond: { $gte: ['$$date', today] },
+                },
               },
-              sortBy: 1
-            }
-          }
-        }
+              sortBy: 1,
+            },
+          },
+        },
       },
-      { $sort: { createdAt: -1 } }
+      { $sort: { createdAt: -1 } },
     ];
-
-    if (!page || !limit) {
-      return await this.excursionModel.aggregate(pipeline).exec();
-    }
 
     const skip = (page - 1) * limit;
 
     const [data, total] = await Promise.all([
-      this.excursionModel.aggregate([
-        ...pipeline,
-        { $skip: skip },
-        { $limit: limit }
-      ]).exec(),
+      this.excursionModel
+        .aggregate([...pipeline, { $skip: skip }, { $limit: limit }])
+        .exec(),
       this.excursionModel.countDocuments(matchFilter).exec(),
     ]);
 
@@ -78,25 +78,27 @@ export class ExcursionService {
     }
 
     const today = new Date();
-    const result = await this.excursionModel.aggregate([
-      { $match: { _id: new Types.ObjectId(id) } },
-      {
-        $addFields: {
-          excursionStartDates: {
-            $sortArray: {
-              input: {
-                $filter: {
-                  input: "$excursionStartDates",
-                  as: "date",
-                  cond: { $gte: ["$$date", today] }
-                }
+    const result = await this.excursionModel
+      .aggregate([
+        { $match: { _id: new Types.ObjectId(id) } },
+        {
+          $addFields: {
+            excursionStartDates: {
+              $sortArray: {
+                input: {
+                  $filter: {
+                    input: '$excursionStartDates',
+                    as: 'date',
+                    cond: { $gte: ['$$date', today] },
+                  },
+                },
+                sortBy: 1,
               },
-              sortBy: 1
-            }
-          }
-        }
-      }
-    ]).exec();
+            },
+          },
+        },
+      ])
+      .exec();
 
     const excursion = result[0];
 
@@ -111,9 +113,11 @@ export class ExcursionService {
     const today = new Date();
 
     // Возвращаем только те города, где есть актуальные экскурсии
-    const res = await this.excursionModel.distinct("cities", {
-      excursionStartDates: { $elemMatch: { $gte: today } }
-    }).exec();
+    const res = await this.excursionModel
+      .distinct('cities', {
+        excursionStartDates: { $elemMatch: { $gte: today } },
+      })
+      .exec();
     return mapToSelectItem(res);
   }
 }

@@ -10,7 +10,7 @@ export class User {
   username: string;
 
   @ApiProperty({ example: '123456', description: 'password' })
-  @Prop({ type: String, required: true })
+  @Prop({ type: String, required: true, select: false })
   password: string;
 
   @ApiProperty({ description: 'token hash' })

@@ -1,10 +1,14 @@
-import { Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+} from '@nestjs/common';
 import {
   S3Client,
   GetObjectCommand,
   PutObjectCommand,
   DeleteObjectCommand,
-  ListObjectsV2Command
+  ListObjectsV2Command,
 } from '@aws-sdk/client-s3';
 import { ConfigService } from '@nestjs/config';
 import { ObjectId } from 'bson';
@@ -26,17 +30,18 @@ export class UploadService {
     },
   });
 
-  constructor(private readonly configService: ConfigService) { }
+  constructor(private readonly configService: ConfigService) {}
 
   async upload(file: Express.Multer.File) {
-    const originalMime = lookup.lookup(file.originalname) || 'application/octet-stream';
-    const isImage = originalMime.includes('image') && !originalMime.includes('svg');
+    const originalMime =
+      lookup.lookup(file.originalname) || 'application/octet-stream';
+    const isImage =
+      originalMime.includes('image') && !originalMime.includes('svg');
 
     let buffer = file.buffer;
     let finalContentType = originalMime;
     const extension = file.originalname.split('.').pop() || '';
     let fileName = `${new ObjectId().toString()}.${extension}`;
-
 
     if (isImage) {
       // Пытаемся конвертировать
@@ -45,7 +50,9 @@ export class UploadService {
         finalContentType = 'image/webp';
         fileName = `${new ObjectId().toString()}.webp`;
       } catch (error) {
-        this.logger.warn(`Sharp failed to process image, uploading original: ${file.originalname}`);
+        this.logger.warn(
+          `Sharp failed to process image, uploading original: ${file.originalname}`,
+        );
       }
     } else {
       buffer = file.buffer;
@@ -64,13 +71,17 @@ export class UploadService {
       return fileName;
     } catch (error) {
       this.logger.error(`Failed to upload file: ${error.message}`);
-      throw new InternalServerErrorException('Ошибка при загрузке файла в хранилище');
+      throw new InternalServerErrorException(
+        'Ошибка при загрузке файла в хранилище',
+      );
     }
-
   }
 
   async download(fileName: string) {
-    const command = new GetObjectCommand({ Bucket: this.configService.get('AWS_S3_BUCKET'), Key: fileName });
+    const command = new GetObjectCommand({
+      Bucket: this.configService.get('AWS_S3_BUCKET'),
+      Key: fileName,
+    });
     const response = await this.s3Client.send(command);
     let contentType = response.ContentType;
     if (!contentType || contentType === 'application/octet-stream') {
@@ -92,7 +103,7 @@ export class UploadService {
       return true;
     } catch (error) {
       console.error(error);
-      throw (error);
+      throw error;
     }
   }
 
@@ -100,17 +111,17 @@ export class UploadService {
     try {
       const list = await this.s3Client.send(
         new ListObjectsV2Command({
-          Bucket: this.bucket
-        })
+          Bucket: this.bucket,
+        }),
       );
       return list;
     } catch (error) {
       console.error(error);
-      throw (error);
+      throw error;
     }
   }
 
   async convertToWebP(buffer: Buffer): Promise<Buffer> {
     return sharp(buffer).webp({ quality: 85 }).toBuffer();
-  };
+  }
 }

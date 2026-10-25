@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, isValidObjectId, Model } from 'mongoose';
 import { Excursion, ExcursionDocument } from './schemas/excursions.schema';
@@ -15,34 +19,36 @@ export class ExcursionsAdminService {
   constructor(
     @InjectModel(Excursion.name)
     private readonly excursionModel: Model<ExcursionDocument>,
-  ) { }
+  ) {}
 
   async createExcursion(dto: CreateExcursionDto) {
     return await this.excursionModel.create(dto);
   }
 
-  async getAllExcursions(params: ExcursionQueryDto, pagination?: PaginationDto): Promise<Excursion[] | PaginatedResponse<Excursion>> {
-    const { page, limit } = pagination;
+  async getAllExcursions(
+    params: ExcursionQueryDto,
+    pagination?: PaginationDto,
+  ): Promise<PaginatedResponse<Excursion>> {
+    const { page = 1, limit = 20 } = pagination ?? {};
     const filter: FilterQuery<ExcursionDocument> = {};
 
     if (params?.city) {
       filter['cities'] = params.city;
     }
     if (params?.search) {
-      filter.name = { $regex: params.search, $options: 'i' };
-    }
-
-    if (!page || !limit) {
-      return await this.excursionModel
-        .find(filter)
-        .sort({ _id: -1 })
-        .lean()
-        .exec();
+      const search = params.search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      filter.name = { $regex: search, $options: 'i' };
     }
 
     const skip = (page - 1) * limit;
     const [data, total] = await Promise.all([
-      this.excursionModel.find(filter).sort({ _id: -1 }).skip(skip).limit(limit).lean().exec(),
+      this.excursionModel
+        .find(filter)
+        .sort({ _id: -1 })
+        .skip(skip)
+        .limit(limit)
+        .lean()
+        .exec(),
       this.excursionModel.countDocuments(filter).exec(),
     ]);
 
@@ -55,7 +61,6 @@ export class ExcursionsAdminService {
         lastPage: Math.ceil(total / limit),
       },
     };
-
   }
 
   async getExcursion(id: string): Promise<Excursion> {
@@ -80,7 +85,7 @@ export class ExcursionsAdminService {
     const excursion = await this.excursionModel.findByIdAndUpdate(
       { _id: id },
       { $set: dto },
-      { new: true }
+      { new: true },
     );
 
     if (!excursion) {
@@ -109,7 +114,11 @@ export class ExcursionsAdminService {
   }
 
   async getTypesList(): Promise<SelectItemDto[]> {
-    const res = await this.excursionModel.distinct('type', { type: { $exists: true, $nin: [null, '', undefined] } }).exec();
+    const res = await this.excursionModel
+      .distinct('type', {
+        type: { $exists: true, $nin: [null, '', undefined] },
+      })
+      .exec();
     return mapToSelectItem(res);
   }
 }

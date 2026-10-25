@@ -6,7 +6,7 @@ import {
   MultitourRequest,
   MultitourResponse,
   Country,
-  isSuccessResponse
+  isSuccessResponse,
 } from './tours.interface';
 
 @Injectable()
@@ -22,12 +22,12 @@ export class TourService {
    */
   private async sendRequest<TParams, TResponse>(
     method: string,
-    params: TParams = {} as TParams
+    params: TParams = {} as TParams,
   ): Promise<TResponse> {
     if (!this.token) {
       throw new HttpException(
         'Multitour API token is not configured',
-        HttpStatus.INTERNAL_SERVER_ERROR
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
 
@@ -40,15 +40,13 @@ export class TourService {
     };
 
     try {
-      const response = await this.httpService.axiosRef.post<MultitourResponse<TResponse>>(
-        this.apiUrl,
-        requestBody,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      );
+      const response = await this.httpService.axiosRef.post<
+        MultitourResponse<TResponse>
+      >(this.apiUrl, requestBody, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
 
       const rpcData = response.data;
 
@@ -56,11 +54,11 @@ export class TourService {
       if (!isSuccessResponse(rpcData)) {
         this.logger.error(
           `Multitour API Error [${method}]: ${rpcData.error.message}`,
-          JSON.stringify(rpcData.error)
+          JSON.stringify(rpcData.error),
         );
         throw new HttpException(
           `Multitour API Error: ${rpcData.error.message}`,
-          HttpStatus.BAD_REQUEST
+          HttpStatus.BAD_REQUEST,
         );
       }
 
@@ -72,11 +70,11 @@ export class TourService {
 
       this.logger.error(
         `Failed to connect to Multitour API [${method}]: ${(error as any)?.message}`,
-        (error as any)?.stack
+        (error as any)?.stack,
       );
       throw new HttpException(
         'Multitour service temporarily unavailable',
-        HttpStatus.BAD_GATEWAY
+        HttpStatus.BAD_GATEWAY,
       );
     }
   }

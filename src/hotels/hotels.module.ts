@@ -8,9 +8,7 @@ import { Hotel, HotelSchema } from './schemas/hotels.schema';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([
-      { name: Hotel.name, schema: HotelSchema },
-    ]),
+    MongooseModule.forFeature([{ name: Hotel.name, schema: HotelSchema }]),
   ],
   controllers: [HotelsController, HotelsAdminController],
   providers: [HotelsService, HotelsAdminService],

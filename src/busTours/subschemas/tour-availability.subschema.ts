@@ -7,14 +7,14 @@ export class TourAvailability {
     example: '2025-07-12',
     description: 'startDate',
   })
-  @Prop({type: Date})
+  @Prop({ type: Date })
   startDate: Date;
 
   @ApiProperty({
     example: '2025-07-22',
     description: 'endDate',
   })
-  @Prop({type: Date})
+  @Prop({ type: Date })
   endDate: Date;
 
   @ApiProperty({
@@ -25,4 +25,5 @@ export class TourAvailability {
   pricePerPerson: number;
 }
 
-export const TourAvailabilitySchema = SchemaFactory.createForClass(TourAvailability);
+export const TourAvailabilitySchema =
+  SchemaFactory.createForClass(TourAvailability);

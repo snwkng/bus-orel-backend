@@ -1,9 +1,4 @@
-import {
-  Controller,
-  Get,
-  Param,
-  Query,
-} from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { HotelsService } from './hotels.service';
 import { Hotel } from './schemas/hotels.schema';
@@ -14,7 +9,7 @@ import { PaginationDto } from 'src/common/dto/pagination.dto';
 @ApiTags('hotels')
 @Controller('hotels')
 export class HotelsController {
-  constructor(private readonly hotelsService: HotelsService) { }
+  constructor(private readonly hotelsService: HotelsService) {}
 
   @ApiOperation({ summary: 'Get sea list' })
   @ApiResponse({ status: 200, type: [SelectItemDto] })
@@ -26,7 +21,9 @@ export class HotelsController {
   @ApiOperation({ summary: 'Get cities list' })
   @ApiResponse({ status: 200, type: [SelectItemDto] })
   @Get('cities-list')
-  getCitiesList(@Query('seaType') seaType: string = ''): Promise<SelectItemDto[]> {
+  getCitiesList(
+    @Query('seaType') seaType: string = '',
+  ): Promise<SelectItemDto[]> {
     return this.hotelsService.getCitiesList(seaType);
   }
 

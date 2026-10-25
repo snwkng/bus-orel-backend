@@ -1,10 +1,4 @@
-import {
-  Controller,
-  Get,
-  Header,
-  Param,
-  Query,
-} from '@nestjs/common';
+import { Controller, Get, Header, Param, Query } from '@nestjs/common';
 import { ExcursionService } from './excursions.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Excursion } from './schemas/excursions.schema';
@@ -15,7 +9,7 @@ import { PaginationDto } from 'src/common/dto/pagination.dto';
 @ApiTags('Excursions')
 @Controller('excursions')
 export class ExcursionsController {
-  constructor(private readonly excursionService: ExcursionService) { }
+  constructor(private readonly excursionService: ExcursionService) {}
 
   @ApiOperation({ summary: 'Get all cities' })
   @ApiResponse({ status: 200, type: [SelectItemDto] })
@@ -28,7 +22,10 @@ export class ExcursionsController {
   @ApiOperation({ summary: 'Get all excursions' })
   @ApiResponse({ status: 200, type: [Excursion] })
   @Get()
-  getAll(@Query() params: ExcursionQueryDto, @Query() pagination?: PaginationDto) {
+  getAll(
+    @Query() params: ExcursionQueryDto,
+    @Query() pagination?: PaginationDto,
+  ) {
     return this.excursionService.getAllExcursions(params, pagination);
   }
 

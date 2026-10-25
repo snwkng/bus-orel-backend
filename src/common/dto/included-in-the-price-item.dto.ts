@@ -5,13 +5,13 @@ export class IncludedInThePriceDto {
   id: number;
 
   @ApiProperty({
-    example: "wi-fi",
+    example: 'wi-fi',
     description: 'service are included in the price',
   })
   serviceName: string;
 
   @ApiProperty({
-    example: "wi-fi.svg",
+    example: 'wi-fi.svg',
     description: 'icon for service',
   })
   iconForService: string;

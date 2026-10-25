@@ -4,18 +4,19 @@ import { ApiProperty } from '@nestjs/swagger';
 @Schema()
 export class IncludedInThePrice {
   @ApiProperty({
-    example: "wi-fi",
+    example: 'wi-fi',
     description: 'service are included in the price',
   })
   @Prop({})
   serviceName: string;
 
-   @ApiProperty({
-    example: "wi-fi.svg",
+  @ApiProperty({
+    example: 'wi-fi.svg',
     description: 'icon for service',
   })
   @Prop({})
   iconForService: string;
 }
 
-export const IncludedInThePriceSchema = SchemaFactory.createForClass(IncludedInThePrice);
+export const IncludedInThePriceSchema =
+  SchemaFactory.createForClass(IncludedInThePrice);

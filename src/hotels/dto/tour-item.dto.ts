@@ -17,6 +17,9 @@ export class TourItemDto {
   @ApiProperty({ example: 'Две односпальные кровати...' })
   readonly description?: string;
 
-  @ApiProperty({ type: [TourAvailabilityDto], description: 'Доступные периоды' })
+  @ApiProperty({
+    type: [TourAvailabilityDto],
+    description: 'Доступные периоды',
+  })
   readonly availability?: TourAvailabilityDto[];
 }

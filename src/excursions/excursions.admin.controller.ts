@@ -13,7 +13,12 @@ import {
 } from '@nestjs/common';
 import { CreateExcursionDto } from './dto/create-excursion-dto';
 import { ExcursionsAdminService } from './excursions.admin.service';
-import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { Excursion } from './schemas/excursions.schema';
 import { DeleteResult } from 'mongodb';
 import { UpdateExcursionDto } from './dto/update-excursion-dto';
@@ -27,7 +32,7 @@ import { PaginationDto } from 'src/common/dto/pagination.dto';
 @ApiTags('AdminExcursions')
 @Controller('admin/excursions')
 export class ExcursionsAdminController {
-  constructor(private readonly excursionAdminService: ExcursionsAdminService) { }
+  constructor(private readonly excursionAdminService: ExcursionsAdminService) {}
 
   @ApiOperation({ summary: 'Get all cities' })
   @ApiResponse({ status: 200, type: [SelectItemDto] })
@@ -54,7 +59,10 @@ export class ExcursionsAdminController {
   @ApiOperation({ summary: 'Get all excursions' })
   @ApiResponse({ status: 200, type: [Excursion] })
   @Get()
-  getAll(@Query() params: ExcursionQueryDto, @Query() pagination?: PaginationDto) {
+  getAll(
+    @Query() params: ExcursionQueryDto,
+    @Query() pagination?: PaginationDto,
+  ) {
     return this.excursionAdminService.getAllExcursions(params, pagination);
   }
 

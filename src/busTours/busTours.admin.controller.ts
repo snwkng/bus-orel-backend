@@ -6,7 +6,6 @@ import {
   HttpCode,
   HttpStatus,
   Param,
-  Patch,
   Post,
   Put,
   Query,
@@ -14,13 +13,17 @@ import {
 } from '@nestjs/common';
 import { CreateBusTourDto } from './dto/create-bus-tour-dto';
 import { BusToursAdminService } from './busTours.admin.service';
-import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { BusTour } from './schemas/busTour.schema';
 import { DeleteResult } from 'mongodb';
-import { Types } from 'mongoose';
 import { UpdateBusTourDto } from './dto/update-bus-tour-dto';
+import { BusTourQueryDto } from './dto/bus-tour-query.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth/jwt-auth.guard';
-
 
 @ApiBearerAuth('JWT-auth')
 @UseGuards(JwtAuthGuard)
@@ -33,14 +36,14 @@ export class BusToursAdminController {
   @ApiResponse({ status: 201, type: BusTour })
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  async create(@Body() hotelDto: CreateBusTourDto) {
-    return await this.busToursAdminService.createBusTour(hotelDto);
+  async create(@Body() busTourDto: CreateBusTourDto) {
+    return await this.busToursAdminService.createBusTour(busTourDto);
   }
 
   @ApiOperation({ summary: 'Get all bus tours' })
   @ApiResponse({ status: 200, type: [BusTour] })
   @Get()
-  async getAll(@Query() params: {hotelId: Types.ObjectId}): Promise<BusTour[]> {
+  async getAll(@Query() params: BusTourQueryDto): Promise<BusTour[]> {
     return await this.busToursAdminService.getBusTours(params);
   }
 
@@ -49,17 +52,17 @@ export class BusToursAdminController {
   @Put(':id')
   @HttpCode(HttpStatus.OK)
   async update(
-    @Body() hotelDto: UpdateBusTourDto,
+    @Body() busTourDto: UpdateBusTourDto,
     @Param('id') id: string,
   ): Promise<BusTour> {
-    return await this.busToursAdminService.updateBusTour(id, hotelDto);
+    return await this.busToursAdminService.updateBusTour(id, busTourDto);
   }
 
   @ApiOperation({ summary: 'Delete bus tour' })
   @ApiResponse({ status: 200, type: Boolean })
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
-  async delete(@Param('id') id: Types.ObjectId): Promise<DeleteResult> {
+  async delete(@Param('id') id: string): Promise<DeleteResult> {
     return await this.busToursAdminService.deleteBusTour(id);
   }
 }

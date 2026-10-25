@@ -10,7 +10,7 @@ import {
   IsObject,
   ArrayMinSize,
   ValidateNested,
-  IsNotEmpty
+  IsNotEmpty,
 } from 'class-validator';
 
 import { AddressDto } from './address.dto';
@@ -18,24 +18,26 @@ import { AdditionalInfoDto } from './additional-info.dto';
 import { IncludedInThePriceDto } from './included-in-the-price.dto';
 import { RoomDto } from './room.dto';
 
-
 export class CreateHotelDto {
   @ApiProperty({ example: 'Аврора', description: 'Название отеля' })
   @IsString()
   @IsNotEmpty()
-  @Transform(({ value }) => typeof value === 'string' ? value.trim() : value)
+  @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
   readonly name: string;
 
   @ApiProperty({ example: 'Гостиница', description: 'Тип жилья' })
   @IsString()
   @IsNotEmpty()
-  @Transform(({ value }) => typeof value === 'string' ? value.trim() : value)
+  @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
   readonly type?: string;
 
-  @ApiProperty({ example: 'гостиница в живописном месте...', description: 'Описание отеля' })
+  @ApiProperty({
+    example: 'гостиница в живописном месте...',
+    description: 'Описание отеля',
+  })
   @IsOptional()
   @IsString()
-  @Transform(({ value }) => typeof value === 'string' ? value.trim() : value)
+  @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
   readonly description?: string;
 
   @ApiProperty({ type: AddressDto, description: 'Адрес отеля' })
@@ -48,7 +50,7 @@ export class CreateHotelDto {
   @ApiProperty({ example: 'Черное море', description: 'Тип моря' })
   @IsOptional()
   @IsString()
-  @Transform(({ value }) => typeof value === 'string' ? value.trim() : value)
+  @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
   readonly seaType?: string;
 
   @ApiProperty({ example: 9100, description: 'Минимальная цена за тур' })
@@ -64,7 +66,11 @@ export class CreateHotelDto {
   @Type(() => AdditionalInfoDto)
   readonly additionalInfo?: AdditionalInfoDto;
 
-  @ApiProperty({ type: [IncludedInThePriceDto], isArray: true, description: 'Услуги включенные в стоимость' })
+  @ApiProperty({
+    type: [IncludedInThePriceDto],
+    isArray: true,
+    description: 'Услуги включенные в стоимость',
+  })
   @IsOptional()
   @IsArray()
   @ValidateNested({ each: true })
@@ -88,10 +94,13 @@ export class CreateHotelDto {
   @IsOptional()
   readonly published: boolean;
 
-  @ApiProperty({ example: 'CSO7772222', description: 'Регистрационный номер отеля' })
+  @ApiProperty({
+    example: 'CSO7772222',
+    description: 'Регистрационный номер отеля',
+  })
   @IsString()
   @IsNotEmpty()
-  @Transform(({ value }) => typeof value === 'string' ? value.trim() : value)
+  @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
   readonly registryNumber: string;
 
   @ApiProperty({ type: [RoomDto], description: 'Номера' })

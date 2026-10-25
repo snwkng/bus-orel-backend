@@ -14,7 +14,12 @@ import {
 } from '@nestjs/common';
 import { CreateHotelDto } from './dto/create-hotel-dto';
 import { HotelsAdminService } from './hotels.admin.service';
-import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { Hotel } from '../hotels/schemas/hotels.schema';
 import { DeleteResult } from 'mongodb';
 import { UpdateHotelDto } from './dto/update-hotel-dto';
@@ -22,15 +27,15 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth/jwt-auth.guard';
 import { SelectItemDto } from '../common/dto/select-item.dto';
 import { IncludedInThePriceDto } from './dto/included-in-the-price.dto';
 import { HotelQueryDto } from './dto/hotel-query.dto';
+import { PublishHotelDto } from './dto/publish-hotel.dto';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
-
 
 @ApiBearerAuth('JWT-auth')
 @UseGuards(JwtAuthGuard)
 @ApiTags('AdminHotels')
 @Controller('admin/hotels')
 export class HotelsAdminController {
-  constructor( private readonly hotelsAdminService: HotelsAdminService ) {}
+  constructor(private readonly hotelsAdminService: HotelsAdminService) {}
 
   @ApiOperation({ summary: 'Get sea list' })
   @ApiResponse({ status: 200, type: [SelectItemDto] })
@@ -42,7 +47,9 @@ export class HotelsAdminController {
   @ApiOperation({ summary: 'Get cities list' })
   @ApiResponse({ status: 200, type: [SelectItemDto] })
   @Get('cities-list')
-  getCitiesList(@Query('seaType') seaType: string = ''): Promise<SelectItemDto[]> {
+  getCitiesList(
+    @Query('seaType') seaType: string = '',
+  ): Promise<SelectItemDto[]> {
     return this.hotelsAdminService.getCitiesList(seaType);
   }
 
@@ -90,7 +97,7 @@ export class HotelsAdminController {
   @Patch('published/:id')
   published(
     @Param('id') id: string,
-    @Body() dto: {published: boolean},
+    @Body() dto: PublishHotelDto,
   ): Promise<Hotel> {
     return this.hotelsAdminService.updateHotel(id, dto);
   }

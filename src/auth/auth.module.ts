@@ -14,7 +14,7 @@ import { PassportModule } from '@nestjs/passport';
     UsersModule,
     PassportModule,
     JwtModule.registerAsync(jwtConfig.asProvider()),
-    ConfigModule.forFeature(jwtConfig)
+    ConfigModule.forFeature(jwtConfig),
   ],
   providers: [AuthService, LocalStrategy, JwtStrategy],
   controllers: [AuthController],

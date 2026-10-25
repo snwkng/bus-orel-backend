@@ -8,7 +8,9 @@ export const mapToSelectItem = (items: string[]): SelectItemDto[] => {
   }));
 };
 
-export const mapToIncludedInThePriceItem = (items: { serviceName: string, iconForService: string }[]): IncludedInThePriceDto[] => {
+export const mapToIncludedInThePriceItem = (
+  items: { serviceName: string; iconForService: string }[],
+): IncludedInThePriceDto[] => {
   return (items || []).map((item, index) => ({
     id: index + 1,
     serviceName: item.serviceName,

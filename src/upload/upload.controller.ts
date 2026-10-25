@@ -11,7 +11,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('s3')
 export class UploadController {
-  constructor(private readonly uploadService: UploadService) { }
+  constructor(private readonly uploadService: UploadService) {}
 
   @Get('/download/:uuid')
   @UseInterceptors(FileInterceptor('file'))
