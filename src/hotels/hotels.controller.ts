@@ -4,7 +4,6 @@ import { HotelsService } from './hotels.service';
 import { Hotel } from './schemas/hotels.schema';
 import { SelectItemDto } from '../common/dto/select-item.dto';
 import { HotelQueryDto } from './dto/hotel-query.dto';
-import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 @ApiTags('hotels')
 @Controller('hotels')
@@ -30,8 +29,8 @@ export class HotelsController {
   @ApiOperation({ summary: 'Get all hotels' })
   @ApiResponse({ status: 200, type: [Hotel] })
   @Get()
-  getAll(@Query() params: HotelQueryDto, @Query() pagination?: PaginationDto) {
-    return this.hotelsService.getHotels(params, pagination);
+  getAll(@Query() params: HotelQueryDto) {
+    return this.hotelsService.getHotels(params, params);
   }
 
   @ApiOperation({ summary: 'Get hotel' })
