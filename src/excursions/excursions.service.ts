@@ -31,6 +31,10 @@ export class ExcursionService {
       ...(params?.city ? { cities: params.city } : {}),
     };
 
+    const sort: Record<string, 1 | -1> = params?.sortBy
+      ? { [params.sortBy]: params.sortDir === 'asc' ? 1 : -1 }
+      : { createdAt: -1 };
+
     const pipeline: any[] = [
       { $match: matchFilter },
       {
@@ -49,7 +53,7 @@ export class ExcursionService {
           },
         },
       },
-      { $sort: { createdAt: -1 } },
+      { $sort: sort },
     ];
 
     const skip = (page - 1) * limit;

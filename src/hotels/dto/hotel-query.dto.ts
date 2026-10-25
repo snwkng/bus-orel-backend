@@ -1,6 +1,14 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsInt, IsString } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsOptional, IsInt, IsString, IsIn } from 'class-validator';
 import { Type } from 'class-transformer';
+
+export const HOTEL_SORT_FIELDS = [
+  'createdAt',
+  'name',
+  'minPrice',
+  'type',
+  'seaType',
+] as const;
 
 export class HotelQueryDto {
   @ApiProperty({ example: 'Москва', required: false })
@@ -18,4 +26,23 @@ export class HotelQueryDto {
   @IsInt()
   @Type(() => Number)
   readonly count?: number = 10;
+
+  @ApiPropertyOptional({
+    example: 'createdAt',
+    enum: HOTEL_SORT_FIELDS,
+    description: 'Поле сортировки',
+  })
+  @IsOptional()
+  @IsString()
+  @IsIn(HOTEL_SORT_FIELDS)
+  readonly sortBy?: string;
+
+  @ApiPropertyOptional({
+    example: 'desc',
+    enum: ['asc', 'desc'],
+    description: 'Направление сортировки',
+  })
+  @IsOptional()
+  @IsIn(['asc', 'desc'])
+  readonly sortDir?: 'asc' | 'desc';
 }
