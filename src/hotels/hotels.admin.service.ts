@@ -1,11 +1,13 @@
 import {
   BadRequestException,
+  ConflictException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, isValidObjectId, QueryFilter } from 'mongoose';
 import { Hotel } from '../hotels/schemas/hotels.schema';
+import { BusTour } from '../busTours/schemas/busTour.schema';
 import { CreateHotelDto } from './dto/create-hotel-dto';
 import { UpdateHotelDto } from './dto/update-hotel-dto';
 import { IncludedInThePrice } from './subschemas/includedInThePrice.subschema';
@@ -24,6 +26,8 @@ export class HotelsAdminService {
   constructor(
     @InjectModel(Hotel.name)
     private readonly hotelModel: Model<Hotel>,
+    @InjectModel(BusTour.name)
+    private readonly busTourModel: Model<BusTour>,
   ) {}
 
   async createHotel(dto: CreateHotelDto) {
@@ -106,6 +110,16 @@ export class HotelsAdminService {
   async deleteHotel(id: string) {
     if (!isValidObjectId(id)) {
       throw new BadRequestException('Некорректный формат идентификатора');
+    }
+
+    const toursCount = await this.busTourModel
+      .countDocuments({ hotelId: id })
+      .exec();
+
+    if (toursCount > 0) {
+      throw new ConflictException(
+        `Невозможно удалить отель: с ним связано автобусных туров: ${toursCount}. Сначала удалите или переназначьте туры.`,
+      );
     }
 
     const result = await this.hotelModel.deleteOne({ _id: id }).exec();

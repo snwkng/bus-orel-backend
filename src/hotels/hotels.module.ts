@@ -5,10 +5,14 @@ import { HotelsAdminController } from './hotels.admin.controller';
 import { HotelsService } from './hotels.service';
 import { HotelsAdminService } from './hotels.admin.service';
 import { Hotel, HotelSchema } from './schemas/hotels.schema';
+import { BusTour, BusTourSchema } from '../busTours/schemas/busTour.schema';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: Hotel.name, schema: HotelSchema }]),
+    MongooseModule.forFeature([
+      { name: Hotel.name, schema: HotelSchema },
+      { name: BusTour.name, schema: BusTourSchema },
+    ]),
   ],
   controllers: [HotelsController, HotelsAdminController],
   providers: [HotelsService, HotelsAdminService],
