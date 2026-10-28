@@ -21,4 +21,22 @@ export class UsersService {
       .exec();
     return user;
   }
+
+  async setCurrentRefreshToken(
+    userId: string,
+    refreshTokenHash: string | null,
+  ): Promise<void> {
+    await this.userModel
+      .findByIdAndUpdate(userId, {
+        $set: { currentHashedRefreshToken: refreshTokenHash },
+      })
+      .exec();
+  }
+
+  async getUserWithRefreshToken(userId: string): Promise<UsersDocument | null> {
+    return this.userModel
+      .findById(userId)
+      .select('+currentHashedRefreshToken')
+      .exec();
+  }
 }

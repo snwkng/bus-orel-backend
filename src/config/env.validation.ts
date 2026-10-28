@@ -14,6 +14,8 @@ const envValidationSchema = Joi.object({
 
   JWT_SECRET: Joi.string().required(),
   JWT_EXPIRE_IN: Joi.string().default('1h'),
+  JWT_REFRESH_SECRET: Joi.string().required(),
+  JWT_REFRESH_EXPIRE_IN: Joi.string().default('7d'),
 
   AWS_S3_BUCKET: Joi.string().required(),
   AWS_S3_REGION: Joi.string().required(),

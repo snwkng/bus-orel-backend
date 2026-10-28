@@ -1,14 +1,18 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import { ConfigType } from '@nestjs/config';
 import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { AuthJwtPayload } from './types/auth-jwt.payload';
+import jwtConfig from './config/jwt.config';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
+    @Inject(jwtConfig.KEY)
+    private readonly jwtConfiguration: ConfigType<typeof jwtConfig>,
   ) {}
 
   async validateUser(username: string, pass: string): Promise<any> {
@@ -34,9 +38,50 @@ export class AuthService {
   }
 
   async login(user: any) {
-    const payload: AuthJwtPayload = { username: user.username, sub: user._id };
-    return {
-      access_token: this.jwtService.sign(payload),
-    };
+    const tokens = await this.generateTokens(user.username, user._id);
+    await this.updateRefreshTokenHash(user._id, tokens.refresh_token);
+    return tokens;
+  }
+
+  async refreshTokens(userId: string, refreshToken: string) {
+    const user = await this.usersService.getUserWithRefreshToken(userId);
+
+    if (!user || !user.currentHashedRefreshToken) {
+      throw new UnauthorizedException('Сессия завершена, войдите снова');
+    }
+
+    const isMatch = await bcrypt.compare(
+      refreshToken,
+      user.currentHashedRefreshToken,
+    );
+
+    if (!isMatch) {
+      throw new UnauthorizedException('Недействительный refresh-токен');
+    }
+
+    const tokens = await this.generateTokens(user.username, user._id);
+    await this.updateRefreshTokenHash(user._id, tokens.refresh_token);
+    return tokens;
+  }
+
+  async logout(userId: string): Promise<void> {
+    await this.usersService.setCurrentRefreshToken(userId, null);
+  }
+
+  private async generateTokens(username: string, userId: any) {
+    const payload: AuthJwtPayload = { username, sub: userId };
+    const [access_token, refresh_token] = await Promise.all([
+      this.jwtService.signAsync(payload),
+      this.jwtService.signAsync(payload, {
+        secret: this.jwtConfiguration.refreshSecret,
+        expiresIn: this.jwtConfiguration.refreshExpiresIn,
+      }),
+    ]);
+    return { access_token, refresh_token };
+  }
+
+  private async updateRefreshTokenHash(userId: any, refreshToken: string) {
+    const hash = await bcrypt.hash(refreshToken, 10);
+    await this.usersService.setCurrentRefreshToken(userId, hash);
   }
 }

@@ -4,7 +4,11 @@ import { AuthService } from './auth.service';
 
 describe('AuthController', () => {
   let controller: AuthController;
-  const authService = { login: jest.fn() };
+  const authService = {
+    login: jest.fn(),
+    refreshTokens: jest.fn(),
+    logout: jest.fn(),
+  };
 
   beforeEach(async () => {
     jest.clearAllMocks();
@@ -16,8 +20,9 @@ describe('AuthController', () => {
     controller = module.get<AuthController>(AuthController);
   });
 
-  it('login возвращает токен для пользователя из запроса', async () => {
-    authService.login.mockResolvedValue({ access_token: 'token' });
+  it('login возвращает токены для пользователя из запроса', async () => {
+    const tokens = { access_token: 'access', refresh_token: 'refresh' };
+    authService.login.mockResolvedValue(tokens);
     const user = { _id: '1', username: 'admin' };
 
     const result = await controller.login(
@@ -26,12 +31,25 @@ describe('AuthController', () => {
     );
 
     expect(authService.login).toHaveBeenCalledWith(user);
-    expect(result).toEqual({ access_token: 'token' });
+    expect(result).toEqual(tokens);
   });
 
-  it('logout возвращает сообщение об успехе', async () => {
-    await expect(controller.logout()).resolves.toEqual({
-      message: 'Выход выполнен успешно',
-    });
+  it('refresh передаёт userId и refresh-токен из запроса в сервис', async () => {
+    const tokens = { access_token: 'new-access', refresh_token: 'new-refresh' };
+    authService.refreshTokens.mockResolvedValue(tokens);
+
+    const result = await controller.refresh({
+      user: { _id: '1', username: 'admin', refreshToken: 'old-refresh' },
+    } as any);
+
+    expect(authService.refreshTokens).toHaveBeenCalledWith('1', 'old-refresh');
+    expect(result).toEqual(tokens);
+  });
+
+  it('logout отзывает refresh-токен и возвращает сообщение об успехе', async () => {
+    const result = await controller.logout({ user: { _id: '1' } } as any);
+
+    expect(authService.logout).toHaveBeenCalledWith('1');
+    expect(result).toEqual({ message: 'Выход выполнен успешно' });
   });
 });

@@ -67,6 +67,12 @@ $ npm run swagger:generate
 
 Интерактивная документация доступна на `/api/docs` при `NODE_ENV !== 'production'`.
 
+## Environment variables
+
+Обязательные (валидируются при старте): `MONGODB_*`, `JWT_SECRET`, `JWT_REFRESH_SECRET`, `AWS_S3_*`, `AWS_ACCESS_KEY`, `AWS_SECRET_KEY`, `ALLOWED_ORIGINS`.
+
+Опциональные (со значениями по умолчанию): `PORT=3000`, `JWT_EXPIRE_IN=1h`, `JWT_REFRESH_EXPIRE_IN=7d`, `MULTI_URL`, `MULTI_TOKEN`.
+
 ## Support
 
 Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
