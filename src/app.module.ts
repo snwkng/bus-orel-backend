@@ -11,15 +11,14 @@ import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { ApiResponseInterceptor } from './common/interceptors/response.interceptor';
 import { ToursModule } from './tours/tours.module';
-import { envValidationSchema } from './config/env.validation';
+import { validateEnv } from './config/env.validation';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       envFilePath: '.env',
       isGlobal: true,
-      validationSchema: envValidationSchema,
-      validationOptions: { abortEarly: false },
+      validate: validateEnv,
     }),
     ThrottlerModule.forRoot([{ ttl: 60000, limit: 100 }]),
     MongooseModule.forRootAsync({

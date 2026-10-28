@@ -14,10 +14,11 @@ import {
 } from '@aws-sdk/client-s3';
 import { ConfigService } from '@nestjs/config';
 import { ObjectId } from 'bson';
-import * as sharp from 'sharp';
+import sharp from 'sharp';
 import { Readable } from 'node:stream';
 import * as lookup from 'mime-types';
 import { fromBuffer } from 'file-type';
+import type {} from 'multer';
 
 const IMAGE_MIME_TYPES = new Set([
   'image/jpeg',
@@ -103,7 +104,7 @@ export class UploadService {
       await this.s3Client.send(command);
       return fileName;
     } catch (error) {
-      this.logger.error(`Failed to upload file: ${error.message}`);
+      this.logger.error(`Failed to upload file: ${(error as Error).message}`);
       throw new InternalServerErrorException(
         'Ошибка при загрузке файла в хранилище',
       );
@@ -147,7 +148,9 @@ export class UploadService {
       await this.s3Client.send(command);
       return true;
     } catch (error) {
-      this.logger.error(`Failed to delete file ${fileName}: ${error.message}`);
+      this.logger.error(
+        `Failed to delete file ${fileName}: ${(error as Error).message}`,
+      );
       throw new InternalServerErrorException(
         'Ошибка при удалении файла из хранилища',
       );
@@ -163,7 +166,7 @@ export class UploadService {
       );
       return list;
     } catch (error) {
-      this.logger.error(`Failed to list objects: ${error.message}`);
+      this.logger.error(`Failed to list objects: ${(error as Error).message}`);
       throw new InternalServerErrorException(
         'Ошибка при получении списка файлов из хранилища',
       );

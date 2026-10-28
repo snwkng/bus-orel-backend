@@ -1,6 +1,6 @@
 import * as Joi from 'joi';
 
-export const envValidationSchema = Joi.object({
+const envValidationSchema = Joi.object({
   NODE_ENV: Joi.string()
     .valid('development', 'production', 'test')
     .default('development'),
@@ -25,4 +25,14 @@ export const envValidationSchema = Joi.object({
 
   MULTI_URL: Joi.string().uri().optional(),
   MULTI_TOKEN: Joi.string().optional(),
-});
+}).unknown(true);
+
+export function validateEnv(config: Record<string, unknown>) {
+  const { error, value } = envValidationSchema.validate(config, {
+    abortEarly: false,
+  });
+  if (error) {
+    throw new Error(`Config validation error: ${error.message}`);
+  }
+  return value;
+}

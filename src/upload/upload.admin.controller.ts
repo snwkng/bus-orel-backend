@@ -13,6 +13,7 @@ import { UploadService } from './upload.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth/jwt-auth.guard';
+import type {} from 'multer';
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 const FILE_KEY_PATTERN = /^[\w.-]+$/;
