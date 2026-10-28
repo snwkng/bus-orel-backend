@@ -3,7 +3,7 @@ import { getModelToken } from '@nestjs/mongoose';
 import { ConflictException, NotFoundException } from '@nestjs/common';
 import { HotelsAdminService } from './hotels.admin.service';
 import { Hotel } from './schemas/hotels.schema';
-import { BusTour } from '../busTours/schemas/busTour.schema';
+import { BusTour } from '../bus-tours/schemas/bus-tour.schema';
 
 describe('HotelsAdminService', () => {
   let service: HotelsAdminService;

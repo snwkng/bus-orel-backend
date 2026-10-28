@@ -4,7 +4,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { UsersModule } from './users/users.module';
 import { ExcursionsModule } from './excursions/excursions.module';
 import { HotelsModule } from './hotels/hotels.module';
-import { BusToursModule } from './busTours/busTours.module';
+import { BusToursModule } from './bus-tours/bus-tours.module';
 import { AuthModule } from './auth/auth.module';
 import { UploadModule } from './upload/upload.module';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';

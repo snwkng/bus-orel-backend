@@ -12,7 +12,7 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { CreateHotelDto } from './dto/create-hotel-dto';
+import { CreateHotelDto } from './dto/create-hotel.dto';
 import { HotelsAdminService } from './hotels.admin.service';
 import {
   ApiBearerAuth,
@@ -22,7 +22,7 @@ import {
 } from '@nestjs/swagger';
 import { Hotel } from '../hotels/schemas/hotels.schema';
 import { DeleteResult } from 'mongodb';
-import { UpdateHotelDto } from './dto/update-hotel-dto';
+import { UpdateHotelDto } from './dto/update-hotel.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth/jwt-auth.guard';
 import { SelectItemDto } from '../common/dto/select-item.dto';
 import { IncludedInThePriceDto } from './dto/included-in-the-price.dto';

@@ -11,17 +11,17 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { CreateBusTourDto } from './dto/create-bus-tour-dto';
-import { BusToursAdminService } from './busTours.admin.service';
+import { CreateBusTourDto } from './dto/create-bus-tour.dto';
+import { BusToursAdminService } from './bus-tours.admin.service';
 import {
   ApiBearerAuth,
   ApiOperation,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { BusTour } from './schemas/busTour.schema';
+import { BusTour } from './schemas/bus-tour.schema';
 import { DeleteResult } from 'mongodb';
-import { UpdateBusTourDto } from './dto/update-bus-tour-dto';
+import { UpdateBusTourDto } from './dto/update-bus-tour.dto';
 import { BusTourQueryDto } from './dto/bus-tour-query.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth/jwt-auth.guard';
 import { ParseObjectIdPipe } from '../common/pipes/parse-object-id.pipe';

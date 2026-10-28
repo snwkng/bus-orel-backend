@@ -1,11 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getModelToken } from '@nestjs/mongoose';
 import { NotFoundException } from '@nestjs/common';
-import { ExcursionService } from './excursions.service';
+import { ExcursionsService } from './excursions.service';
 import { Excursion } from './schemas/excursions.schema';
 
-describe('ExcursionService', () => {
-  let service: ExcursionService;
+describe('ExcursionsService', () => {
+  let service: ExcursionsService;
   const excursionModel = { aggregate: jest.fn() };
 
   const validId = '507f1f77bcf86cd799439011';
@@ -14,12 +14,12 @@ describe('ExcursionService', () => {
     jest.clearAllMocks();
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        ExcursionService,
+        ExcursionsService,
         { provide: getModelToken(Excursion.name), useValue: excursionModel },
       ],
     }).compile();
 
-    service = module.get<ExcursionService>(ExcursionService);
+    service = module.get<ExcursionsService>(ExcursionsService);
   });
 
   describe('getExcursion', () => {

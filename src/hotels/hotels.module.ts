@@ -5,7 +5,7 @@ import { HotelsAdminController } from './hotels.admin.controller';
 import { HotelsService } from './hotels.service';
 import { HotelsAdminService } from './hotels.admin.service';
 import { Hotel, HotelSchema } from './schemas/hotels.schema';
-import { BusTour, BusTourSchema } from '../busTours/schemas/busTour.schema';
+import { BusTour, BusTourSchema } from '../bus-tours/schemas/bus-tour.schema';
 
 @Module({
   imports: [

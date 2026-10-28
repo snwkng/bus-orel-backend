@@ -9,7 +9,7 @@ import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { PaginatedResponse } from 'src/common/interfaces/pagination.interface';
 
 @Injectable()
-export class ExcursionService {
+export class ExcursionsService {
   constructor(
     @InjectModel(Excursion.name)
     private readonly excursionModel: Model<ExcursionDocument>,

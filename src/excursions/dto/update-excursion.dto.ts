@@ -1,3 +1,3 @@
-import { CreateExcursionDto } from './create-excursion-dto';
+import { CreateExcursionDto } from './create-excursion.dto';
 
 export class UpdateExcursionDto extends CreateExcursionDto {}

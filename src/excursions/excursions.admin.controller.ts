@@ -11,7 +11,7 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { CreateExcursionDto } from './dto/create-excursion-dto';
+import { CreateExcursionDto } from './dto/create-excursion.dto';
 import { ExcursionsAdminService } from './excursions.admin.service';
 import {
   ApiBearerAuth,
@@ -21,7 +21,7 @@ import {
 } from '@nestjs/swagger';
 import { Excursion } from './schemas/excursions.schema';
 import { DeleteResult } from 'mongodb';
-import { UpdateExcursionDto } from './dto/update-excursion-dto';
+import { UpdateExcursionDto } from './dto/update-excursion.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth/jwt-auth.guard';
 import { SelectItemDto } from '../common/dto/select-item.dto';
 import { ExcursionQueryDto } from './dto/excursion-query.dto';

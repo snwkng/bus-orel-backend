@@ -3,9 +3,9 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, QueryFilter } from 'mongoose';
 import { DeleteResult } from 'mongodb';
 import { Hotel } from '../hotels/schemas/hotels.schema';
-import { BusTour } from '../busTours/schemas/busTour.schema';
-import { CreateHotelDto } from './dto/create-hotel-dto';
-import { UpdateHotelDto } from './dto/update-hotel-dto';
+import { BusTour } from '../bus-tours/schemas/bus-tour.schema';
+import { CreateHotelDto } from './dto/create-hotel.dto';
+import { UpdateHotelDto } from './dto/update-hotel.dto';
 import { IncludedInThePrice } from './subschemas/includedInThePrice.subschema';
 import {
   mapToSelectItem,

@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { QueryFilter, Model } from 'mongoose';
-import { BusTour } from './schemas/busTour.schema';
-import { CreateBusTourDto } from './dto/create-bus-tour-dto';
-import { UpdateBusTourDto } from './dto/update-bus-tour-dto';
+import { BusTour } from './schemas/bus-tour.schema';
+import { CreateBusTourDto } from './dto/create-bus-tour.dto';
+import { UpdateBusTourDto } from './dto/update-bus-tour.dto';
 import { BusTourQueryDto } from './dto/bus-tour-query.dto';
 import { BaseAdminService } from '../common/services/base-admin.service';
 import { buildSort } from '../common/utils/pagination.util';
