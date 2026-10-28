@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { FilterQuery, isValidObjectId, Model } from 'mongoose';
+import { QueryFilter, isValidObjectId, Model } from 'mongoose';
 import { Excursion, ExcursionDocument } from './schemas/excursions.schema';
 import { CreateExcursionDto } from './dto/create-excursion-dto';
 import { UpdateExcursionDto } from './dto/update-excursion-dto';
@@ -30,7 +30,7 @@ export class ExcursionsAdminService {
     pagination?: PaginationDto,
   ): Promise<PaginatedResponse<Excursion>> {
     const { page = 1, limit = 20 } = pagination ?? {};
-    const filter: FilterQuery<ExcursionDocument> = {};
+    const filter: QueryFilter<ExcursionDocument> = {};
 
     if (params?.city) {
       filter['cities'] = params.city;

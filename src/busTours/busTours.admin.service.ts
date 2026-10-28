@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { FilterQuery, Model, isValidObjectId } from 'mongoose';
+import { QueryFilter, Model, isValidObjectId } from 'mongoose';
 import { BusTour } from './schemas/busTour.schema';
 import { CreateBusTourDto } from './dto/create-bus-tour-dto';
 import { UpdateBusTourDto } from './dto/update-bus-tour-dto';
@@ -24,7 +24,7 @@ export class BusToursAdminService {
   }
 
   async getBusTours(params: BusTourQueryDto): Promise<BusTour[]> {
-    const filter: FilterQuery<BusTour> = {};
+    const filter: QueryFilter<BusTour> = {};
 
     if (params?.hotelId) {
       filter.hotelId = params.hotelId;

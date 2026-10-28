@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, FilterQuery, isValidObjectId, Types } from 'mongoose';
+import { Model, QueryFilter, isValidObjectId, Types } from 'mongoose';
 import { Excursion, ExcursionDocument } from './schemas/excursions.schema';
 import { ExcursionQueryDto } from './dto/excursion-query.dto';
 import { mapToSelectItem } from '../common/utils/mapper.util';
@@ -26,7 +26,7 @@ export class ExcursionService {
     const { page = 1, limit = 20 } = pagination ?? {};
     const today = new Date();
 
-    const matchFilter: FilterQuery<ExcursionDocument> = {
+    const matchFilter: QueryFilter<ExcursionDocument> = {
       excursionStartDates: { $elemMatch: { $gte: today } },
       ...(params?.city ? { cities: params.city } : {}),
     };

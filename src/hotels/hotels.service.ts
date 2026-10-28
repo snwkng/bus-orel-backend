@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, isValidObjectId, FilterQuery } from 'mongoose';
+import { Model, isValidObjectId, QueryFilter } from 'mongoose';
 import { Hotel } from '../hotels/schemas/hotels.schema';
 import { HotelQueryDto } from './dto/hotel-query.dto';
 import { mapToSelectItem } from '../common/utils/mapper.util';
@@ -24,7 +24,7 @@ export class HotelsService {
     pagination?: PaginationDto,
   ): Promise<PaginatedResponse<Hotel>> {
     const { page = 1, limit = 20 } = pagination ?? {};
-    const filter: FilterQuery<Hotel> = { published: true };
+    const filter: QueryFilter<Hotel> = { published: true };
 
     if (params.city) {
       filter['address.city'] = params.city;
@@ -83,7 +83,7 @@ export class HotelsService {
   }
 
   async getCitiesList(seaType?: string): Promise<SelectItemDto[]> {
-    const filter: FilterQuery<Hotel> = { published: true };
+    const filter: QueryFilter<Hotel> = { published: true };
     if (seaType) {
       filter.seaType = seaType;
     }
