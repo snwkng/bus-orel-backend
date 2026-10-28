@@ -4,6 +4,7 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Excursion } from './schemas/excursions.schema';
 import { ExcursionQueryDto } from './dto/excursion-query.dto';
 import { SelectItemDto } from '../common/dto/select-item.dto';
+import { ParseObjectIdPipe } from '../common/pipes/parse-object-id.pipe';
 
 @ApiTags('Excursions')
 @Controller('excursions')
@@ -28,7 +29,7 @@ export class ExcursionsController {
   @ApiOperation({ summary: 'Get one excursion' })
   @ApiResponse({ status: 200, type: Excursion })
   @Get(':id')
-  getOne(@Param('id') id: string): Promise<Excursion> {
+  getOne(@Param('id', ParseObjectIdPipe) id: string): Promise<Excursion> {
     return this.excursionService.getExcursion(id);
   }
 }

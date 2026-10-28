@@ -1,10 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getModelToken } from '@nestjs/mongoose';
-import {
-  BadRequestException,
-  ConflictException,
-  NotFoundException,
-} from '@nestjs/common';
+import { ConflictException, NotFoundException } from '@nestjs/common';
 import { HotelsAdminService } from './hotels.admin.service';
 import { Hotel } from './schemas/hotels.schema';
 import { BusTour } from '../busTours/schemas/busTour.schema';
@@ -30,14 +26,6 @@ describe('HotelsAdminService', () => {
   });
 
   describe('deleteHotel', () => {
-    it('бросает BadRequest при некорректном id', async () => {
-      await expect(service.deleteHotel('not-an-id')).rejects.toThrow(
-        BadRequestException,
-      );
-      expect(busTourModel.countDocuments).not.toHaveBeenCalled();
-      expect(hotelModel.deleteOne).not.toHaveBeenCalled();
-    });
-
     it('бросает Conflict, если с отелем связаны туры, и не удаляет отель', async () => {
       busTourModel.countDocuments.mockReturnValue({
         exec: jest.fn().mockResolvedValue(3),

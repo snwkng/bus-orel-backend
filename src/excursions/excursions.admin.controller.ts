@@ -25,6 +25,7 @@ import { UpdateExcursionDto } from './dto/update-excursion-dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth/jwt-auth.guard';
 import { SelectItemDto } from '../common/dto/select-item.dto';
 import { ExcursionQueryDto } from './dto/excursion-query.dto';
+import { ParseObjectIdPipe } from '../common/pipes/parse-object-id.pipe';
 
 @ApiBearerAuth('JWT-auth')
 @UseGuards(JwtAuthGuard)
@@ -65,7 +66,7 @@ export class ExcursionsAdminController {
   @ApiOperation({ summary: 'Get one excursion' })
   @ApiResponse({ status: 200, type: Excursion })
   @Get(':id')
-  getOne(@Param('id') id: string): Promise<Excursion> {
+  getOne(@Param('id', ParseObjectIdPipe) id: string): Promise<Excursion> {
     return this.excursionAdminService.getExcursion(id);
   }
 
@@ -73,7 +74,7 @@ export class ExcursionsAdminController {
   @ApiResponse({ status: 200, type: Excursion })
   @Put(':id')
   update(
-    @Param('id') id: string,
+    @Param('id', ParseObjectIdPipe) id: string,
     @Body() excursionDto: UpdateExcursionDto,
   ): Promise<Excursion> {
     return this.excursionAdminService.updateExcursion(id, excursionDto);
@@ -82,7 +83,7 @@ export class ExcursionsAdminController {
   @ApiOperation({ summary: 'Delete excursion' })
   @ApiResponse({ status: 200 })
   @Delete(':id')
-  delete(@Param('id') id: string): Promise<DeleteResult> {
+  delete(@Param('id', ParseObjectIdPipe) id: string): Promise<DeleteResult> {
     return this.excursionAdminService.deleteExcursion(id);
   }
 }

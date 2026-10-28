@@ -1,16 +1,13 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, isValidObjectId, QueryFilter } from 'mongoose';
+import { Model, QueryFilter } from 'mongoose';
 import { Hotel } from '../hotels/schemas/hotels.schema';
 import { HotelQueryDto } from './dto/hotel-query.dto';
 import { mapToSelectItem } from '../common/utils/mapper.util';
 import { SelectItemDto } from '../common/dto/select-item.dto';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { PaginatedResponse } from 'src/common/interfaces/pagination.interface';
+import { buildSort, paginate } from '../common/utils/pagination.util';
 
 @Injectable()
 export class HotelsService {
@@ -23,7 +20,6 @@ export class HotelsService {
     params: HotelQueryDto,
     pagination?: PaginationDto,
   ): Promise<PaginatedResponse<Hotel>> {
-    const { page = 1, limit = 20 } = pagination ?? {};
     const filter: QueryFilter<Hotel> = { published: true };
 
     if (params.city) {
@@ -34,37 +30,15 @@ export class HotelsService {
       filter.seaType = params.seaType;
     }
 
-    const sort: Record<string, 1 | -1> = params?.sortBy
-      ? { [params.sortBy]: params.sortDir === 'asc' ? 1 : -1 }
-      : { _id: -1 };
-
-    const skip = (page - 1) * limit;
-    const [data, total] = await Promise.all([
-      this.hotelModel
-        .find(filter)
-        .sort(sort)
-        .skip(skip)
-        .limit(limit)
-        .lean()
-        .exec(),
-      this.hotelModel.countDocuments(filter).exec(),
-    ]);
-
-    return {
-      items: data,
-      meta: {
-        total,
-        page,
-        limit,
-        lastPage: Math.ceil(total / limit),
-      },
-    };
+    return paginate(
+      this.hotelModel,
+      filter,
+      pagination,
+      buildSort(params?.sortBy, params?.sortDir),
+    );
   }
 
   async getHotel(id: string): Promise<Hotel> {
-    if (!isValidObjectId(id)) {
-      throw new BadRequestException('Некорректный формат идентификатора');
-    }
     const hotel = await this.hotelModel
       .findOne({ _id: id, published: true })
       .lean()

@@ -4,6 +4,7 @@ import { HotelsService } from './hotels.service';
 import { Hotel } from './schemas/hotels.schema';
 import { SelectItemDto } from '../common/dto/select-item.dto';
 import { HotelQueryDto } from './dto/hotel-query.dto';
+import { ParseObjectIdPipe } from '../common/pipes/parse-object-id.pipe';
 
 @ApiTags('hotels')
 @Controller('hotels')
@@ -36,7 +37,7 @@ export class HotelsController {
   @ApiOperation({ summary: 'Get hotel' })
   @ApiResponse({ status: 200, type: Hotel })
   @Get(':id')
-  getOne(@Param('id') id: string): Promise<Hotel> {
+  getOne(@Param('id', ParseObjectIdPipe) id: string): Promise<Hotel> {
     return this.hotelsService.getHotel(id);
   }
 }

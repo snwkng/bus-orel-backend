@@ -28,6 +28,7 @@ import { SelectItemDto } from '../common/dto/select-item.dto';
 import { IncludedInThePriceDto } from './dto/included-in-the-price.dto';
 import { HotelQueryDto } from './dto/hotel-query.dto';
 import { PublishHotelDto } from './dto/publish-hotel.dto';
+import { ParseObjectIdPipe } from '../common/pipes/parse-object-id.pipe';
 
 @ApiBearerAuth('JWT-auth')
 @UseGuards(JwtAuthGuard)
@@ -77,7 +78,7 @@ export class HotelsAdminController {
   @ApiOperation({ summary: 'Get hotel by ID' })
   @ApiResponse({ status: 200, type: Hotel })
   @Get(':id')
-  getOne(@Param('id') id: string): Promise<Hotel> {
+  getOne(@Param('id', ParseObjectIdPipe) id: string): Promise<Hotel> {
     return this.hotelsAdminService.getHotel(id);
   }
 
@@ -86,7 +87,7 @@ export class HotelsAdminController {
   @Put(':id')
   update(
     @Body() hotelDto: UpdateHotelDto,
-    @Param('id') id: string,
+    @Param('id', ParseObjectIdPipe) id: string,
   ): Promise<Hotel> {
     return this.hotelsAdminService.updateHotel(id, hotelDto);
   }
@@ -95,7 +96,7 @@ export class HotelsAdminController {
   @ApiResponse({ status: 200, type: Hotel })
   @Patch('published/:id')
   published(
-    @Param('id') id: string,
+    @Param('id', ParseObjectIdPipe) id: string,
     @Body() dto: PublishHotelDto,
   ): Promise<Hotel> {
     return this.hotelsAdminService.updateHotel(id, dto);
@@ -104,7 +105,7 @@ export class HotelsAdminController {
   @ApiOperation({ summary: 'Delete hotel' })
   @ApiResponse({ status: 200 })
   @Delete(':id')
-  delete(@Param('id') id: string): Promise<DeleteResult> {
+  delete(@Param('id', ParseObjectIdPipe) id: string): Promise<DeleteResult> {
     return this.hotelsAdminService.deleteHotel(id);
   }
 }

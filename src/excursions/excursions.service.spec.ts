@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getModelToken } from '@nestjs/mongoose';
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { NotFoundException } from '@nestjs/common';
 import { ExcursionService } from './excursions.service';
 import { Excursion } from './schemas/excursions.schema';
 
@@ -23,13 +23,6 @@ describe('ExcursionService', () => {
   });
 
   describe('getExcursion', () => {
-    it('бросает BadRequest при некорректном id', async () => {
-      await expect(service.getExcursion('not-an-id')).rejects.toThrow(
-        BadRequestException,
-      );
-      expect(excursionModel.aggregate).not.toHaveBeenCalled();
-    });
-
     it('бросает NotFound, если экскурсия не найдена', async () => {
       excursionModel.aggregate.mockReturnValue({
         exec: jest.fn().mockResolvedValue([]),

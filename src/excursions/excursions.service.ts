@@ -1,10 +1,6 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, QueryFilter, isValidObjectId, Types } from 'mongoose';
+import { Model, QueryFilter, Types } from 'mongoose';
 import { Excursion, ExcursionDocument } from './schemas/excursions.schema';
 import { ExcursionQueryDto } from './dto/excursion-query.dto';
 import { mapToSelectItem } from '../common/utils/mapper.util';
@@ -77,10 +73,6 @@ export class ExcursionService {
   }
 
   async getExcursion(id: string) {
-    if (!isValidObjectId(id)) {
-      throw new BadRequestException('Некорректный формат идентификатора');
-    }
-
     const today = new Date();
     const result = await this.excursionModel
       .aggregate([

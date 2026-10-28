@@ -1,11 +1,7 @@
-import {
-  BadRequestException,
-  ConflictException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, isValidObjectId, QueryFilter } from 'mongoose';
+import { Model, QueryFilter } from 'mongoose';
+import { DeleteResult } from 'mongodb';
 import { Hotel } from '../hotels/schemas/hotels.schema';
 import { BusTour } from '../busTours/schemas/busTour.schema';
 import { CreateHotelDto } from './dto/create-hotel-dto';
@@ -20,26 +16,33 @@ import { HotelQueryDto } from './dto/hotel-query.dto';
 import { PublishHotelDto } from './dto/publish-hotel.dto';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { PaginatedResponse } from 'src/common/interfaces/pagination.interface';
+import { BaseAdminService } from '../common/services/base-admin.service';
+import { buildSort, paginate } from '../common/utils/pagination.util';
 
 @Injectable()
-export class HotelsAdminService {
+export class HotelsAdminService extends BaseAdminService<Hotel> {
   constructor(
     @InjectModel(Hotel.name)
-    private readonly hotelModel: Model<Hotel>,
+    hotelModel: Model<Hotel>,
     @InjectModel(BusTour.name)
     private readonly busTourModel: Model<BusTour>,
-  ) {}
+  ) {
+    super(hotelModel, {
+      notFound: 'Отель не найден',
+      notFoundForUpdate: 'Отель для обновления не найден',
+      notFoundForDelete: 'Отель не найден, удаление невозможно',
+    });
+  }
 
   async createHotel(dto: CreateHotelDto) {
     // по умолчанию создаем не опубликованные туры
-    return await this.hotelModel.create({ ...dto, published: false });
+    return this.create({ ...dto, published: false });
   }
 
   async getHotels(
     params: HotelQueryDto,
     pagination?: PaginationDto,
   ): Promise<PaginatedResponse<Hotel>> {
-    const { page = 1, limit = 20 } = pagination ?? {};
     const filter: QueryFilter<Hotel> = {};
 
     if (params.city) {
@@ -50,68 +53,23 @@ export class HotelsAdminService {
       filter.seaType = params.seaType;
     }
 
-    const sort: Record<string, 1 | -1> = params?.sortBy
-      ? { [params.sortBy]: params.sortDir === 'asc' ? 1 : -1 }
-      : { _id: -1 };
-
-    const skip = (page - 1) * limit;
-    const [data, total] = await Promise.all([
-      this.hotelModel
-        .find(filter)
-        .sort(sort)
-        .skip(skip)
-        .limit(limit)
-        .lean()
-        .exec(),
-      this.hotelModel.countDocuments(filter).exec(),
-    ]);
-
-    return {
-      items: data,
-      meta: {
-        total,
-        page,
-        limit,
-        lastPage: Math.ceil(total / limit),
-      },
-    };
+    return paginate(
+      this.model,
+      filter,
+      pagination,
+      buildSort(params?.sortBy, params?.sortDir),
+    );
   }
 
   async getHotel(id: string) {
-    if (!isValidObjectId(id)) {
-      throw new BadRequestException('Некорректный формат идентификатора');
-    }
-    const hotel = await this.hotelModel.findById(id).exec();
-
-    if (!hotel) {
-      throw new NotFoundException('Отель не найден');
-    }
-
-    return hotel;
+    return this.getById(id);
   }
 
   async updateHotel(id: string, dto: UpdateHotelDto | PublishHotelDto) {
-    if (!isValidObjectId(id)) {
-      throw new BadRequestException('Некорректный формат идентификатора');
-    }
-    const hotel = await this.hotelModel.findByIdAndUpdate(
-      { _id: id },
-      { $set: dto },
-      { new: true },
-    );
-
-    if (!hotel) {
-      throw new NotFoundException('Отель для обновления не найден');
-    }
-
-    return hotel;
+    return this.update(id, dto);
   }
 
-  async deleteHotel(id: string) {
-    if (!isValidObjectId(id)) {
-      throw new BadRequestException('Некорректный формат идентификатора');
-    }
-
+  async deleteHotel(id: string): Promise<DeleteResult> {
     const toursCount = await this.busTourModel
       .countDocuments({ hotelId: id })
       .exec();
@@ -122,17 +80,11 @@ export class HotelsAdminService {
       );
     }
 
-    const result = await this.hotelModel.deleteOne({ _id: id }).exec();
-
-    if (result.deletedCount === 0) {
-      throw new NotFoundException('Отель не найден, удаление невозможно');
-    }
-
-    return result;
+    return this.delete(id);
   }
 
   async getSeaList(): Promise<SelectItemDto[]> {
-    const res = await this.hotelModel.distinct('seaType').exec();
+    const res = await this.model.distinct('seaType').exec();
     return mapToSelectItem(res);
   }
 
@@ -141,12 +93,12 @@ export class HotelsAdminService {
     if (seaType) {
       filter.seaType = seaType;
     }
-    const res = await this.hotelModel.distinct('address.city', filter);
+    const res = await this.model.distinct('address.city', filter);
     return mapToSelectItem(res);
   }
 
   async getIncludedInThePriceList(): Promise<IncludedInThePrice[]> {
-    const res = await this.hotelModel.distinct('includedInThePrice').exec();
+    const res = await this.model.distinct('includedInThePrice').exec();
     return mapToIncludedInThePriceItem(res);
   }
 }

@@ -24,6 +24,7 @@ import { DeleteResult } from 'mongodb';
 import { UpdateBusTourDto } from './dto/update-bus-tour-dto';
 import { BusTourQueryDto } from './dto/bus-tour-query.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth/jwt-auth.guard';
+import { ParseObjectIdPipe } from '../common/pipes/parse-object-id.pipe';
 
 @ApiBearerAuth('JWT-auth')
 @UseGuards(JwtAuthGuard)
@@ -53,7 +54,7 @@ export class BusToursAdminController {
   @HttpCode(HttpStatus.OK)
   async update(
     @Body() busTourDto: UpdateBusTourDto,
-    @Param('id') id: string,
+    @Param('id', ParseObjectIdPipe) id: string,
   ): Promise<BusTour> {
     return await this.busToursAdminService.updateBusTour(id, busTourDto);
   }
@@ -62,7 +63,9 @@ export class BusToursAdminController {
   @ApiResponse({ status: 200, type: Boolean })
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
-  async delete(@Param('id') id: string): Promise<DeleteResult> {
+  async delete(
+    @Param('id', ParseObjectIdPipe) id: string,
+  ): Promise<DeleteResult> {
     return await this.busToursAdminService.deleteBusTour(id);
   }
 }

@@ -1,26 +1,28 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { QueryFilter, Model, isValidObjectId } from 'mongoose';
+import { QueryFilter, Model } from 'mongoose';
 import { BusTour } from './schemas/busTour.schema';
 import { CreateBusTourDto } from './dto/create-bus-tour-dto';
 import { UpdateBusTourDto } from './dto/update-bus-tour-dto';
 import { BusTourQueryDto } from './dto/bus-tour-query.dto';
+import { BaseAdminService } from '../common/services/base-admin.service';
+import { buildSort } from '../common/utils/pagination.util';
 
 @Injectable()
-export class BusToursAdminService {
+export class BusToursAdminService extends BaseAdminService<BusTour> {
   constructor(
     @InjectModel(BusTour.name)
-    private readonly busTourModel: Model<BusTour>,
-  ) {}
+    busTourModel: Model<BusTour>,
+  ) {
+    super(busTourModel, {
+      notFound: 'Автобусный тур не найден',
+      notFoundForUpdate: 'Автобусный тур для обновления не найден',
+      notFoundForDelete: 'Автобусный тур не найден, удаление невозможно',
+    });
+  }
 
   async createBusTour(dto: CreateBusTourDto) {
-    // по умолчанию создаем не опубликованные туры
-    const busTour = await this.busTourModel.create({ ...dto });
-    return busTour;
+    return this.create(dto);
   }
 
   async getBusTours(params: BusTourQueryDto): Promise<BusTour[]> {
@@ -30,48 +32,19 @@ export class BusToursAdminService {
       filter.hotelId = params.hotelId;
     }
 
-    const sort: Record<string, 1 | -1> = params?.sortBy
-      ? { [params.sortBy]: params.sortDir === 'asc' ? 1 : -1 }
-      : { _id: -1 };
-
-    const busTours = await this.busTourModel
+    const busTours = await this.model
       .find(filter)
-      .sort(sort)
+      .sort(buildSort(params?.sortBy, params?.sortDir))
       .lean()
       .exec();
     return busTours as BusTour[];
   }
 
   async updateBusTour(id: string, dto: UpdateBusTourDto) {
-    if (!isValidObjectId(id)) {
-      throw new BadRequestException('Некорректный формат идентификатора');
-    }
-    const busTour = await this.busTourModel.findByIdAndUpdate(
-      { _id: id },
-      { $set: dto },
-      { new: true },
-    );
-
-    if (!busTour) {
-      throw new NotFoundException('Автобусный тур для обновления не найден');
-    }
-
-    return busTour;
+    return this.update(id, dto);
   }
 
   async deleteBusTour(id: string) {
-    if (!isValidObjectId(id)) {
-      throw new BadRequestException('Некорректный формат идентификатора');
-    }
-
-    const result = await this.busTourModel.deleteOne({ _id: id }).exec();
-
-    if (result.deletedCount === 0) {
-      throw new NotFoundException(
-        'Автобусный тур не найден, удаление невозможно',
-      );
-    }
-
-    return result;
+    return this.delete(id);
   }
 }
