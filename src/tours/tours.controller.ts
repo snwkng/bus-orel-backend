@@ -7,11 +7,11 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 export class ToursController {
   constructor(private readonly tourService: TourService) {}
 
-  @ApiOperation({ summary: 'get hotels by country id' })
+  @ApiOperation({ summary: 'Get countries list' })
   @ApiResponse({ status: 200 })
   // @Header('Cache-Control', 'public, max-age=3600')
   @Get('countries')
-  getCitiesList(): Promise<any> {
+  getCountriesList(): Promise<any> {
     return this.tourService.getCountries();
   }
 }

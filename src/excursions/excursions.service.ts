@@ -106,8 +106,8 @@ export class ExcursionService {
 
     const excursion = result[0];
 
-    if (!excursion || !excursion.excursionStartDates?.length) {
-      throw new NotFoundException('Экскурсия не найдена или уже завершена');
+    if (!excursion) {
+      throw new NotFoundException('Экскурсия не найдена');
     }
 
     return excursion;

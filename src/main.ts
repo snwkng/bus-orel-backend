@@ -2,10 +2,11 @@ import { join } from 'node:path';
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { SwaggerModule } from '@nestjs/swagger';
 import helmet from 'helmet';
 import { AppModule } from './app.module';
 import { AllExceptionsFilter } from './common/filters/http-exception.filter';
+import { buildSwaggerConfig } from './config/swagger.config';
 async function bootstrap() {
   const PORT = process.env.PORT || 3000;
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -34,23 +35,7 @@ async function bootstrap() {
   );
   app.useGlobalFilters(new AllExceptionsFilter());
   if (process.env.NODE_ENV !== 'production') {
-    const config = new DocumentBuilder()
-      .setTitle('bus-orel.ru')
-      .setDescription('REST API')
-      .setVersion('1.0.0')
-      .addBearerAuth(
-        {
-          type: 'http',
-          scheme: 'bearer',
-          bearerFormat: 'JWT',
-          name: 'JWT',
-          description: 'Enter JWT token',
-          in: 'header',
-        },
-        'JWT-auth',
-      )
-      .build();
-    const document = SwaggerModule.createDocument(app, config);
+    const document = SwaggerModule.createDocument(app, buildSwaggerConfig());
     SwaggerModule.setup('/api/docs', app, document);
   }
   await app.listen(PORT, () => console.log(`Server start on port - ${PORT}`));

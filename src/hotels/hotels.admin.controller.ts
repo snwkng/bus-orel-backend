@@ -101,7 +101,7 @@ export class HotelsAdminController {
     return this.hotelsAdminService.updateHotel(id, dto);
   }
 
-  @ApiOperation({ summary: 'Delete bus tour' })
+  @ApiOperation({ summary: 'Delete hotel' })
   @ApiResponse({ status: 200 })
   @Delete(':id')
   delete(@Param('id') id: string): Promise<DeleteResult> {

@@ -37,4 +37,5 @@ lerna-debug.log*
 
 AGENTS.md
 BACKLOG.md
+swagger.json
 *.tsbuildinfo
