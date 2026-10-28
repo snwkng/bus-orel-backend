@@ -17,6 +17,7 @@ import { HotelsAdminService } from './hotels.admin.service';
 import {
   ApiBearerAuth,
   ApiOperation,
+  ApiQuery,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -46,6 +47,11 @@ export class HotelsAdminController {
 
   @ApiOperation({ summary: 'Get cities list' })
   @ApiResponse({ status: 200, type: [SelectItemDto] })
+  @ApiQuery({
+    name: 'seaType',
+    required: false,
+    description: 'Фильтр по типу моря',
+  })
   @Get('cities-list')
   getCitiesList(
     @Query('seaType') seaType: string = '',

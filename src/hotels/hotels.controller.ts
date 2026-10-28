@@ -1,5 +1,5 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { HotelsService } from './hotels.service';
 import { Hotel } from './schemas/hotels.schema';
 import { SelectItemDto } from '../common/dto/select-item.dto';
@@ -20,6 +20,11 @@ export class HotelsController {
 
   @ApiOperation({ summary: 'Get cities list' })
   @ApiResponse({ status: 200, type: [SelectItemDto] })
+  @ApiQuery({
+    name: 'seaType',
+    required: false,
+    description: 'Фильтр по типу моря',
+  })
   @Get('cities-list')
   getCitiesList(
     @Query('seaType') seaType: string = '',
