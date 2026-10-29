@@ -34,7 +34,11 @@ describe('ExcursionsService', () => {
     });
 
     it('возвращает экскурсию с пустым массивом дат, если все даты в прошлом', async () => {
-      const excursion = { _id: validId, name: 'Тур', excursionStartDates: [] };
+      const excursion = {
+        _id: validId,
+        name: 'Тур',
+        excursionStartDates: [] as Date[],
+      };
       excursionModel.aggregate.mockReturnValue({
         exec: vi.fn().mockResolvedValue([excursion]),
       });

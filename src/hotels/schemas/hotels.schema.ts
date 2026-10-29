@@ -83,7 +83,7 @@ export class Hotel {
     type: () => [Room],
     default: [],
     validate: [
-      (v) => Array.isArray(v) && v.length > 0,
+      (v: unknown) => Array.isArray(v) && v.length > 0,
       'Hotel must have at least one room',
     ],
   })

@@ -11,7 +11,7 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get('profile')
-  getProfile(@Request() req) {
+  getProfile(@Request() req: { user: { username: string } }) {
     return this.usersService.findOne(req.user.username);
   }
 }

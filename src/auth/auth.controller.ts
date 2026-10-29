@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
 import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
-import { AuthService } from './auth.service';
+import { AuthService, ValidatedUser } from './auth.service';
 import { LocalAuthGuard } from './guards/local-auth/local-auth.guard';
 import { JwtAuthGuard } from './guards/jwt-auth/jwt-auth.guard';
 import { JwtRefreshGuard } from './guards/jwt-refresh/jwt-refresh.guard';
@@ -25,7 +25,10 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @ApiBody({ type: LoginDto })
   @Post('login')
-  async login(@Body() loginDto: LoginDto, @Request() req) {
+  async login(
+    @Body() loginDto: LoginDto,
+    @Request() req: { user: ValidatedUser },
+  ) {
     return this.authService.login(req.user);
   }
 
@@ -34,7 +37,9 @@ export class AuthController {
   @ApiBearerAuth('JWT-auth')
   @UseGuards(JwtRefreshGuard)
   @Post('refresh')
-  async refresh(@Request() req) {
+  async refresh(
+    @Request() req: { user: { _id: string; refreshToken: string } },
+  ) {
     return this.authService.refreshTokens(req.user._id, req.user.refreshToken);
   }
 
@@ -42,7 +47,7 @@ export class AuthController {
   @ApiBearerAuth('JWT-auth')
   @UseGuards(JwtAuthGuard)
   @Post('logout')
-  async logout(@Request() req) {
+  async logout(@Request() req: { user: { _id: string } }) {
     await this.authService.logout(req.user._id);
     return { message: 'Выход выполнен успешно' };
   }
