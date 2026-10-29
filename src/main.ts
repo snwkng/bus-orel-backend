@@ -1,6 +1,6 @@
 import { join } from 'node:path';
 import { NestFactory } from '@nestjs/core';
-import { ValidationPipe } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { SwaggerModule } from '@nestjs/swagger';
 import helmet from 'helmet';
@@ -38,6 +38,7 @@ async function bootstrap() {
     const document = SwaggerModule.createDocument(app, buildSwaggerConfig());
     SwaggerModule.setup('/api/docs', app, document);
   }
-  await app.listen(PORT, () => console.log(`Server start on port - ${PORT}`));
+  await app.listen(PORT);
+  new Logger('Bootstrap').log(`Server start on port - ${PORT}`);
 }
 bootstrap();
