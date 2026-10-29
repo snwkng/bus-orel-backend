@@ -19,12 +19,19 @@ export default [
       ...tsPlugin.configs.recommended.rules,
       '@typescript-eslint/explicit-function-return-type': 'off',
       '@typescript-eslint/explicit-module-boundary-types': 'off',
-      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-explicit-any': 'error',
       // деструктуризация для исключения поля: const { password, ...rest } = user
       '@typescript-eslint/no-unused-vars': [
         'error',
         { ignoreRestSiblings: true, argsIgnorePattern: '^_' },
       ],
+    },
+  },
+  {
+    // в spec-файлах `as any` для моков DI допустим
+    files: ['**/*.spec.ts'],
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'off',
     },
   },
   eslintPluginPrettierRecommended,

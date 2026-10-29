@@ -69,8 +69,8 @@ export class TourService {
       }
 
       this.logger.error(
-        `Failed to connect to Multitour API [${method}]: ${(error as any)?.message}`,
-        (error as any)?.stack,
+        `Failed to connect to Multitour API [${method}]: ${error instanceof Error ? error.message : String(error)}`,
+        error instanceof Error ? error.stack : undefined,
       );
       throw new HttpException(
         'Multitour service temporarily unavailable',
@@ -92,8 +92,8 @@ export class TourService {
   /**
    * Пример: Получение курортов по стране
    */
-  async getResorts(countryId: number): Promise<any[]> {
-    return this.sendRequest<{ country_id: number }, any[]>('Geo.Resort', {
+  async getResorts(countryId: number): Promise<unknown[]> {
+    return this.sendRequest<{ country_id: number }, unknown[]>('Geo.Resort', {
       country_id: countryId,
     });
   }

@@ -14,19 +14,26 @@ import { Request, Response } from 'express';
 export class AllExceptionsFilter implements ExceptionFilter {
   private readonly logger = new Logger(AllExceptionsFilter.name);
 
-  catch(exception: any, host: ArgumentsHost) {
+  catch(exception: unknown, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
     let status: number = HttpStatus.INTERNAL_SERVER_ERROR;
     let message: string[] | string =
       'Произошла непредвиденная ошибка. Пожалуйста, попробуйте позже.';
+    const errorName = exception instanceof Error ? exception.name : 'Error';
+    const errorMessage = exception instanceof Error ? exception.message : '';
 
     if (exception instanceof HttpException) {
       status = exception.getStatus();
-      const responseBody: any = exception.getResponse();
-      const originalMessage =
-        typeof responseBody === 'object' ? responseBody.message : responseBody;
+      const responseBody = exception.getResponse();
+      let originalMessage: string | string[] | undefined;
+      if (typeof responseBody === 'string') {
+        originalMessage = responseBody;
+      } else {
+        const body = responseBody as { message?: string | string[] };
+        originalMessage = body.message;
+      }
 
       if (exception instanceof NotFoundException) {
         const isDefaultMessage =
@@ -44,7 +51,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
       }
     }
     // Обработка специфических ошибок MongoDB (например, битый ID)
-    else if (exception.name === 'CastError') {
+    else if (exception instanceof Error && exception.name === 'CastError') {
       status = HttpStatus.BAD_REQUEST;
       message =
         'Указан неверный идентификатор, либо страницы больше не существует';
@@ -52,7 +59,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
 
     if (status >= HttpStatus.INTERNAL_SERVER_ERROR) {
       this.logger.error(
-        `${request.method} ${request.url} — ${exception.name || 'Error'}: ${exception.message ?? ''}`,
+        `${request.method} ${request.url} — ${errorName}: ${errorMessage}`,
         exception instanceof Error ? exception.stack : String(exception),
       );
     }
@@ -61,7 +68,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
       success: false,
       data: null,
       error: {
-        code: exception.name || 'Error',
+        code: errorName,
         message: Array.isArray(message) ? message : [message],
         statusCode: status,
       },

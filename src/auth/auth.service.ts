@@ -3,8 +3,12 @@ import { ConfigType } from '@nestjs/config';
 import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import { type Types } from 'mongoose';
+import { User } from 'src/users/schemas/users.schema';
 import { AuthJwtPayload } from './types/auth-jwt.payload';
 import jwtConfig from './config/jwt.config';
+
+export type ValidatedUser = Omit<User, 'password'> & { _id: Types.ObjectId };
 
 @Injectable()
 export class AuthService {
@@ -15,7 +19,10 @@ export class AuthService {
     private readonly jwtConfiguration: ConfigType<typeof jwtConfig>,
   ) {}
 
-  async validateUser(username: string, pass: string): Promise<any> {
+  async validateUser(
+    username: string,
+    pass: string,
+  ): Promise<ValidatedUser | null> {
     const user = await this.usersService.checkUser(username);
     if (!user) {
       return null;
@@ -37,7 +44,7 @@ export class AuthService {
     return result;
   }
 
-  async login(user: any) {
+  async login(user: ValidatedUser) {
     const tokens = await this.generateTokens(user.username, user._id);
     await this.updateRefreshTokenHash(user._id, tokens.refresh_token);
     return tokens;
@@ -68,7 +75,7 @@ export class AuthService {
     await this.usersService.setCurrentRefreshToken(userId, null);
   }
 
-  private async generateTokens(username: string, userId: any) {
+  private async generateTokens(username: string, userId: Types.ObjectId) {
     const payload: AuthJwtPayload = { username, sub: userId };
     const [access_token, refresh_token] = await Promise.all([
       this.jwtService.signAsync(payload),
@@ -80,7 +87,10 @@ export class AuthService {
     return { access_token, refresh_token };
   }
 
-  private async updateRefreshTokenHash(userId: any, refreshToken: string) {
+  private async updateRefreshTokenHash(
+    userId: Types.ObjectId,
+    refreshToken: string,
+  ) {
     const hash = await bcrypt.hash(refreshToken, 10);
     await this.usersService.setCurrentRefreshToken(userId, hash);
   }

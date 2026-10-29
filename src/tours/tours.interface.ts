@@ -1,4 +1,4 @@
-export interface MultitourRequest<T = any> {
+export interface MultitourRequest<T = unknown> {
   header: {
     token: string;
     method: string;
@@ -7,12 +7,12 @@ export interface MultitourRequest<T = any> {
 }
 
 // Базовая структура успешного ответа
-export interface MultitourSuccessResponse<R = any> {
+export interface MultitourSuccessResponse<R = unknown> {
   header: {
     token: string;
     method: string;
   };
-  request: any;
+  request: unknown;
   response: R;
 }
 
@@ -22,11 +22,11 @@ export interface MultitourErrorResponse {
     token: string;
     method: string;
   };
-  request: any;
+  request: unknown;
   error: {
     code: number;
     message: string;
-    data?: any;
+    data?: unknown;
   };
 }
 

@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
-import { type ObjectId } from 'mongoose';
+import { type Types } from 'mongoose';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { Request } from 'express';
 import jwtConfig from 'src/auth/config/jwt.config';
@@ -25,7 +25,12 @@ export class JwtRefreshStrategy extends PassportStrategy(
 
   validate(
     req: Request,
-    payload: { username: string; sub: ObjectId; iat: number; exp: number },
+    payload: {
+      username: string;
+      sub: Types.ObjectId;
+      iat: number;
+      exp: number;
+    },
   ) {
     const refreshToken = req.get('Authorization')?.replace('Bearer', '').trim();
     return { username: payload.username, _id: payload.sub, refreshToken };

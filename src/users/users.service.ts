@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, type Types } from 'mongoose';
 import { User, UsersDocument } from './schemas/users.schema';
 
 @Injectable()
@@ -23,7 +23,7 @@ export class UsersService {
   }
 
   async setCurrentRefreshToken(
-    userId: string,
+    userId: string | Types.ObjectId,
     refreshTokenHash: string | null,
   ): Promise<void> {
     await this.userModel

@@ -1,5 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
 import { TourService } from './tours.service';
+import { Country } from './tours.interface';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Tours')
@@ -11,7 +12,7 @@ export class ToursController {
   @ApiResponse({ status: 200 })
   // @Header('Cache-Control', 'public, max-age=3600')
   @Get('countries')
-  getCountriesList(): Promise<any> {
+  getCountriesList(): Promise<Country[]> {
     return this.tourService.getCountries();
   }
 }

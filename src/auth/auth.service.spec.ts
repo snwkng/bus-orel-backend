@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import { Types } from 'mongoose';
 import { AuthService } from './auth.service';
 import { UsersService } from '../users/users.service';
 import jwtConfig from './config/jwt.config';
@@ -107,16 +108,20 @@ describe('AuthService', () => {
         .mockResolvedValueOnce('access-token')
         .mockResolvedValueOnce('refresh-token');
 
-      const result = await service.login({ _id: '1', username: 'admin' });
+      const userObjectId = new Types.ObjectId();
+      const result = await service.login({
+        _id: userObjectId,
+        username: 'admin',
+      });
 
       expect(jwtService.signAsync).toHaveBeenCalledTimes(2);
       expect(jwtService.signAsync).toHaveBeenNthCalledWith(1, {
         username: 'admin',
-        sub: '1',
+        sub: userObjectId,
       });
       expect(jwtService.signAsync).toHaveBeenNthCalledWith(
         2,
-        { username: 'admin', sub: '1' },
+        { username: 'admin', sub: userObjectId },
         { secret: 'refresh-secret', expiresIn: '7d' },
       );
       expect(result).toEqual({
@@ -125,7 +130,7 @@ describe('AuthService', () => {
       });
 
       const [userId, hash] = usersService.setCurrentRefreshToken.mock.calls[0];
-      expect(userId).toBe('1');
+      expect(userId).toBe(userObjectId);
       expect(hash).toMatch(/^\$2/);
       await expect(bcrypt.compare('refresh-token', hash)).resolves.toBe(true);
     });

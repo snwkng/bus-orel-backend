@@ -1,5 +1,5 @@
 import { NotFoundException } from '@nestjs/common';
-import { Model } from 'mongoose';
+import { AnyObject, Model, UpdateQuery } from 'mongoose';
 import { DeleteResult } from 'mongodb';
 
 export interface EntityErrorMessages {
@@ -14,8 +14,9 @@ export abstract class BaseAdminService<T> {
     private readonly errorMessages: EntityErrorMessages,
   ) {}
 
-  async create(dto: any): Promise<T> {
-    return this.model.create(dto);
+  async create(dto: AnyObject): Promise<T> {
+    const doc = new this.model(dto);
+    return (await doc.save()) as T;
   }
 
   async getById(id: string): Promise<T> {
@@ -28,10 +29,10 @@ export abstract class BaseAdminService<T> {
     return doc;
   }
 
-  async update(id: string, dto: any): Promise<T> {
+  async update(id: string, dto: AnyObject): Promise<T> {
     const doc = await this.model.findByIdAndUpdate(
       { _id: id },
-      { $set: dto },
+      { $set: dto } as UpdateQuery<T>,
       { new: true },
     );
 
