@@ -1,12 +1,32 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, QueryFilter, Types } from 'mongoose';
+import { Model, PipelineStage, QueryFilter, Types } from 'mongoose';
 import { Excursion, ExcursionDocument } from './schemas/excursions.schema';
 import { ExcursionQueryDto } from './dto/excursion-query.dto';
 import { mapToSelectItem } from '../common/utils/mapper.util';
 import { SelectItemDto } from '../common/dto/select-item.dto';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { PaginatedResponse } from 'src/common/interfaces/pagination.interface';
+
+// Стейдж агрегации: оставляет только будущие даты и сортирует их по возрастанию
+function buildFutureDatesStage(today: Date): PipelineStage {
+  return {
+    $addFields: {
+      excursionStartDates: {
+        $sortArray: {
+          input: {
+            $filter: {
+              input: '$excursionStartDates',
+              as: 'date',
+              cond: { $gte: ['$$date', today] },
+            },
+          },
+          sortBy: 1,
+        },
+      },
+    },
+  };
+}
 
 @Injectable()
 export class ExcursionsService {
@@ -31,24 +51,9 @@ export class ExcursionsService {
       ? { [params.sortBy]: params.sortDir === 'asc' ? 1 : -1 }
       : { createdAt: -1 };
 
-    const pipeline: any[] = [
+    const pipeline: PipelineStage[] = [
       { $match: matchFilter },
-      {
-        $addFields: {
-          excursionStartDates: {
-            $sortArray: {
-              input: {
-                $filter: {
-                  input: '$excursionStartDates',
-                  as: 'date',
-                  cond: { $gte: ['$$date', today] },
-                },
-              },
-              sortBy: 1,
-            },
-          },
-        },
-      },
+      buildFutureDatesStage(today),
       { $sort: sort },
     ];
 
@@ -77,22 +82,7 @@ export class ExcursionsService {
     const result = await this.excursionModel
       .aggregate([
         { $match: { _id: new Types.ObjectId(id) } },
-        {
-          $addFields: {
-            excursionStartDates: {
-              $sortArray: {
-                input: {
-                  $filter: {
-                    input: '$excursionStartDates',
-                    as: 'date',
-                    cond: { $gte: ['$$date', today] },
-                  },
-                },
-                sortBy: 1,
-              },
-            },
-          },
-        },
+        buildFutureDatesStage(today),
       ])
       .exec();
 
