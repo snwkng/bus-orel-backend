@@ -9,17 +9,12 @@ export class UsersService {
     @InjectModel(User.name) private readonly userModel: Model<UsersDocument>,
   ) {}
 
-  async findOne(username: string): Promise<User | undefined> {
-    const user = await this.userModel.findOne({ username }).exec();
-    return user;
+  async findOne(username: string): Promise<UsersDocument | null> {
+    return this.userModel.findOne({ username }).exec();
   }
 
-  async checkUser(username: string): Promise<UsersDocument | undefined> {
-    const user = await this.userModel
-      .findOne({ username })
-      .select('+password')
-      .exec();
-    return user;
+  async checkUser(username: string): Promise<UsersDocument | null> {
+    return this.userModel.findOne({ username }).select('+password').exec();
   }
 
   async setCurrentRefreshToken(

@@ -45,8 +45,8 @@ export class UploadService {
     endpoint: this.configService.getOrThrow('AWS_S3_ENDPOINT'),
     forcePathStyle: true,
     credentials: {
-      accessKeyId: this.configService.get('AWS_ACCESS_KEY'),
-      secretAccessKey: this.configService.get('AWS_SECRET_KEY'),
+      accessKeyId: this.configService.getOrThrow('AWS_ACCESS_KEY'),
+      secretAccessKey: this.configService.getOrThrow('AWS_SECRET_KEY'),
     },
   });
 

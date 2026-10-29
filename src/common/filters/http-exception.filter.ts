@@ -40,7 +40,10 @@ export class AllExceptionsFilter implements ExceptionFilter {
           originalMessage === 'Not Found' ||
           (typeof originalMessage === 'string' &&
             originalMessage.startsWith('Cannot GET'));
-        message = isDefaultMessage ? 'Страница не найдена' : originalMessage;
+        message =
+          isDefaultMessage || !originalMessage
+            ? 'Страница не найдена'
+            : originalMessage;
       } else if (exception instanceof BadRequestException) {
         message =
           Array.isArray(originalMessage) || originalMessage

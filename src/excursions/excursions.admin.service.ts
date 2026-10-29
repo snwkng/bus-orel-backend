@@ -71,7 +71,7 @@ export class ExcursionsAdminService extends BaseAdminService<ExcursionDocument> 
   async getTypesList(): Promise<SelectItemDto[]> {
     const res = await this.model
       .distinct('type', {
-        type: { $exists: true, $nin: [null, '', undefined] },
+        type: { $exists: true, $nin: [null, ''] },
       })
       .exec();
     return mapToSelectItem(res);

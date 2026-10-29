@@ -83,7 +83,7 @@ describe('AuthService', () => {
 
       const result = await service.validateUser('admin', 'plain');
 
-      expect(result.username).toBe('admin');
+      expect(result?.username).toBe('admin');
       expect(user.password).toMatch(/^\$2/);
       expect(save).toHaveBeenCalled();
     });

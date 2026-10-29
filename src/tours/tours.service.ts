@@ -24,9 +24,9 @@ export class TourService {
     method: string,
     params: TParams = {} as TParams,
   ): Promise<TResponse> {
-    if (!this.token) {
+    if (!this.token || !this.apiUrl) {
       throw new HttpException(
-        'Multitour API token is not configured',
+        'Multitour API token or URL is not configured',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
