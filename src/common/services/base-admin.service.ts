@@ -33,7 +33,7 @@ export abstract class BaseAdminService<T> {
     const doc = await this.model.findByIdAndUpdate(
       { _id: id },
       { $set: dto } as UpdateQuery<T>,
-      { new: true },
+      { returnDocument: 'after' },
     );
 
     if (!doc) {
