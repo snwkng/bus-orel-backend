@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # этап сборки
-FROM node:22-alpine AS build
+FROM node:24-alpine AS build
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci
@@ -9,7 +9,7 @@ COPY . .
 RUN npm run build
 
 # продакшн-образ
-FROM node:22-alpine AS prod
+FROM node:24-alpine AS prod
 WORKDIR /app
 ENV NODE_ENV=production
 ENV PORT=3001
