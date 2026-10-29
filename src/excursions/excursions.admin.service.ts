@@ -40,7 +40,8 @@ export class ExcursionsAdminService extends BaseAdminService<ExcursionDocument> 
     }
     if (params?.search) {
       const search = params.search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-      filter.name = { $regex: search, $options: 'i' };
+      const regex = { $regex: search, $options: 'i' };
+      filter.$or = [{ name: regex }, { type: regex }, { cities: regex }];
     }
 
     return paginate(

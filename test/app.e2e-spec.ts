@@ -258,4 +258,78 @@ describe('App (e2e, mongodb-memory-server)', () => {
       expect(listRes.body.meta.pagination.total).toBe(0);
     });
   });
+
+  describe('excursions: поиск в админке по name/type/cities', () => {
+    const futureDate = new Date('2099-07-01');
+
+    const excursionTemplate = {
+      description: ['День 1'],
+      images: [],
+      documentName: [],
+      thePriceIncludes: [],
+      additionallyPaid: [],
+      duration: 5,
+      price: 10000,
+    };
+
+    beforeAll(async () => {
+      await connection.db!.collection('excursions').insertMany([
+        {
+          ...excursionTemplate,
+          name: 'Золотое кольцо',
+          type: 'Обзорная',
+          cities: ['Москва', 'Владимир'],
+          excursionStartDates: [futureDate],
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          ...excursionTemplate,
+          name: 'Карельские водопады',
+          type: 'Природная',
+          cities: ['Петрозаводск'],
+          excursionStartDates: [futureDate],
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      ]);
+    });
+
+    const search = (q: string) =>
+      request(app.getHttpServer())
+        .get(`/api/admin/excursions?search=${encodeURIComponent(q)}`)
+        .set('Authorization', `Bearer ${accessToken}`);
+
+    it('находит по подстроке в названии', async () => {
+      const res = await search('кольцо');
+
+      expect(res.status).toBe(200);
+      expect(res.body.data).toHaveLength(1);
+      expect(res.body.data[0].name).toBe('Золотое кольцо');
+    });
+
+    it('находит по типу экскурсии', async () => {
+      const res = await search('природная');
+
+      expect(res.status).toBe(200);
+      expect(res.body.data).toHaveLength(1);
+      expect(res.body.data[0].name).toBe('Карельские водопады');
+    });
+
+    it('находит по городу маршрута', async () => {
+      const res = await search('владимир');
+
+      expect(res.status).toBe(200);
+      expect(res.body.data).toHaveLength(1);
+      expect(res.body.data[0].name).toBe('Золотое кольцо');
+    });
+
+    it('возвращает пустой список при отсутствии совпадений', async () => {
+      const res = await search('несуществующее');
+
+      expect(res.status).toBe(200);
+      expect(res.body.data).toEqual([]);
+      expect(res.body.meta.pagination.total).toBe(0);
+    });
+  });
 });
