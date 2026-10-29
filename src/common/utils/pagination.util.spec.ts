@@ -19,21 +19,21 @@ describe('buildSort', () => {
 });
 
 describe('paginate', () => {
-  const exec = jest.fn();
+  const exec = vi.fn();
   const chain = {
-    sort: jest.fn().mockReturnThis(),
-    skip: jest.fn().mockReturnThis(),
-    limit: jest.fn().mockReturnThis(),
-    lean: jest.fn().mockReturnThis(),
+    sort: vi.fn().mockReturnThis(),
+    skip: vi.fn().mockReturnThis(),
+    limit: vi.fn().mockReturnThis(),
+    lean: vi.fn().mockReturnThis(),
     exec,
   };
   const model: any = {
-    find: jest.fn().mockReturnValue(chain),
-    countDocuments: jest.fn(),
+    find: vi.fn().mockReturnValue(chain),
+    countDocuments: vi.fn(),
   };
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     model.find.mockReturnValue(chain);
     chain.sort.mockReturnThis();
     chain.skip.mockReturnThis();
@@ -44,7 +44,7 @@ describe('paginate', () => {
   it('применяет дефолтные page=1, limit=20 и считает meta', async () => {
     exec.mockResolvedValue([{ name: 'a' }]);
     model.countDocuments.mockReturnValue({
-      exec: jest.fn().mockResolvedValue(21),
+      exec: vi.fn().mockResolvedValue(21),
     });
 
     const result = await paginate(model, {});
@@ -60,7 +60,7 @@ describe('paginate', () => {
   it('считает skip для переданной страницы', async () => {
     exec.mockResolvedValue([]);
     model.countDocuments.mockReturnValue({
-      exec: jest.fn().mockResolvedValue(0),
+      exec: vi.fn().mockResolvedValue(0),
     });
 
     await paginate(model, {}, { page: 3, limit: 10 }, { name: 1 });

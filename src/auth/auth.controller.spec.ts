@@ -5,13 +5,13 @@ import { AuthService } from './auth.service';
 describe('AuthController', () => {
   let controller: AuthController;
   const authService = {
-    login: jest.fn(),
-    refreshTokens: jest.fn(),
-    logout: jest.fn(),
+    login: vi.fn(),
+    refreshTokens: vi.fn(),
+    logout: vi.fn(),
   };
 
   beforeEach(async () => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AuthController],
       providers: [{ provide: AuthService, useValue: authService }],

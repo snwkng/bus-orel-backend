@@ -10,10 +10,10 @@ import { UploadService } from './upload.service';
 
 describe('UploadController', () => {
   let controller: UploadController;
-  const uploadService = { download: jest.fn() };
+  const uploadService = { download: vi.fn() };
 
   beforeEach(async () => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     const module: TestingModule = await Test.createTestingModule({
       controllers: [UploadController],
       providers: [{ provide: UploadService, useValue: uploadService }],

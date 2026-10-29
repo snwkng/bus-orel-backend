@@ -10,7 +10,7 @@
     "sourceMap": true,
     "outDir": "./dist",
     "paths": { "src/*": ["./src/*"] },
-    "types": ["node", "jest", "multer"],
+    "types": ["node", "vitest/globals", "multer"],
     "esModuleInterop": true,
     "incremental": true,
     "skipLibCheck": true,

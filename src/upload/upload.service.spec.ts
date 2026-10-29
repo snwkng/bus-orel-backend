@@ -7,12 +7,12 @@ import { UploadService } from './upload.service';
 describe('UploadService', () => {
   let service: UploadService;
   const configService = {
-    get: jest.fn().mockReturnValue('test-value'),
-    getOrThrow: jest.fn().mockReturnValue('test-value'),
+    get: vi.fn().mockReturnValue('test-value'),
+    getOrThrow: vi.fn().mockReturnValue('test-value'),
   };
 
   beforeEach(async () => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         UploadService,
@@ -44,7 +44,7 @@ describe('UploadService', () => {
       })
         .png()
         .toBuffer();
-      const send = jest
+      const send = vi
         .spyOn(service['s3Client'], 'send')
         .mockResolvedValue({} as never);
 
@@ -65,7 +65,7 @@ describe('UploadService', () => {
       const pdf = Buffer.from(
         '%PDF-1.4\n1 0 obj\n<<>>\nendobj\ntrailer\n<<>>\n%%EOF',
       );
-      jest.spyOn(service['s3Client'], 'send').mockResolvedValue({} as never);
+      vi.spyOn(service['s3Client'], 'send').mockResolvedValue({} as never);
 
       const fileName = await service.upload({
         buffer: pdf,
@@ -78,7 +78,7 @@ describe('UploadService', () => {
 
   describe('download', () => {
     it('бросает NotFoundException при отсутствии файла в S3', async () => {
-      jest.spyOn(service['s3Client'], 'send').mockRejectedValue(
+      vi.spyOn(service['s3Client'], 'send').mockRejectedValue(
         Object.assign(new Error('The specified key does not exist.'), {
           name: 'NoSuchKey',
         }) as never,

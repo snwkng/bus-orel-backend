@@ -10,11 +10,11 @@ import jwtConfig from './config/jwt.config';
 describe('AuthService', () => {
   let service: AuthService;
   const usersService = {
-    checkUser: jest.fn(),
-    setCurrentRefreshToken: jest.fn(),
-    getUserWithRefreshToken: jest.fn(),
+    checkUser: vi.fn(),
+    setCurrentRefreshToken: vi.fn(),
+    getUserWithRefreshToken: vi.fn(),
   };
-  const jwtService = { signAsync: jest.fn() };
+  const jwtService = { signAsync: vi.fn() };
   const jwtConfiguration = {
     secret: 'secret',
     refreshSecret: 'refresh-secret',
@@ -22,7 +22,7 @@ describe('AuthService', () => {
   };
 
   beforeEach(async () => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         AuthService,
@@ -63,14 +63,14 @@ describe('AuthService', () => {
       usersService.checkUser.mockResolvedValue({
         username: 'admin',
         password,
-        toObject: jest.fn(),
+        toObject: vi.fn(),
       });
 
       await expect(service.validateUser('admin', 'wrong')).resolves.toBeNull();
     });
 
     it('мигрирует legacy-пароль из открытого текста в bcrypt при успешном логине', async () => {
-      const save = jest.fn().mockResolvedValue(undefined);
+      const save = vi.fn().mockResolvedValue(undefined);
       const user = {
         username: 'admin',
         password: 'plain',
@@ -89,12 +89,12 @@ describe('AuthService', () => {
     });
 
     it('не мигрирует legacy-пароль при неверном пароле', async () => {
-      const save = jest.fn();
+      const save = vi.fn();
       usersService.checkUser.mockResolvedValue({
         username: 'admin',
         password: 'plain',
         save,
-        toObject: jest.fn(),
+        toObject: vi.fn(),
       });
 
       await expect(service.validateUser('admin', 'nope')).resolves.toBeNull();

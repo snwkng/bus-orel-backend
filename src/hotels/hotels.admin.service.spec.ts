@@ -7,13 +7,13 @@ import { BusTour } from '../bus-tours/schemas/bus-tour.schema';
 
 describe('HotelsAdminService', () => {
   let service: HotelsAdminService;
-  const hotelModel = { deleteOne: jest.fn() };
-  const busTourModel = { countDocuments: jest.fn() };
+  const hotelModel = { deleteOne: vi.fn() };
+  const busTourModel = { countDocuments: vi.fn() };
 
   const validId = '507f1f77bcf86cd799439011';
 
   beforeEach(async () => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         HotelsAdminService,
@@ -28,7 +28,7 @@ describe('HotelsAdminService', () => {
   describe('deleteHotel', () => {
     it('бросает Conflict, если с отелем связаны туры, и не удаляет отель', async () => {
       busTourModel.countDocuments.mockReturnValue({
-        exec: jest.fn().mockResolvedValue(3),
+        exec: vi.fn().mockResolvedValue(3),
       });
 
       await expect(service.deleteHotel(validId)).rejects.toThrow(
@@ -39,10 +39,10 @@ describe('HotelsAdminService', () => {
 
     it('бросает NotFound, если отель не найден', async () => {
       busTourModel.countDocuments.mockReturnValue({
-        exec: jest.fn().mockResolvedValue(0),
+        exec: vi.fn().mockResolvedValue(0),
       });
       hotelModel.deleteOne.mockReturnValue({
-        exec: jest.fn().mockResolvedValue({ deletedCount: 0 }),
+        exec: vi.fn().mockResolvedValue({ deletedCount: 0 }),
       });
 
       await expect(service.deleteHotel(validId)).rejects.toThrow(
@@ -52,11 +52,11 @@ describe('HotelsAdminService', () => {
 
     it('удаляет отель, если связанных туров нет', async () => {
       busTourModel.countDocuments.mockReturnValue({
-        exec: jest.fn().mockResolvedValue(0),
+        exec: vi.fn().mockResolvedValue(0),
       });
       const deleteResult = { deletedCount: 1 };
       hotelModel.deleteOne.mockReturnValue({
-        exec: jest.fn().mockResolvedValue(deleteResult),
+        exec: vi.fn().mockResolvedValue(deleteResult),
       });
 
       await expect(service.deleteHotel(validId)).resolves.toEqual(deleteResult);
