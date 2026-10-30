@@ -1,10 +1,11 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import { Document } from 'mongoose';
+import { BaseDocument } from '../../common/schemas/base-document.schema';
 
 export type ExcursionDocument = Excursion & Document;
 @Schema({ timestamps: true, versionKey: false })
-export class Excursion {
+export class Excursion extends BaseDocument {
   @ApiProperty({
     example: 'Золотое кольцо России',
     description: 'Название экскурсии',

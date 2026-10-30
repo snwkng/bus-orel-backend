@@ -18,7 +18,6 @@ import {
   ApiBearerAuth,
   ApiOperation,
   ApiQuery,
-  ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
 import { Hotel } from '../hotels/schemas/hotels.schema';
@@ -30,6 +29,8 @@ import { IncludedInThePriceDto } from './dto/included-in-the-price.dto';
 import { HotelQueryDto } from './dto/hotel-query.dto';
 import { PublishHotelDto } from './dto/publish-hotel.dto';
 import { ParseObjectIdPipe } from '../common/pipes/parse-object-id.pipe';
+import { ApiWrappedResponse } from '../common/decorators/api-wrapped-response.decorator';
+import { DeleteResultDto } from '../common/dto/delete-result.dto';
 
 @ApiBearerAuth('JWT-auth')
 @UseGuards(JwtAuthGuard)
@@ -39,14 +40,14 @@ export class HotelsAdminController {
   constructor(private readonly hotelsAdminService: HotelsAdminService) {}
 
   @ApiOperation({ summary: 'Get sea list' })
-  @ApiResponse({ status: 200, type: [SelectItemDto] })
+  @ApiWrappedResponse(SelectItemDto, { isArray: true })
   @Get('sea-list')
   getSeaList(): Promise<SelectItemDto[]> {
     return this.hotelsAdminService.getSeaList();
   }
 
   @ApiOperation({ summary: 'Get cities list' })
-  @ApiResponse({ status: 200, type: [SelectItemDto] })
+  @ApiWrappedResponse(SelectItemDto, { isArray: true })
   @ApiQuery({
     name: 'seaType',
     required: false,
@@ -60,14 +61,14 @@ export class HotelsAdminController {
   }
 
   @ApiOperation({ summary: 'Get included in the price list' })
-  @ApiResponse({ status: 200, type: [IncludedInThePriceDto] })
+  @ApiWrappedResponse(IncludedInThePriceDto, { isArray: true })
   @Get('included-in-the-price-list')
   getIncludedInThePriceList(): Promise<IncludedInThePriceDto[]> {
     return this.hotelsAdminService.getIncludedInThePriceList();
   }
 
   @ApiOperation({ summary: 'Create new hotel' })
-  @ApiResponse({ status: 201, type: Hotel })
+  @ApiWrappedResponse(Hotel, { status: 201 })
   @Post()
   @HttpCode(HttpStatus.CREATED)
   create(@Body() hotelDto: CreateHotelDto) {
@@ -75,21 +76,21 @@ export class HotelsAdminController {
   }
 
   @ApiOperation({ summary: 'Get all hotels' })
-  @ApiResponse({ status: 200, type: [Hotel] })
+  @ApiWrappedResponse(Hotel, { isArray: true, paginated: true })
   @Get()
   getAll(@Query() params: HotelQueryDto) {
     return this.hotelsAdminService.getHotels(params, params);
   }
 
   @ApiOperation({ summary: 'Get hotel by ID' })
-  @ApiResponse({ status: 200, type: Hotel })
+  @ApiWrappedResponse(Hotel)
   @Get(':id')
   getOne(@Param('id', ParseObjectIdPipe) id: string): Promise<Hotel> {
     return this.hotelsAdminService.getHotel(id);
   }
 
   @ApiOperation({ summary: 'Update hotel' })
-  @ApiResponse({ status: 200, type: Hotel })
+  @ApiWrappedResponse(Hotel)
   @Put(':id')
   update(
     @Body() hotelDto: UpdateHotelDto,
@@ -99,7 +100,7 @@ export class HotelsAdminController {
   }
 
   @ApiOperation({ summary: 'Change hotel visibility (publish/unpublish)' })
-  @ApiResponse({ status: 200, type: Hotel })
+  @ApiWrappedResponse(Hotel)
   @Patch('published/:id')
   published(
     @Param('id', ParseObjectIdPipe) id: string,
@@ -109,7 +110,7 @@ export class HotelsAdminController {
   }
 
   @ApiOperation({ summary: 'Delete hotel' })
-  @ApiResponse({ status: 200 })
+  @ApiWrappedResponse(DeleteResultDto)
   @Delete(':id')
   delete(@Param('id', ParseObjectIdPipe) id: string): Promise<DeleteResult> {
     return this.hotelsAdminService.deleteHotel(id);

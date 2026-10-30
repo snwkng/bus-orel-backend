@@ -5,9 +5,10 @@ import { Address } from '../subschemas/address.subschema';
 import { AdditionalInfo } from '../subschemas/additionalInfo.subschema';
 import { IncludedInThePrice } from '../subschemas/includedInThePrice.subschema';
 import { Room } from '../subschemas/rooms.subschema';
+import { BaseDocument } from '../../common/schemas/base-document.schema';
 export type HotelsDocument = Hotel & Document;
 @Schema({ timestamps: true })
-export class Hotel {
+export class Hotel extends BaseDocument {
   @ApiProperty({
     example: 'Аврора',
     description: 'Hotel name',
@@ -30,11 +31,16 @@ export class Hotel {
   description: string;
 
   @ApiProperty({
-    description: 'location description',
+    type: () => Address,
+    description: 'hotel address',
   })
   @Prop({ type: () => Address })
   address: Address;
 
+  @ApiProperty({
+    example: 'Чёрное море',
+    description: 'sea type',
+  })
   @Prop({ type: String, index: true })
   seaType: string;
 
@@ -45,9 +51,17 @@ export class Hotel {
   @Prop({ type: Number, index: true })
   minPrice: number;
 
+  @ApiProperty({
+    type: () => AdditionalInfo,
+    description: 'additional hotel info (food, beach, check-in/out)',
+  })
   @Prop({ type: () => AdditionalInfo })
   additionalInfo: AdditionalInfo;
 
+  @ApiProperty({
+    type: () => [IncludedInThePrice],
+    description: 'services included in the price',
+  })
   @Prop({ type: () => [IncludedInThePrice], default: [] })
   includedInThePrice: IncludedInThePrice[];
 
@@ -79,6 +93,10 @@ export class Hotel {
   @Prop({ type: String, required: true })
   registryNumber: string;
 
+  @ApiProperty({
+    type: () => [Room],
+    description: 'hotel rooms (at least one)',
+  })
   @Prop({
     type: () => [Room],
     default: [],

@@ -54,12 +54,24 @@ export class CheckIn {
 
 @Schema()
 export class AdditionalInfo {
+  @ApiProperty({
+    type: () => Food,
+    description: 'food info',
+  })
   @Prop(() => Food)
   food: Food;
 
+  @ApiProperty({
+    type: () => Beach,
+    description: 'beach info',
+  })
   @Prop(() => Beach)
   beach: Beach;
 
+  @ApiProperty({
+    type: () => CheckIn,
+    description: 'check-in / check-out time',
+  })
   @Prop(() => CheckIn)
   checkInOut: CheckIn;
 }

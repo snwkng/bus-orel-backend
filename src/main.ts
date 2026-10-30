@@ -6,7 +6,7 @@ import { SwaggerModule } from '@nestjs/swagger';
 import helmet from 'helmet';
 import { AppModule } from './app.module';
 import { AllExceptionsFilter } from './common/filters/http-exception.filter';
-import { buildSwaggerConfig } from './config/swagger.config';
+import { buildSwaggerDocument } from './config/swagger.config';
 async function bootstrap() {
   const PORT = process.env.PORT || 3000;
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -35,7 +35,7 @@ async function bootstrap() {
   );
   app.useGlobalFilters(new AllExceptionsFilter());
   if (process.env.NODE_ENV !== 'production') {
-    const document = SwaggerModule.createDocument(app, buildSwaggerConfig());
+    const document = buildSwaggerDocument(app);
     SwaggerModule.setup('/api/docs', app, document);
   }
   await app.listen(PORT);
