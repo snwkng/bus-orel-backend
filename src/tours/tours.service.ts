@@ -24,9 +24,9 @@ export class TourService {
     method: string,
     params: TParams = {} as TParams,
   ): Promise<TResponse> {
-    if (!this.token) {
+    if (!this.token || !this.apiUrl) {
       throw new HttpException(
-        'Multitour API token is not configured',
+        'Multitour API token or URL is not configured',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
@@ -69,8 +69,8 @@ export class TourService {
       }
 
       this.logger.error(
-        `Failed to connect to Multitour API [${method}]: ${(error as any)?.message}`,
-        (error as any)?.stack,
+        `Failed to connect to Multitour API [${method}]: ${error instanceof Error ? error.message : String(error)}`,
+        error instanceof Error ? error.stack : undefined,
       );
       throw new HttpException(
         'Multitour service temporarily unavailable',
@@ -83,14 +83,17 @@ export class TourService {
    * Получение списка стран
    */
   async getCountries(): Promise<Country[]> {
-    return this.sendRequest<{}, Country[]>('Geo.Country', {});
+    return this.sendRequest<Record<string, never>, Country[]>(
+      'Geo.Country',
+      {},
+    );
   }
 
   /**
    * Пример: Получение курортов по стране
    */
-  async getResorts(countryId: number): Promise<any[]> {
-    return this.sendRequest<{ country_id: number }, any[]>('Geo.Resort', {
+  async getResorts(countryId: number): Promise<unknown[]> {
+    return this.sendRequest<{ country_id: number }, unknown[]>('Geo.Resort', {
       country_id: countryId,
     });
   }

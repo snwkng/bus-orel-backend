@@ -14,7 +14,7 @@ export class User {
   password: string;
 
   @ApiProperty({ description: 'token hash' })
-  @Prop({ required: false, default: null })
+  @Prop({ required: false, default: null, select: false })
   currentHashedRefreshToken?: string;
 }
 

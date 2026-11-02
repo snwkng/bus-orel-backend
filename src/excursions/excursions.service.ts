@@ -1,10 +1,6 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, FilterQuery, isValidObjectId, Types } from 'mongoose';
+import { Model, PipelineStage, QueryFilter, Types } from 'mongoose';
 import { Excursion, ExcursionDocument } from './schemas/excursions.schema';
 import { ExcursionQueryDto } from './dto/excursion-query.dto';
 import { mapToSelectItem } from '../common/utils/mapper.util';
@@ -12,8 +8,28 @@ import { SelectItemDto } from '../common/dto/select-item.dto';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { PaginatedResponse } from 'src/common/interfaces/pagination.interface';
 
+// Стейдж агрегации: оставляет только будущие даты и сортирует их по возрастанию
+function buildFutureDatesStage(today: Date): PipelineStage {
+  return {
+    $addFields: {
+      excursionStartDates: {
+        $sortArray: {
+          input: {
+            $filter: {
+              input: '$excursionStartDates',
+              as: 'date',
+              cond: { $gte: ['$$date', today] },
+            },
+          },
+          sortBy: 1,
+        },
+      },
+    },
+  };
+}
+
 @Injectable()
-export class ExcursionService {
+export class ExcursionsService {
   constructor(
     @InjectModel(Excursion.name)
     private readonly excursionModel: Model<ExcursionDocument>,
@@ -26,7 +42,7 @@ export class ExcursionService {
     const { page = 1, limit = 20 } = pagination ?? {};
     const today = new Date();
 
-    const matchFilter: FilterQuery<ExcursionDocument> = {
+    const matchFilter: QueryFilter<ExcursionDocument> = {
       excursionStartDates: { $elemMatch: { $gte: today } },
       ...(params?.city ? { cities: params.city } : {}),
     };
@@ -35,24 +51,9 @@ export class ExcursionService {
       ? { [params.sortBy]: params.sortDir === 'asc' ? 1 : -1 }
       : { createdAt: -1 };
 
-    const pipeline: any[] = [
+    const pipeline: PipelineStage[] = [
       { $match: matchFilter },
-      {
-        $addFields: {
-          excursionStartDates: {
-            $sortArray: {
-              input: {
-                $filter: {
-                  input: '$excursionStartDates',
-                  as: 'date',
-                  cond: { $gte: ['$$date', today] },
-                },
-              },
-              sortBy: 1,
-            },
-          },
-        },
-      },
+      buildFutureDatesStage(today),
       { $sort: sort },
     ];
 
@@ -77,37 +78,18 @@ export class ExcursionService {
   }
 
   async getExcursion(id: string) {
-    if (!isValidObjectId(id)) {
-      throw new BadRequestException('Некорректный формат идентификатора');
-    }
-
     const today = new Date();
     const result = await this.excursionModel
       .aggregate([
         { $match: { _id: new Types.ObjectId(id) } },
-        {
-          $addFields: {
-            excursionStartDates: {
-              $sortArray: {
-                input: {
-                  $filter: {
-                    input: '$excursionStartDates',
-                    as: 'date',
-                    cond: { $gte: ['$$date', today] },
-                  },
-                },
-                sortBy: 1,
-              },
-            },
-          },
-        },
+        buildFutureDatesStage(today),
       ])
       .exec();
 
     const excursion = result[0];
 
-    if (!excursion || !excursion.excursionStartDates?.length) {
-      throw new NotFoundException('Экскурсия не найдена или уже завершена');
+    if (!excursion) {
+      throw new NotFoundException('Экскурсия не найдена');
     }
 
     return excursion;

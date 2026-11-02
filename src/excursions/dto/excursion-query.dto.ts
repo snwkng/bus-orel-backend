@@ -1,6 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsOptional, IsInt, IsString, Min, Max, IsIn } from 'class-validator';
-import { Type } from 'class-transformer';
+import { IsOptional, IsString, IsIn } from 'class-validator';
 import { PaginationDto } from '../../common/dto/pagination.dto';
 
 export const EXCURSION_SORT_FIELDS = [
@@ -16,14 +15,6 @@ export class ExcursionQueryDto extends PaginationDto {
   @IsString()
   @IsOptional()
   readonly city?: string;
-
-  @ApiProperty({ example: 123, required: false })
-  @IsOptional()
-  @IsInt()
-  @Type(() => Number)
-  @Min(1)
-  @Max(100)
-  readonly count?: number = 10;
 
   @ApiProperty({ example: 'Название', required: false })
   @IsOptional()

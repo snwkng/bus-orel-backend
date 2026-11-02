@@ -15,7 +15,7 @@ import {
 export interface Response<T> {
   success: boolean;
   data: T; // Убрали опциональность для предсказуемости
-  error?: { code: string; message: string; statusCode?: number };
+  error?: { code: string; message: string[]; statusCode?: number };
   meta: {
     timestamp: string;
     path: string;

@@ -1,6 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsOptional, IsInt, IsString, IsIn } from 'class-validator';
-import { Type } from 'class-transformer';
+import { IsOptional, IsString, IsIn } from 'class-validator';
 import { PaginationDto } from '../../common/dto/pagination.dto';
 
 export const HOTEL_SORT_FIELDS = [
@@ -21,12 +20,6 @@ export class HotelQueryDto extends PaginationDto {
   @IsString()
   @IsOptional()
   readonly seaType?: string;
-
-  @ApiProperty({ example: 123, required: false })
-  @IsOptional()
-  @IsInt()
-  @Type(() => Number)
-  readonly count?: number = 10;
 
   @ApiPropertyOptional({
     example: 'createdAt',

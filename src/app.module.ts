@@ -4,17 +4,22 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { UsersModule } from './users/users.module';
 import { ExcursionsModule } from './excursions/excursions.module';
 import { HotelsModule } from './hotels/hotels.module';
-import { BusToursModule } from './busTours/busTours.module';
+import { BusToursModule } from './bus-tours/bus-tours.module';
 import { AuthModule } from './auth/auth.module';
 import { UploadModule } from './upload/upload.module';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { ApiResponseInterceptor } from './common/interceptors/response.interceptor';
 import { ToursModule } from './tours/tours.module';
+import { validateEnv } from './config/env.validation';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ envFilePath: '.env', isGlobal: true }),
+    ConfigModule.forRoot({
+      envFilePath: '.env',
+      isGlobal: true,
+      validate: validateEnv,
+    }),
     ThrottlerModule.forRoot([{ ttl: 60000, limit: 100 }]),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],

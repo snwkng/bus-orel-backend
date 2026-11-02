@@ -1,73 +1,104 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# bus-orel-backend
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Бэкенд сайта [bus-orel.ru](https://bus-orel.ru) — REST API для бронирования автобусных туров, экскурсий и отелей.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Стек
 
-## Description
+- **Node.js 24 + NestJS 11** (Express 5), TypeScript
+- **MongoDB + Mongoose 9** (`@nestjs/mongoose`)
+- **Аутентификация**: JWT (access + refresh с ротацией), `bcrypt`
+- **Файлы**: AWS S3 (`@aws-sdk/client-s3`), обработка изображений `sharp` (конвертация в WebP)
+- **Безопасность**: `helmet`, CORS-whitelist, rate limiting (`@nestjs/throttler`: 100/мин глобально, 5/мин на login/refresh)
+- **Валидация**: `class-validator` + глобальный `ValidationPipe`, env — через Joi при старте
+- **Тесты**: Vitest (unit + e2e на `mongodb-memory-server`)
+- **Документация**: Swagger (`/api/docs` при `NODE_ENV !== 'production'`)
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Требования
 
-## Installation
+- Node.js 24 (npm 11) — **не ниже**: lockfile записан npm 11, `npm ci` под npm 10 (Node 22) падает
+- MongoDB 8 (локально или в Docker)
+
+## Установка и запуск
 
 ```bash
-$ npm install
+npm install          # установка зависимостей
+
+npm run start:dev    # dev-режим с watch
+npm run start        # обычный запуск (требует dist/)
+npm run start:prod   # продакшн (NODE_ENV=production)
+
+npm run build        # сборка в dist/
 ```
 
-## Running the app
+Либо в Docker (app + mongo): `docker compose up --build`.
+
+## Переменные окружения
+
+Валидируются при старте (Joi, `src/config/env.validation.ts`) — приложение не поднимется без обязательных.
+
+| Переменная | Обязательная | По умолчанию | Описание |
+|---|---|---|---|
+| `MONGODB_HOST` | да | — | хост MongoDB |
+| `MONGODB_PORT` | да | — | порт MongoDB |
+| `MONGODB_DATABASE_NAME` | да | — | имя БД |
+| `MONGODB_USERNAME` | да | — | пользователь MongoDB (`authSource=admin`) |
+| `MONGODB_PASSWORD` | да | — | пароль MongoDB |
+| `JWT_SECRET` | да | — | секрет access-токена |
+| `JWT_EXPIRE_IN` | нет | `1h` | TTL access-токена |
+| `JWT_REFRESH_SECRET` | да | — | секрет refresh-токена |
+| `JWT_REFRESH_EXPIRE_IN` | нет | `7d` | TTL refresh-токена |
+| `AWS_S3_BUCKET` | да | — | бакет S3 |
+| `AWS_S3_REGION` | да | — | регион S3 |
+| `AWS_S3_ENDPOINT` | да | — | endpoint S3 (URL) |
+| `AWS_ACCESS_KEY` | да | — | ключ доступа S3 |
+| `AWS_SECRET_KEY` | да | — | секретный ключ S3 |
+| `ALLOWED_ORIGINS` | да | — | CORS-whitelist, через запятую |
+| `PORT` | нет | `3000` | порт приложения |
+| `NODE_ENV` | нет | `development` | `development` / `production` / `test` |
+| `MULTI_URL` | нет | — | URL внешнего API Multitour |
+| `MULTI_TOKEN` | нет | — | токен Multitour |
+
+## Тесты
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+npm run test         # unit (Vitest, src/**/*.spec.ts)
+npm run test:watch   # watch-режим
+npm run test:cov     # покрытие (v8)
+npm run test:e2e     # e2e на mongodb-memory-server — внешняя MongoDB не нужна
 ```
 
-## Test
+## Линт и форматирование
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+npm run lint         # ESLint (--fix)
+npm run format       # Prettier --write по src/ и test/
 ```
 
-## Support
+## Swagger
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+Интерактивная документация — на `/api/docs` при `NODE_ENV !== 'production'`.
 
-## Stay in touch
+```bash
+npm run swagger:generate   # сгенерировать swagger.json в корне (нужны .env и запущенная MongoDB)
+```
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+## Структура
 
-## License
+```
+src/
+  auth/        # JWT-аутентификация (login/refresh/logout), гварды
+  strategies/  # passport-стратегии (local, jwt, jwt-refresh)
+  users/       # пользователи
+  hotels/      # отели (public + admin)
+  bus-tours/   # автобусные туры (связь с отелями, цены)
+  excursions/  # экскурсии
+  tours/       # интеграция с внешним API Multitour (RPC)
+  upload/      # загрузка файлов в S3
+  common/      # dto, interceptors, filters, pipes, utils
+```
 
-Nest is [MIT licensed](LICENSE).
+Конвенции: `*.admin.controller.ts` — защищённые JWT эндпоинты админки; публичные контроллеры отдают только `published: true`. Ответы оборачиваются в `{ success, data, meta }`, ошибки — в `{ success: false, error: { code, message[], statusCode } }`.
+
+## CI/CD
+
+GitHub Actions (`.github/workflows/node.js.yml`): на push в `master`/`develop` и PR — проверки (lint → unit → e2e → build) на GitHub-hosted раннере; деплой на VPS (`pm2 restart backend`) — только на push в `master` после успешных проверок.

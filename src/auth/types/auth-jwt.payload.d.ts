@@ -1,6 +1,6 @@
-import { type ObjectId } from 'mongoose';
+import { type Types } from 'mongoose';
 
 export type AuthJwtPayload = {
   username: string;
-  sub: ObjectId;
+  sub: Types.ObjectId;
 };

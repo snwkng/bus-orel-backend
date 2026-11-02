@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ExcursionsController } from './excursions.controller';
 import { ExcursionsAdminController } from './excursions.admin.controller';
-import { ExcursionService } from './excursions.service';
+import { ExcursionsService } from './excursions.service';
 import { ExcursionsAdminService } from './excursions.admin.service';
 import { Excursion, ExcursionSchema } from './schemas/excursions.schema';
 
@@ -13,6 +13,6 @@ import { Excursion, ExcursionSchema } from './schemas/excursions.schema';
     ]),
   ],
   controllers: [ExcursionsController, ExcursionsAdminController],
-  providers: [ExcursionService, ExcursionsAdminService],
+  providers: [ExcursionsService, ExcursionsAdminService],
 })
 export class ExcursionsModule {}
