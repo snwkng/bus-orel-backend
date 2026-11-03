@@ -45,6 +45,7 @@ export class ExcursionsService {
     const matchFilter: QueryFilter<ExcursionDocument> = {
       excursionStartDates: { $elemMatch: { $gte: today } },
       ...(params?.city ? { cities: params.city } : {}),
+      ...(params?.type ? { type: params.type } : {}),
     };
 
     const sort: Record<string, 1 | -1> = params?.sortBy
@@ -101,6 +102,19 @@ export class ExcursionsService {
     // Возвращаем только те города, где есть актуальные экскурсии
     const res = await this.excursionModel
       .distinct('cities', {
+        excursionStartDates: { $elemMatch: { $gte: today } },
+      })
+      .exec();
+    return mapToSelectItem(res);
+  }
+
+  async getTypesList(): Promise<SelectItemDto[]> {
+    const today = new Date();
+
+    // Возвращаем только те типы, где есть актуальные экскурсии
+    const res = await this.excursionModel
+      .distinct('type', {
+        type: { $exists: true, $nin: [null, ''] },
         excursionStartDates: { $elemMatch: { $gte: today } },
       })
       .exec();
