@@ -332,4 +332,45 @@ describe('App (e2e, mongodb-memory-server)', () => {
       expect(res.body.meta.pagination.total).toBe(0);
     });
   });
+
+  describe('excursions: публичный фильтр по типу и types-list', () => {
+    // Фикстуры (Обзорная/Природная с будущими датами) вставлены в beforeAll
+    // предыдущего describe и общие на весь файл
+
+    it('GET /api/excursions?type= — точное совпадение по типу', async () => {
+      const res = await request(app.getHttpServer()).get(
+        `/api/excursions?type=${encodeURIComponent('Обзорная')}`,
+      );
+
+      expect(res.status).toBe(200);
+      expect(res.body.data).toHaveLength(1);
+      expect(res.body.data[0].name).toBe('Золотое кольцо');
+      expect(res.body.meta.pagination.total).toBe(1);
+    });
+
+    it('GET /api/excursions?type= — регистрозависим, другой регистр не находит', async () => {
+      const res = await request(app.getHttpServer()).get(
+        `/api/excursions?type=${encodeURIComponent('обзорная')}`,
+      );
+
+      expect(res.status).toBe(200);
+      expect(res.body.data).toEqual([]);
+      expect(res.body.meta.pagination.total).toBe(0);
+    });
+
+    it('GET /api/excursions/types-list — без авторизации, формат SelectItemDto[]', async () => {
+      const res = await request(app.getHttpServer()).get(
+        '/api/excursions/types-list',
+      );
+
+      expect(res.status).toBe(200);
+      expect(res.body.success).toBe(true);
+      // порядок distinct не гарантирован — сравниваем множество имён
+      const names = res.body.data
+        .map((item: { name: string }) => item.name)
+        .sort();
+      expect(names).toEqual(['Обзорная', 'Природная']);
+      expect(res.body.data[0]).toMatchObject({ id: expect.any(Number) });
+    });
+  });
 });

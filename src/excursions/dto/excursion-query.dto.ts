@@ -16,6 +16,15 @@ export class ExcursionQueryDto extends PaginationDto {
   @IsOptional()
   readonly city?: string;
 
+  @ApiProperty({
+    example: 'Новогодняя',
+    required: false,
+    description: 'Фильтр по типу экскурсии (точное совпадение)',
+  })
+  @IsString()
+  @IsOptional()
+  readonly type?: string;
+
   @ApiProperty({ example: 'Название', required: false })
   @IsOptional()
   @IsString()

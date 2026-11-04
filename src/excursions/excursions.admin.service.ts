@@ -38,6 +38,9 @@ export class ExcursionsAdminService extends BaseAdminService<ExcursionDocument> 
     if (params?.city) {
       filter['cities'] = params.city;
     }
+    if (params?.type) {
+      filter['type'] = params.type;
+    }
     if (params?.search) {
       const search = params.search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
       const regex = { $regex: search, $options: 'i' };

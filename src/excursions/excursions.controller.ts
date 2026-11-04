@@ -20,6 +20,14 @@ export class ExcursionsController {
     return this.excursionsService.getCitiesList();
   }
 
+  @ApiOperation({ summary: 'Get all types' })
+  @ApiWrappedResponse(SelectItemDto, { isArray: true })
+  @Header('Cache-Control', 'public, max-age=3600')
+  @Get('types-list')
+  getTypesList(): Promise<SelectItemDto[]> {
+    return this.excursionsService.getTypesList();
+  }
+
   @ApiOperation({ summary: 'Get all excursions' })
   @ApiWrappedResponse(Excursion, { isArray: true, paginated: true })
   @Get()
