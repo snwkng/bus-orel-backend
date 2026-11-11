@@ -1,0 +1,15 @@
+FROM node:24-alpine
+
+WORKDIR /app
+
+# Копируем только package.json для кэширования npm install
+COPY package*.json ./
+RUN npm ci
+
+# Копируем остальной код
+COPY . .
+
+EXPOSE 3001
+
+# Dev-режим: nest watch (hot reload при монтировании ./src — см. docker-compose.dev.yml)
+CMD ["npm", "run", "start:dev"]
