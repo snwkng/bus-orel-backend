@@ -39,3 +39,4 @@ AGENTS.md
 BACKLOG.md
 swagger.json
 *.tsbuildinfo
+dockerfile.dev
