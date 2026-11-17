@@ -5,7 +5,7 @@ import { getConnectionToken } from '@nestjs/mongoose';
 import { Connection } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import request from 'supertest';
-import { AllExceptionsFilter } from '../src/common/filters/http-exception.filter';
+import { AllExceptionsFilter } from '../src/common/filters/http-exception.filter.js';
 
 describe('App (e2e, mongodb-memory-server)', () => {
   let app: INestApplication;
@@ -42,7 +42,7 @@ describe('App (e2e, mongodb-memory-server)', () => {
 
     // ConfigModule.forRoot валидирует env при импорте модуля,
     // поэтому AppModule импортируем динамически — после установки env
-    const { AppModule } = await import('../src/app.module');
+    const { AppModule } = await import('../src/app.module.js');
     const moduleRef = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();

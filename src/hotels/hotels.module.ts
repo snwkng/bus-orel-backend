@@ -1,11 +1,14 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { HotelsController } from './hotels.controller';
-import { HotelsAdminController } from './hotels.admin.controller';
-import { HotelsService } from './hotels.service';
-import { HotelsAdminService } from './hotels.admin.service';
-import { Hotel, HotelSchema } from './schemas/hotels.schema';
-import { BusTour, BusTourSchema } from '../bus-tours/schemas/bus-tour.schema';
+import { HotelsController } from './hotels.controller.js';
+import { HotelsAdminController } from './hotels.admin.controller.js';
+import { HotelsService } from './hotels.service.js';
+import { HotelsAdminService } from './hotels.admin.service.js';
+import { Hotel, HotelSchema } from './schemas/hotels.schema.js';
+import {
+  BusTour,
+  BusTourSchema,
+} from '../bus-tours/schemas/bus-tour.schema.js';
 
 @Module({
   imports: [

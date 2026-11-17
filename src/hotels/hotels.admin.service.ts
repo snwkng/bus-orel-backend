@@ -2,22 +2,22 @@ import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, QueryFilter } from 'mongoose';
 import { DeleteResult } from 'mongodb';
-import { Hotel } from '../hotels/schemas/hotels.schema';
-import { BusTour } from '../bus-tours/schemas/bus-tour.schema';
-import { CreateHotelDto } from './dto/create-hotel.dto';
-import { UpdateHotelDto } from './dto/update-hotel.dto';
-import { IncludedInThePrice } from './subschemas/includedInThePrice.subschema';
+import { Hotel } from '../hotels/schemas/hotels.schema.js';
+import { BusTour } from '../bus-tours/schemas/bus-tour.schema.js';
+import { CreateHotelDto } from './dto/create-hotel.dto.js';
+import { UpdateHotelDto } from './dto/update-hotel.dto.js';
+import { IncludedInThePrice } from './subschemas/includedInThePrice.subschema.js';
 import {
   mapToSelectItem,
   mapToIncludedInThePriceItem,
-} from '../common/utils/mapper.util';
-import { SelectItemDto } from '../common/dto/select-item.dto';
-import { HotelQueryDto } from './dto/hotel-query.dto';
-import { PublishHotelDto } from './dto/publish-hotel.dto';
-import { PaginationDto } from 'src/common/dto/pagination.dto';
-import { PaginatedResponse } from 'src/common/interfaces/pagination.interface';
-import { BaseAdminService } from '../common/services/base-admin.service';
-import { buildSort, paginate } from '../common/utils/pagination.util';
+} from '../common/utils/mapper.util.js';
+import { SelectItemDto } from '../common/dto/select-item.dto.js';
+import { HotelQueryDto } from './dto/hotel-query.dto.js';
+import { PublishHotelDto } from './dto/publish-hotel.dto.js';
+import { PaginationDto } from '../common/dto/pagination.dto.js';
+import { PaginatedResponse } from '../common/interfaces/pagination.interface.js';
+import { BaseAdminService } from '../common/services/base-admin.service.js';
+import { buildSort, paginate } from '../common/utils/pagination.util.js';
 
 @Injectable()
 export class HotelsAdminService extends BaseAdminService<Hotel> {

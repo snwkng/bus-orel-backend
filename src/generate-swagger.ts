@@ -2,8 +2,8 @@ import { writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import { AppModule } from './app.module';
-import { buildSwaggerDocument } from './config/swagger.config';
+import { AppModule } from './app.module.js';
+import { buildSwaggerDocument } from './config/swagger.config.js';
 
 // Генерирует swagger.json в корне проекта без запуска HTTP-сервера.
 // Требует запущенную MongoDB и заполненный .env (поднимается весь AppModule).

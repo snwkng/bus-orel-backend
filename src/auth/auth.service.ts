@@ -1,12 +1,12 @@
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from '../users/users.service.js';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { type Types } from 'mongoose';
-import { User } from 'src/users/schemas/users.schema';
-import { AuthJwtPayload } from './types/auth-jwt.payload';
-import jwtConfig from './config/jwt.config';
+import { User } from '../users/schemas/users.schema.js';
+import { AuthJwtPayload } from './types/auth-jwt.payload.js';
+import jwtConfig from './config/jwt.config.js';
 
 export type ValidatedUser = Omit<User, 'password'> & { _id: Types.ObjectId };
 

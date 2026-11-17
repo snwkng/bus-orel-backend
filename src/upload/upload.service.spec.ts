@@ -2,7 +2,7 @@ import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import sharp from 'sharp';
-import { UploadService } from './upload.service';
+import { UploadService } from './upload.service.js';
 
 describe('UploadService', () => {
   let service: UploadService;

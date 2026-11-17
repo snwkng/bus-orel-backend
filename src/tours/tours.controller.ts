@@ -1,9 +1,9 @@
 import { Controller, Get } from '@nestjs/common';
-import { TourService } from './tours.service';
-import { Country } from './tours.interface';
+import { TourService } from './tours.service.js';
+import { Country } from './tours.interface.js';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { CountryDto } from './dto/country.dto';
-import { ApiWrappedResponse } from '../common/decorators/api-wrapped-response.decorator';
+import { CountryDto } from './dto/country.dto.js';
+import { ApiWrappedResponse } from '../common/decorators/api-wrapped-response.decorator.js';
 
 @ApiTags('Tours')
 @Controller('tours')

@@ -17,15 +17,15 @@ import {
   ApiTags,
   getSchemaPath,
 } from '@nestjs/swagger';
-import { AuthService, ValidatedUser } from './auth.service';
-import { LocalAuthGuard } from './guards/local-auth/local-auth.guard';
-import { JwtAuthGuard } from './guards/jwt-auth/jwt-auth.guard';
-import { JwtRefreshGuard } from './guards/jwt-refresh/jwt-refresh.guard';
-import { LoginDto } from './dto/login.dto';
-import { AuthTokensDto } from './dto/auth-tokens.dto';
-import { MessageDto } from '../common/dto/message.dto';
-import { ErrorResponseDto } from '../common/dto/api-response.dto';
-import { ApiWrappedResponse } from '../common/decorators/api-wrapped-response.decorator';
+import { AuthService, ValidatedUser } from './auth.service.js';
+import { LocalAuthGuard } from './guards/local-auth/local-auth.guard.js';
+import { JwtAuthGuard } from './guards/jwt-auth/jwt-auth.guard.js';
+import { JwtRefreshGuard } from './guards/jwt-refresh/jwt-refresh.guard.js';
+import { LoginDto } from './dto/login.dto.js';
+import { AuthTokensDto } from './dto/auth-tokens.dto.js';
+import { MessageDto } from '../common/dto/message.dto.js';
+import { ErrorResponseDto } from '../common/dto/api-response.dto.js';
+import { ApiWrappedResponse } from '../common/decorators/api-wrapped-response.decorator.js';
 
 @ApiTags('Auth')
 @ApiExtraModels(ErrorResponseDto)

@@ -12,25 +12,25 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { CreateHotelDto } from './dto/create-hotel.dto';
-import { HotelsAdminService } from './hotels.admin.service';
+import { CreateHotelDto } from './dto/create-hotel.dto.js';
+import { HotelsAdminService } from './hotels.admin.service.js';
 import {
   ApiBearerAuth,
   ApiOperation,
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
-import { Hotel } from '../hotels/schemas/hotels.schema';
+import { Hotel } from '../hotels/schemas/hotels.schema.js';
 import { DeleteResult } from 'mongodb';
-import { UpdateHotelDto } from './dto/update-hotel.dto';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth/jwt-auth.guard';
-import { SelectItemDto } from '../common/dto/select-item.dto';
-import { IncludedInThePriceDto } from './dto/included-in-the-price.dto';
-import { HotelQueryDto } from './dto/hotel-query.dto';
-import { PublishHotelDto } from './dto/publish-hotel.dto';
-import { ParseObjectIdPipe } from '../common/pipes/parse-object-id.pipe';
-import { ApiWrappedResponse } from '../common/decorators/api-wrapped-response.decorator';
-import { DeleteResultDto } from '../common/dto/delete-result.dto';
+import { UpdateHotelDto } from './dto/update-hotel.dto.js';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth/jwt-auth.guard.js';
+import { SelectItemDto } from '../common/dto/select-item.dto.js';
+import { IncludedInThePriceDto } from './dto/included-in-the-price.dto.js';
+import { HotelQueryDto } from './dto/hotel-query.dto.js';
+import { PublishHotelDto } from './dto/publish-hotel.dto.js';
+import { ParseObjectIdPipe } from '../common/pipes/parse-object-id.pipe.js';
+import { ApiWrappedResponse } from '../common/decorators/api-wrapped-response.decorator.js';
+import { DeleteResultDto } from '../common/dto/delete-result.dto.js';
 
 @ApiBearerAuth('JWT-auth')
 @UseGuards(JwtAuthGuard)

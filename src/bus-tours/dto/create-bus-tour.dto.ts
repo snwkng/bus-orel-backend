@@ -6,7 +6,7 @@ import {
   IsMongoId,
   ValidateNested,
 } from 'class-validator';
-import { TourAvailabilityDto } from './tour-availability.dto';
+import { TourAvailabilityDto } from './tour-availability.dto.js';
 
 export class CreateBusTourDto {
   @ApiProperty({

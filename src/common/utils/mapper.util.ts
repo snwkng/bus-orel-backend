@@ -1,5 +1,5 @@
-import { IncludedInThePriceDto } from '../dto/included-in-the-price-item.dto';
-import { SelectItemDto } from '../dto/select-item.dto';
+import { IncludedInThePriceDto } from '../dto/included-in-the-price-item.dto.js';
+import { SelectItemDto } from '../dto/select-item.dto.js';
 
 export const mapToSelectItem = (items: string[]): SelectItemDto[] => {
   return (items || []).map((item, index) => ({

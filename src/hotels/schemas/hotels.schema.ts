@@ -1,11 +1,11 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import { Document } from 'mongoose';
-import { Address } from '../subschemas/address.subschema';
-import { AdditionalInfo } from '../subschemas/additionalInfo.subschema';
-import { IncludedInThePrice } from '../subschemas/includedInThePrice.subschema';
-import { Room } from '../subschemas/rooms.subschema';
-import { BaseDocument } from '../../common/schemas/base-document.schema';
+import { Address } from '../subschemas/address.subschema.js';
+import { AdditionalInfo } from '../subschemas/additionalInfo.subschema.js';
+import { IncludedInThePrice } from '../subschemas/includedInThePrice.subschema.js';
+import { Room } from '../subschemas/rooms.subschema.js';
+import { BaseDocument } from '../../common/schemas/base-document.schema.js';
 export type HotelsDocument = Hotel & Document;
 @Schema({ timestamps: true })
 export class Hotel extends BaseDocument {

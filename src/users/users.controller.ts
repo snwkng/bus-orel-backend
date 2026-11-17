@@ -1,9 +1,9 @@
 import { Controller, Get, Request, UseGuards } from '@nestjs/common';
-import { UsersService } from './users.service';
+import { UsersService } from './users.service.js';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth/jwt-auth.guard';
-import { UserProfileDto } from './dto/user-profile.dto';
-import { ApiWrappedResponse } from '../common/decorators/api-wrapped-response.decorator';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth/jwt-auth.guard.js';
+import { UserProfileDto } from './dto/user-profile.dto.js';
+import { ApiWrappedResponse } from '../common/decorators/api-wrapped-response.decorator.js';
 
 @ApiBearerAuth('JWT-auth')
 @UseGuards(JwtAuthGuard)

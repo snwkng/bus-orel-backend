@@ -3,7 +3,7 @@ import { ConfigType } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { type Types } from 'mongoose';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import jwtConfig from 'src/auth/config/jwt.config';
+import jwtConfig from '../auth/config/jwt.config.js';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {

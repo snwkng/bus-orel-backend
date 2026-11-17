@@ -6,7 +6,7 @@ import {
   Param,
 } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { UploadService } from './upload.service';
+import { UploadService } from './upload.service.js';
 
 const FILE_KEY_PATTERN = /^[\w.-]+$/;
 

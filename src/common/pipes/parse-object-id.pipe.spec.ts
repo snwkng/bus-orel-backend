@@ -1,5 +1,5 @@
 import { BadRequestException } from '@nestjs/common';
-import { ParseObjectIdPipe } from './parse-object-id.pipe';
+import { ParseObjectIdPipe } from './parse-object-id.pipe.js';
 
 describe('ParseObjectIdPipe', () => {
   const pipe = new ParseObjectIdPipe();

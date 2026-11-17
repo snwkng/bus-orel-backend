@@ -1,4 +1,4 @@
-import { buildSort, paginate } from './pagination.util';
+import { buildSort, paginate } from './pagination.util.js';
 
 describe('buildSort', () => {
   it('возвращает сортировку по умолчанию без параметров', () => {

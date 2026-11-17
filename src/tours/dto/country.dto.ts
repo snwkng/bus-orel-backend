@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Country } from '../tours.interface';
+import { Country } from '../tours.interface.js';
 
 export class CountryDto implements Country {
   @ApiProperty({ example: 1, description: 'ID страны в системе Multitour' })

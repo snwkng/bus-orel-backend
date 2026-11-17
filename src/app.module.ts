@@ -1,17 +1,17 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
-import { UsersModule } from './users/users.module';
-import { ExcursionsModule } from './excursions/excursions.module';
-import { HotelsModule } from './hotels/hotels.module';
-import { BusToursModule } from './bus-tours/bus-tours.module';
-import { AuthModule } from './auth/auth.module';
-import { UploadModule } from './upload/upload.module';
+import { UsersModule } from './users/users.module.js';
+import { ExcursionsModule } from './excursions/excursions.module.js';
+import { HotelsModule } from './hotels/hotels.module.js';
+import { BusToursModule } from './bus-tours/bus-tours.module.js';
+import { AuthModule } from './auth/auth.module.js';
+import { UploadModule } from './upload/upload.module.js';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
-import { ApiResponseInterceptor } from './common/interceptors/response.interceptor';
-import { ToursModule } from './tours/tours.module';
-import { validateEnv } from './config/env.validation';
+import { ApiResponseInterceptor } from './common/interceptors/response.interceptor.js';
+import { ToursModule } from './tours/tours.module.js';
+import { validateEnv } from './config/env.validation.js';
 
 @Module({
   imports: [

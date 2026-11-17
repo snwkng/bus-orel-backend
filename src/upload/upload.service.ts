@@ -17,7 +17,8 @@ import { ObjectId } from 'bson';
 import sharp from 'sharp';
 import { Readable } from 'node:stream';
 import * as lookup from 'mime-types';
-import { fromBuffer } from 'file-type';
+// file-type 16 — CJS, именованные экспорты недоступны из ESM (lexer не детектит)
+import fileType from 'file-type';
 import type {} from 'multer';
 
 const IMAGE_MIME_TYPES = new Set([
@@ -39,21 +40,24 @@ const DISALLOWED_TYPE_MESSAGE =
 @Injectable()
 export class UploadService {
   private readonly logger = new Logger(UploadService.name);
-  private readonly bucket = this.configService.getOrThrow('AWS_S3_BUCKET');
-  private readonly s3Client = new S3Client({
-    region: this.configService.getOrThrow('AWS_S3_REGION'),
-    endpoint: this.configService.getOrThrow('AWS_S3_ENDPOINT'),
-    forcePathStyle: true,
-    credentials: {
-      accessKeyId: this.configService.getOrThrow('AWS_ACCESS_KEY'),
-      secretAccessKey: this.configService.getOrThrow('AWS_SECRET_KEY'),
-    },
-  });
+  private readonly bucket: string;
+  private readonly s3Client: S3Client;
 
-  constructor(private readonly configService: ConfigService) {}
+  constructor(private readonly configService: ConfigService) {
+    this.bucket = configService.getOrThrow('AWS_S3_BUCKET');
+    this.s3Client = new S3Client({
+      region: configService.getOrThrow('AWS_S3_REGION'),
+      endpoint: configService.getOrThrow('AWS_S3_ENDPOINT'),
+      forcePathStyle: true,
+      credentials: {
+        accessKeyId: configService.getOrThrow('AWS_ACCESS_KEY'),
+        secretAccessKey: configService.getOrThrow('AWS_SECRET_KEY'),
+      },
+    });
+  }
 
   async upload(file: Express.Multer.File) {
-    const detected = await fromBuffer(file.buffer);
+    const detected = await fileType.fromBuffer(file.buffer);
 
     let buffer = file.buffer;
     let finalContentType: string;

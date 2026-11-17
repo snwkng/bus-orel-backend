@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 import {
   PaginatedResponse,
   PaginationMetadata,
-} from '../interfaces/pagination.interface';
+} from '../interfaces/pagination.interface.js';
 
 export interface Response<T> {
   success: boolean;

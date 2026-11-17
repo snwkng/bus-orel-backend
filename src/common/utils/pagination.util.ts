@@ -1,6 +1,6 @@
 import { Model, QueryFilter } from 'mongoose';
-import { PaginationDto } from '../dto/pagination.dto';
-import { PaginatedResponse } from '../interfaces/pagination.interface';
+import { PaginationDto } from '../dto/pagination.dto.js';
+import { PaginatedResponse } from '../interfaces/pagination.interface.js';
 
 export function buildSort(
   sortBy?: string,
