@@ -52,6 +52,13 @@ export class ExcursionsAdminService extends BaseAdminService<ExcursionDocument> 
       filter,
       pagination,
       buildSort(params?.sortBy, params?.sortDir),
+      // тяжёлые поля не нужны в таблице админки (images нужен целиком — счётчик +N)
+      {
+        description: 0,
+        thePriceIncludes: 0,
+        additionallyPaid: 0,
+        hotelName: 0,
+      },
     );
   }
 

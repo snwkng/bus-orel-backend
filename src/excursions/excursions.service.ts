@@ -56,6 +56,16 @@ export class ExcursionsService {
       { $match: matchFilter },
       buildFutureDatesStage(today),
       { $sort: sort },
+      // карточке экскурсии нужны только эти поля; images — первый элемент (превью)
+      {
+        $project: {
+          name: 1,
+          cities: 1,
+          price: 1,
+          excursionStartDates: 1,
+          images: { $slice: ['$images', 1] },
+        },
+      },
     ];
 
     const skip = (page - 1) * limit;

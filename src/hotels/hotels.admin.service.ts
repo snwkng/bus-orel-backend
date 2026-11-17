@@ -58,6 +58,8 @@ export class HotelsAdminService extends BaseAdminService<Hotel> {
       filter,
       pagination,
       buildSort(params?.sortBy, params?.sortDir),
+      // тяжёлые поля не нужны в таблице админки (images нужен целиком — счётчик +N)
+      { description: 0, rooms: 0 },
     );
   }
 

@@ -21,6 +21,7 @@ describe('buildSort', () => {
 describe('paginate', () => {
   const exec = vi.fn();
   const chain = {
+    select: vi.fn().mockReturnThis(),
     sort: vi.fn().mockReturnThis(),
     skip: vi.fn().mockReturnThis(),
     limit: vi.fn().mockReturnThis(),
@@ -35,6 +36,7 @@ describe('paginate', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     model.find.mockReturnValue(chain);
+    chain.select.mockReturnThis();
     chain.sort.mockReturnThis();
     chain.skip.mockReturnThis();
     chain.limit.mockReturnThis();
@@ -68,5 +70,16 @@ describe('paginate', () => {
     expect(chain.sort).toHaveBeenCalledWith({ name: 1 });
     expect(chain.skip).toHaveBeenCalledWith(20);
     expect(chain.limit).toHaveBeenCalledWith(10);
+  });
+
+  it('применяет проекцию select при передаче', async () => {
+    exec.mockResolvedValue([]);
+    model.countDocuments.mockReturnValue({
+      exec: vi.fn().mockResolvedValue(0),
+    });
+
+    await paginate(model, {}, undefined, undefined, { description: 0 });
+
+    expect(chain.select).toHaveBeenCalledWith({ description: 0 });
   });
 });

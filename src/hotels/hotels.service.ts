@@ -35,6 +35,8 @@ export class HotelsService {
       filter,
       pagination,
       buildSort(params?.sortBy, params?.sortDir),
+      // карточке тура нужны только эти поля; images — первый элемент (превью)
+      { name: 1, minPrice: 1, 'address.city': 1, images: { $slice: 1 } },
     );
   }
 

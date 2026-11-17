@@ -1,4 +1,4 @@
-import { Model, QueryFilter } from 'mongoose';
+import { Model, ProjectionType, QueryFilter } from 'mongoose';
 import { PaginationDto } from '../dto/pagination.dto.js';
 import { PaginatedResponse } from '../interfaces/pagination.interface.js';
 
@@ -18,12 +18,20 @@ export async function paginate<T>(
   filter: QueryFilter<T>,
   pagination?: PaginationDto,
   sort: Record<string, 1 | -1> = buildSort(),
+  select?: ProjectionType<T>,
 ): Promise<PaginatedResponse<T>> {
   const { page = 1, limit = 20 } = pagination ?? {};
   const skip = (page - 1) * limit;
 
   const [data, total] = await Promise.all([
-    model.find(filter).sort(sort).skip(skip).limit(limit).lean().exec(),
+    model
+      .find(filter)
+      .select(select ?? {})
+      .sort(sort)
+      .skip(skip)
+      .limit(limit)
+      .lean()
+      .exec(),
     model.countDocuments(filter).exec(),
   ]);
 
