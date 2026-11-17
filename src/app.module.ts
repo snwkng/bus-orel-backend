@@ -11,6 +11,7 @@ import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { ApiResponseInterceptor } from './common/interceptors/response.interceptor.js';
 import { ToursModule } from './tours/tours.module.js';
+import { HealthModule } from './health/health.module.js';
 import { validateEnv } from './config/env.validation.js';
 
 @Module({
@@ -38,6 +39,7 @@ import { validateEnv } from './config/env.validation.js';
     UploadModule,
     BusToursModule,
     ToursModule,
+    HealthModule,
   ],
   providers: [
     {
