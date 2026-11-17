@@ -13,6 +13,7 @@
     "esModuleInterop": true,
     "incremental": true,
     "skipLibCheck": true,
+    "strict": false,
     "strictNullChecks": true,
     "noImplicitAny": true,
     "strictBindCallApply": false,
