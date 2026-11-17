@@ -17,8 +17,7 @@ import { ObjectId } from 'bson';
 import sharp from 'sharp';
 import { Readable } from 'node:stream';
 import * as lookup from 'mime-types';
-// file-type 16 — CJS, именованные экспорты недоступны из ESM (lexer не детектит)
-import fileType from 'file-type';
+import { fileTypeFromBuffer } from 'file-type';
 import type {} from 'multer';
 
 const IMAGE_MIME_TYPES = new Set([
@@ -57,7 +56,7 @@ export class UploadService {
   }
 
   async upload(file: Express.Multer.File) {
-    const detected = await fileType.fromBuffer(file.buffer);
+    const detected = await fileTypeFromBuffer(file.buffer);
 
     let buffer = file.buffer;
     let finalContentType: string;
