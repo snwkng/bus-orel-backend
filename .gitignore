@@ -41,3 +41,5 @@ swagger.json
 *.tsbuildinfo
 DOCKER.md
 VPS.md
+# Kimi Code local config (skills, MCP)
+.kimi-code/
