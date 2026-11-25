@@ -7,7 +7,7 @@ import {
   MultitourResponse,
   Country,
   isSuccessResponse,
-} from './tours.interface';
+} from './tours.interface.js';
 
 @Injectable()
 export class TourService {

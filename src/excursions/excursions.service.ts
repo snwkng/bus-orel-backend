@@ -1,12 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, PipelineStage, QueryFilter, Types } from 'mongoose';
-import { Excursion, ExcursionDocument } from './schemas/excursions.schema';
-import { ExcursionQueryDto } from './dto/excursion-query.dto';
-import { mapToSelectItem } from '../common/utils/mapper.util';
-import { SelectItemDto } from '../common/dto/select-item.dto';
-import { PaginationDto } from 'src/common/dto/pagination.dto';
-import { PaginatedResponse } from 'src/common/interfaces/pagination.interface';
+import { Excursion, ExcursionDocument } from './schemas/excursions.schema.js';
+import { ExcursionQueryDto } from './dto/excursion-query.dto.js';
+import { mapToSelectItem } from '../common/utils/mapper.util.js';
+import { SelectItemDto } from '../common/dto/select-item.dto.js';
+import { PaginationDto } from '../common/dto/pagination.dto.js';
+import { PaginatedResponse } from '../common/interfaces/pagination.interface.js';
 
 // Стейдж агрегации: оставляет только будущие даты и сортирует их по возрастанию
 function buildFutureDatesStage(today: Date): PipelineStage {
@@ -56,6 +56,17 @@ export class ExcursionsService {
       { $match: matchFilter },
       buildFutureDatesStage(today),
       { $sort: sort },
+      // карточке экскурсии нужны только эти поля; images — первый элемент (превью)
+      {
+        $project: {
+          name: 1,
+          cities: 1,
+          price: 1,
+          excursionStartDates: 1,
+          images: { $slice: ['$images', 1] },
+          updatedAt: 1,
+        },
+      },
     ];
 
     const skip = (page - 1) * limit;

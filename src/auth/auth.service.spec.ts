@@ -3,9 +3,9 @@ import { UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { Types } from 'mongoose';
-import { AuthService } from './auth.service';
-import { UsersService } from '../users/users.service';
-import jwtConfig from './config/jwt.config';
+import { AuthService } from './auth.service.js';
+import { UsersService } from '../users/users.service.js';
+import jwtConfig from './config/jwt.config.js';
 
 describe('AuthService', () => {
   let service: AuthService;

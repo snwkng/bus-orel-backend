@@ -4,7 +4,7 @@
 
 ## Стек
 
-- **Node.js 24 + NestJS 11** (Express 5), TypeScript
+- **Node.js 24 + NestJS 12** (Express 5), TypeScript 6, ESM (`"type": "module"`)
 - **MongoDB + Mongoose 9** (`@nestjs/mongoose`)
 - **Аутентификация**: JWT (access + refresh с ротацией), `bcrypt`
 - **Файлы**: AWS S3 (`@aws-sdk/client-s3`), обработка изображений `sharp` (конвертация в WebP)

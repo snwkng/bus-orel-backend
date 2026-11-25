@@ -13,10 +13,10 @@ import {
   IsNotEmpty,
 } from 'class-validator';
 
-import { AddressDto } from './address.dto';
-import { AdditionalInfoDto } from './additional-info.dto';
-import { IncludedInThePriceDto } from './included-in-the-price.dto';
-import { RoomDto } from './room.dto';
+import { AddressDto } from './address.dto.js';
+import { AdditionalInfoDto } from './additional-info.dto.js';
+import { IncludedInThePriceDto } from './included-in-the-price.dto.js';
+import { RoomDto } from './room.dto.js';
 
 export class CreateHotelDto {
   @ApiProperty({ example: 'Аврора', description: 'Название отеля' })

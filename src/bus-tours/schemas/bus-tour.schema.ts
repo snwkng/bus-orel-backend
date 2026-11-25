@@ -4,8 +4,8 @@ import { Document, Types } from 'mongoose';
 import {
   TourAvailabilitySchema,
   TourAvailability,
-} from '../subschemas/tour-availability.subschema';
-import { BaseDocument } from '../../common/schemas/base-document.schema';
+} from '../subschemas/tour-availability.subschema.js';
+import { BaseDocument } from '../../common/schemas/base-document.schema.js';
 export type BusToursDocument = BusTour & Document;
 @Schema({ timestamps: true })
 export class BusTour extends BaseDocument {

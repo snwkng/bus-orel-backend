@@ -9,7 +9,7 @@ import {
   UseGuards,
   BadRequestException,
 } from '@nestjs/common';
-import { UploadService } from './upload.service';
+import { UploadService } from './upload.service.js';
 import { FileInterceptor } from '@nestjs/platform-express';
 import {
   ApiBearerAuth,
@@ -19,8 +19,8 @@ import {
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth/jwt-auth.guard';
-import { ApiWrappedResponse } from '../common/decorators/api-wrapped-response.decorator';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth/jwt-auth.guard.js';
+import { ApiWrappedResponse } from '../common/decorators/api-wrapped-response.decorator.js';
 import type {} from 'multer';
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;

@@ -13,6 +13,7 @@
 
 # docker-файлы
 /dockerfile
+/dockerfile.dev
 /docker-compose.yml
 /.dockerignore
 

@@ -1,11 +1,11 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
-import { HotelsService } from './hotels.service';
-import { Hotel } from './schemas/hotels.schema';
-import { SelectItemDto } from '../common/dto/select-item.dto';
-import { HotelQueryDto } from './dto/hotel-query.dto';
-import { ParseObjectIdPipe } from '../common/pipes/parse-object-id.pipe';
-import { ApiWrappedResponse } from '../common/decorators/api-wrapped-response.decorator';
+import { HotelsService } from './hotels.service.js';
+import { Hotel } from './schemas/hotels.schema.js';
+import { SelectItemDto } from '../common/dto/select-item.dto.js';
+import { HotelQueryDto } from './dto/hotel-query.dto.js';
+import { ParseObjectIdPipe } from '../common/pipes/parse-object-id.pipe.js';
+import { ApiWrappedResponse } from '../common/decorators/api-wrapped-response.decorator.js';
 
 @ApiTags('hotels')
 @Controller('hotels')

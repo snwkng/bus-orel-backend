@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { QueryFilter, Model } from 'mongoose';
-import { Excursion, ExcursionDocument } from './schemas/excursions.schema';
-import { CreateExcursionDto } from './dto/create-excursion.dto';
-import { UpdateExcursionDto } from './dto/update-excursion.dto';
-import { mapToSelectItem } from '../common/utils/mapper.util';
-import { SelectItemDto } from '../common/dto/select-item.dto';
-import { ExcursionQueryDto } from './dto/excursion-query.dto';
-import { PaginationDto } from 'src/common/dto/pagination.dto';
-import { PaginatedResponse } from 'src/common/interfaces/pagination.interface';
-import { BaseAdminService } from '../common/services/base-admin.service';
-import { buildSort, paginate } from '../common/utils/pagination.util';
+import { Excursion, ExcursionDocument } from './schemas/excursions.schema.js';
+import { CreateExcursionDto } from './dto/create-excursion.dto.js';
+import { UpdateExcursionDto } from './dto/update-excursion.dto.js';
+import { mapToSelectItem } from '../common/utils/mapper.util.js';
+import { SelectItemDto } from '../common/dto/select-item.dto.js';
+import { ExcursionQueryDto } from './dto/excursion-query.dto.js';
+import { PaginationDto } from '../common/dto/pagination.dto.js';
+import { PaginatedResponse } from '../common/interfaces/pagination.interface.js';
+import { BaseAdminService } from '../common/services/base-admin.service.js';
+import { buildSort, paginate } from '../common/utils/pagination.util.js';
 
 @Injectable()
 export class ExcursionsAdminService extends BaseAdminService<ExcursionDocument> {
@@ -52,6 +52,13 @@ export class ExcursionsAdminService extends BaseAdminService<ExcursionDocument> 
       filter,
       pagination,
       buildSort(params?.sortBy, params?.sortDir),
+      // тяжёлые поля не нужны в таблице админки (images нужен целиком — счётчик +N)
+      {
+        description: 0,
+        thePriceIncludes: 0,
+        additionallyPaid: 0,
+        hotelName: 0,
+      },
     );
   }
 

@@ -11,18 +11,18 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { CreateExcursionDto } from './dto/create-excursion.dto';
-import { ExcursionsAdminService } from './excursions.admin.service';
+import { CreateExcursionDto } from './dto/create-excursion.dto.js';
+import { ExcursionsAdminService } from './excursions.admin.service.js';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Excursion } from './schemas/excursions.schema';
+import { Excursion } from './schemas/excursions.schema.js';
 import { DeleteResult } from 'mongodb';
-import { UpdateExcursionDto } from './dto/update-excursion.dto';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth/jwt-auth.guard';
-import { SelectItemDto } from '../common/dto/select-item.dto';
-import { ExcursionQueryDto } from './dto/excursion-query.dto';
-import { ParseObjectIdPipe } from '../common/pipes/parse-object-id.pipe';
-import { ApiWrappedResponse } from '../common/decorators/api-wrapped-response.decorator';
-import { DeleteResultDto } from '../common/dto/delete-result.dto';
+import { UpdateExcursionDto } from './dto/update-excursion.dto.js';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth/jwt-auth.guard.js';
+import { SelectItemDto } from '../common/dto/select-item.dto.js';
+import { ExcursionQueryDto } from './dto/excursion-query.dto.js';
+import { ParseObjectIdPipe } from '../common/pipes/parse-object-id.pipe.js';
+import { ApiWrappedResponse } from '../common/decorators/api-wrapped-response.decorator.js';
+import { DeleteResultDto } from '../common/dto/delete-result.dto.js';
 
 @ApiBearerAuth('JWT-auth')
 @UseGuards(JwtAuthGuard)

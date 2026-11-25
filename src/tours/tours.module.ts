@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { HttpModule } from '@nestjs/axios';
-import { ToursController } from './tours.controller';
-import { TourService } from './tours.service';
+import { ToursController } from './tours.controller.js';
+import { TourService } from './tours.service.js';
 
 @Module({
   imports: [

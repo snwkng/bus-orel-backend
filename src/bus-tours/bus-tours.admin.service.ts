@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { QueryFilter, Model } from 'mongoose';
-import { BusTour } from './schemas/bus-tour.schema';
-import { CreateBusTourDto } from './dto/create-bus-tour.dto';
-import { UpdateBusTourDto } from './dto/update-bus-tour.dto';
-import { BusTourQueryDto } from './dto/bus-tour-query.dto';
-import { BaseAdminService } from '../common/services/base-admin.service';
-import { buildSort } from '../common/utils/pagination.util';
+import { BusTour } from './schemas/bus-tour.schema.js';
+import { CreateBusTourDto } from './dto/create-bus-tour.dto.js';
+import { UpdateBusTourDto } from './dto/update-bus-tour.dto.js';
+import { BusTourQueryDto } from './dto/bus-tour-query.dto.js';
+import { BaseAdminService } from '../common/services/base-admin.service.js';
+import { buildSort } from '../common/utils/pagination.util.js';
 
 @Injectable()
 export class BusToursAdminService extends BaseAdminService<BusTour> {

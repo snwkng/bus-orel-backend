@@ -3,10 +3,10 @@ import {
   DocumentBuilder,
   getSchemaPath,
   OpenAPIObject,
+  OperationObject,
   SwaggerModule,
 } from '@nestjs/swagger';
-import { OperationObject } from '@nestjs/swagger/dist/interfaces/open-api-spec.interface';
-import { ErrorResponseDto } from '../common/dto/api-response.dto';
+import { ErrorResponseDto } from '../common/dto/api-response.dto.js';
 
 export function buildSwaggerConfig() {
   return new DocumentBuilder()

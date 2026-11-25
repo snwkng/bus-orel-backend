@@ -5,7 +5,7 @@ import { getConnectionToken } from '@nestjs/mongoose';
 import { Connection } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import request from 'supertest';
-import { AllExceptionsFilter } from '../src/common/filters/http-exception.filter';
+import { AllExceptionsFilter } from '../src/common/filters/http-exception.filter.js';
 
 describe('App (e2e, mongodb-memory-server)', () => {
   let app: INestApplication;
@@ -42,7 +42,7 @@ describe('App (e2e, mongodb-memory-server)', () => {
 
     // ConfigModule.forRoot валидирует env при импорте модуля,
     // поэтому AppModule импортируем динамически — после установки env
-    const { AppModule } = await import('../src/app.module');
+    const { AppModule } = await import('../src/app.module.js');
     const moduleRef = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
@@ -238,12 +238,18 @@ describe('App (e2e, mongodb-memory-server)', () => {
       expect(listRes.body.data).toHaveLength(1);
       expect(listRes.body.data[0].name).toBe('Аврора');
       expect(listRes.body.meta.pagination.total).toBe(1);
+      // проекция списка — только поля карточки (IMP-005)
+      expect(listRes.body.data[0].rooms).toBeUndefined();
+      expect(listRes.body.data[0].type).toBeUndefined();
+      expect(listRes.body.data[0].images?.length ?? 0).toBeLessThanOrEqual(1);
 
       const oneRes = await request(app.getHttpServer()).get(
         `/api/hotels/${hotelId}`,
       );
       expect(oneRes.status).toBe(200);
       expect(oneRes.body.data.name).toBe('Аврора');
+      // детальная отдаёт документ целиком
+      expect(oneRes.body.data.rooms).toHaveLength(1);
     });
 
     it('DELETE /api/admin/hotels/:id — удаление', async () => {
@@ -306,6 +312,9 @@ describe('App (e2e, mongodb-memory-server)', () => {
       expect(res.status).toBe(200);
       expect(res.body.data).toHaveLength(1);
       expect(res.body.data[0].name).toBe('Золотое кольцо');
+      // проекция списка — без тяжёлых текстовых полей (IMP-005)
+      expect(res.body.data[0].description).toBeUndefined();
+      expect(res.body.data[0].thePriceIncludes).toBeUndefined();
     });
 
     it('находит по типу экскурсии', async () => {
@@ -346,6 +355,10 @@ describe('App (e2e, mongodb-memory-server)', () => {
       expect(res.body.data).toHaveLength(1);
       expect(res.body.data[0].name).toBe('Золотое кольцо');
       expect(res.body.meta.pagination.total).toBe(1);
+      // проекция списка — только поля карточки (IMP-005)
+      expect(res.body.data[0].description).toBeUndefined();
+      expect(res.body.data[0].type).toBeUndefined();
+      expect(res.body.data[0].images?.length ?? 0).toBeLessThanOrEqual(1);
     });
 
     it('GET /api/excursions?type= — регистрозависим, другой регистр не находит', async () => {

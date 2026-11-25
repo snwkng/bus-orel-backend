@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getModelToken } from '@nestjs/mongoose';
 import { NotFoundException } from '@nestjs/common';
-import { ExcursionsService } from './excursions.service';
-import { Excursion } from './schemas/excursions.schema';
+import { ExcursionsService } from './excursions.service.js';
+import { Excursion } from './schemas/excursions.schema.js';
 
 describe('ExcursionsService', () => {
   let service: ExcursionsService;

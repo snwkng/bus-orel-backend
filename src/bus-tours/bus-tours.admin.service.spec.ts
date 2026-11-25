@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getModelToken } from '@nestjs/mongoose';
-import { BusToursAdminService } from './bus-tours.admin.service';
-import { BusTour } from './schemas/bus-tour.schema';
+import { BusToursAdminService } from './bus-tours.admin.service.js';
+import { BusTour } from './schemas/bus-tour.schema.js';
 
 describe('BusToursAdminService', () => {
   let service: BusToursAdminService;

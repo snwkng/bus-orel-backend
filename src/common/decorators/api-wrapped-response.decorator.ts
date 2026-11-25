@@ -1,7 +1,11 @@
 import { applyDecorators, HttpStatus, Type } from '@nestjs/common';
-import { ApiExtraModels, ApiResponse, getSchemaPath } from '@nestjs/swagger';
-import { SchemaObject } from '@nestjs/swagger/dist/interfaces/open-api-spec.interface';
-import { PaginationMetaDto } from '../dto/api-response.dto';
+import {
+  ApiExtraModels,
+  ApiResponse,
+  getSchemaPath,
+  SchemaObject,
+} from '@nestjs/swagger';
+import { PaginationMetaDto } from '../dto/api-response.dto.js';
 
 interface ApiWrappedResponseOptions {
   status?: number;

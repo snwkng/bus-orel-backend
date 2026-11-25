@@ -1,13 +1,13 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, QueryFilter } from 'mongoose';
-import { Hotel } from '../hotels/schemas/hotels.schema';
-import { HotelQueryDto } from './dto/hotel-query.dto';
-import { mapToSelectItem } from '../common/utils/mapper.util';
-import { SelectItemDto } from '../common/dto/select-item.dto';
-import { PaginationDto } from 'src/common/dto/pagination.dto';
-import { PaginatedResponse } from 'src/common/interfaces/pagination.interface';
-import { buildSort, paginate } from '../common/utils/pagination.util';
+import { Hotel } from '../hotels/schemas/hotels.schema.js';
+import { HotelQueryDto } from './dto/hotel-query.dto.js';
+import { mapToSelectItem } from '../common/utils/mapper.util.js';
+import { SelectItemDto } from '../common/dto/select-item.dto.js';
+import { PaginationDto } from '../common/dto/pagination.dto.js';
+import { PaginatedResponse } from '../common/interfaces/pagination.interface.js';
+import { buildSort, paginate } from '../common/utils/pagination.util.js';
 
 @Injectable()
 export class HotelsService {
@@ -35,6 +35,14 @@ export class HotelsService {
       filter,
       pagination,
       buildSort(params?.sortBy, params?.sortDir),
+      // карточке тура нужны только эти поля; images — первый элемент (превью)
+      {
+        name: 1,
+        minPrice: 1,
+        'address.city': 1,
+        images: { $slice: 1 },
+        updatedAt: 1,
+      },
     );
   }
 

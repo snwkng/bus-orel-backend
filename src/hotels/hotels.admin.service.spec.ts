@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getModelToken } from '@nestjs/mongoose';
 import { ConflictException, NotFoundException } from '@nestjs/common';
-import { HotelsAdminService } from './hotels.admin.service';
-import { Hotel } from './schemas/hotels.schema';
-import { BusTour } from '../bus-tours/schemas/bus-tour.schema';
+import { HotelsAdminService } from './hotels.admin.service.js';
+import { Hotel } from './schemas/hotels.schema.js';
+import { BusTour } from '../bus-tours/schemas/bus-tour.schema.js';
 
 describe('HotelsAdminService', () => {
   let service: HotelsAdminService;

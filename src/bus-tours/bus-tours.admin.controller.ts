@@ -11,17 +11,17 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { CreateBusTourDto } from './dto/create-bus-tour.dto';
-import { BusToursAdminService } from './bus-tours.admin.service';
+import { CreateBusTourDto } from './dto/create-bus-tour.dto.js';
+import { BusToursAdminService } from './bus-tours.admin.service.js';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { BusTour } from './schemas/bus-tour.schema';
+import { BusTour } from './schemas/bus-tour.schema.js';
 import { DeleteResult } from 'mongodb';
-import { UpdateBusTourDto } from './dto/update-bus-tour.dto';
-import { BusTourQueryDto } from './dto/bus-tour-query.dto';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth/jwt-auth.guard';
-import { ParseObjectIdPipe } from '../common/pipes/parse-object-id.pipe';
-import { ApiWrappedResponse } from '../common/decorators/api-wrapped-response.decorator';
-import { DeleteResultDto } from '../common/dto/delete-result.dto';
+import { UpdateBusTourDto } from './dto/update-bus-tour.dto.js';
+import { BusTourQueryDto } from './dto/bus-tour-query.dto.js';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth/jwt-auth.guard.js';
+import { ParseObjectIdPipe } from '../common/pipes/parse-object-id.pipe.js';
+import { ApiWrappedResponse } from '../common/decorators/api-wrapped-response.decorator.js';
+import { DeleteResultDto } from '../common/dto/delete-result.dto.js';
 
 @ApiBearerAuth('JWT-auth')
 @UseGuards(JwtAuthGuard)

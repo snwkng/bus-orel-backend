@@ -1,11 +1,11 @@
 import { Controller, Get, Header, Param, Query } from '@nestjs/common';
-import { ExcursionsService } from './excursions.service';
+import { ExcursionsService } from './excursions.service.js';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Excursion } from './schemas/excursions.schema';
-import { ExcursionQueryDto } from './dto/excursion-query.dto';
-import { SelectItemDto } from '../common/dto/select-item.dto';
-import { ParseObjectIdPipe } from '../common/pipes/parse-object-id.pipe';
-import { ApiWrappedResponse } from '../common/decorators/api-wrapped-response.decorator';
+import { Excursion } from './schemas/excursions.schema.js';
+import { ExcursionQueryDto } from './dto/excursion-query.dto.js';
+import { SelectItemDto } from '../common/dto/select-item.dto.js';
+import { ParseObjectIdPipe } from '../common/pipes/parse-object-id.pipe.js';
+import { ApiWrappedResponse } from '../common/decorators/api-wrapped-response.decorator.js';
 
 @ApiTags('Excursions')
 @Controller('excursions')
