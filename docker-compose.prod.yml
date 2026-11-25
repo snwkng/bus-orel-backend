@@ -1,0 +1,18 @@
+# Продакшн-стек для VPS (IMP-021). Локальная разработка — docker-compose.yml + docker-compose.dev.yml.
+# Отличия от локального: образ приезжает из GHCR (на сервере ничего не собирается),
+# MongoDB остаётся на хосте (systemd mongod), network_mode: host — контейнер слушает PORT
+# на хосте и ходит в Mongo на 127.0.0.1, поэтому конфиг nginx при переключении не меняется.
+# Раскладка на сервере: ~/apps/backend/docker-compose.yml (копия этого файла) + .env из CI-секретов.
+services:
+  backend:
+    image: ghcr.io/snwkng/bus-orel-backend:latest
+    container_name: bus-orel-backend
+    env_file:
+      - .env
+    network_mode: host
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
