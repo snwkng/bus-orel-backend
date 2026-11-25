@@ -64,6 +64,7 @@ export class ExcursionsService {
           price: 1,
           excursionStartDates: 1,
           images: { $slice: ['$images', 1] },
+          updatedAt: 1,
         },
       },
     ];
