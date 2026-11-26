@@ -355,9 +355,9 @@ describe('App (e2e, mongodb-memory-server)', () => {
       expect(res.body.data).toHaveLength(1);
       expect(res.body.data[0].name).toBe('Золотое кольцо');
       expect(res.body.meta.pagination.total).toBe(1);
-      // проекция списка — только поля карточки (IMP-005)
+      // проекция списка — только поля карточки (IMP-005) + type для бейджа (IMP-030)
       expect(res.body.data[0].description).toBeUndefined();
-      expect(res.body.data[0].type).toBeUndefined();
+      expect(res.body.data[0].type).toBe('Обзорная');
       expect(res.body.data[0].images?.length ?? 0).toBeLessThanOrEqual(1);
     });
 
