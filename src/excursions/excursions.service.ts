@@ -60,6 +60,7 @@ export class ExcursionsService {
       {
         $project: {
           name: 1,
+          type: 1,
           cities: 1,
           price: 1,
           excursionStartDates: 1,
